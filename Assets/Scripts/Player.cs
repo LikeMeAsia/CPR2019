@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public OvrAvatar myOvrAvatar;
+
     [Header("Left hand")]
     public Transform l_hand;
     [SerializeField] private OVRInput.Controller l_controller;
@@ -26,6 +28,7 @@ public class Player : MonoBehaviour
     public GameObject cprHand;
 
     [Header("Controller")]
+    public bool renderController;
     public List<GameObject> controller;
     public GameObject l_controllerMesh;
     public GameObject l_controllerMesh_button01;
@@ -47,9 +50,8 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        //yield return new WaitForSeconds(1f);
-        
-
+        myOvrAvatar = gameObject.GetComponentInChildren<OvrAvatar>();
+        myOvrAvatar.renderController = renderController;
     }
 
     void Update()
@@ -99,6 +101,7 @@ public class Player : MonoBehaviour
         UpdateCapTouchStates();
         CheckUnderController();
         SnapHandTogether();
+        myOvrAvatar.renderController = renderController;
     }
 
     private void UpdateCapTouchStates()
