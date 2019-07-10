@@ -65,38 +65,81 @@ public class Player : MonoBehaviour
         if (l_controllerMesh == null)
         {
             l_controllerMesh = GameObject.Find("lctrl:left_touch_controller_world");
-            l_controllerMesh.AddComponent<Outline>();
+            controller.Add(l_controllerMesh);
         }
         if (l_controllerMesh_button01 == null)
         {
             l_controllerMesh_button01 = GameObject.Find("lctrl:b_button01");
-            l_controllerMesh_button01.AddComponent<Outline>();
+            controller.Add(l_controllerMesh_button01);
         }
         if (l_controllerMesh_button02 == null)
+        {
             l_controllerMesh_button02 = GameObject.Find("lctrl:b_button02");
+            controller.Add(l_controllerMesh_button02);
+        }
         if (l_controllerMesh_button03 == null)
+        {
             l_controllerMesh_button03 = GameObject.Find("lctrl:b_button03");
+            controller.Add(l_controllerMesh_button03);
+        }
         if (l_controllerMesh_hold == null)
+        {
             l_controllerMesh_hold = GameObject.Find("lctrl:b_hold");
+            controller.Add(l_controllerMesh_hold);
+        }
         if (l_controllerMesh_stick == null)
+        {
             l_controllerMesh_stick = GameObject.Find("lctrl:b_stick");
+            controller.Add(l_controllerMesh_stick);
+        }
         if (l_controllerMesh_trigger == null)
+        {
             l_controllerMesh_trigger = GameObject.Find("lctrl:b_trigger");
+            controller.Add(l_controllerMesh_trigger);
+        }
 
         if (r_controllerMesh == null)
+        {
             r_controllerMesh = GameObject.Find("rctrl:right_touch_controller_world");
+            controller.Add(r_controllerMesh);
+
+        }
         if (r_controllerMesh_button01 == null)
+        {
             r_controllerMesh_button01 = GameObject.Find("rctrl:b_button01");
+            controller.Add(r_controllerMesh_button01);
+
+        }
         if (r_controllerMesh_button02 == null)
+        {
             r_controllerMesh_button02 = GameObject.Find("rctrl:b_button02");
+            controller.Add(r_controllerMesh_button02);
+
+        }
         if (r_controllerMesh_button03 == null)
+        {
             r_controllerMesh_button03 = GameObject.Find("rctrl:b_button03");
+            controller.Add(r_controllerMesh_button03);
+
+        }
         if (r_controllerMesh_hold == null)
+        {
             r_controllerMesh_hold = GameObject.Find("rctrl:b_hold");
+            controller.Add(r_controllerMesh_hold);
+
+        }
         if (r_controllerMesh_stick == null)
+        {
             r_controllerMesh_stick = GameObject.Find("rctrl:b_stick");
+            controller.Add(r_controllerMesh_stick);
+
+        }
         if (r_controllerMesh_trigger == null)
+        {
             r_controllerMesh_trigger = GameObject.Find("rctrl:b_trigger");
+            controller.Add(r_controllerMesh_trigger);
+
+        }
         #endregion
         UpdateCapTouchStates();
         CheckUnderController();
