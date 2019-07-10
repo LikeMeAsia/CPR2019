@@ -17,6 +17,12 @@
 # Never ignore Asset .dll files
 !/[Aa]ssets/**/*.dll
 
+# Never ignore Asset .obj files
+!/[Aa]ssets/**/*.obj
+
+# Never ignore Oculus folder
+!/[Aa]ssets/Oculus/
+
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*
 
