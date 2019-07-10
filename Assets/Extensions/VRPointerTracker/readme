@@ -1,0 +1,3 @@
+VR Pointer Tracker
+1. place prefab 'LookGuideCanvas' as player's camera child
+2. assign target to let arrow track
