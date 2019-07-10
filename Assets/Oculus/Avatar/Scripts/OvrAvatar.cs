@@ -73,6 +73,7 @@ public class OvrAvatar : MonoBehaviour
 
     [Header("Other")]
     public bool StartWithControllers;
+    public bool RenderController;
     public AvatarLayer FirstPersonLayer;
     public AvatarLayer ThirdPersonLayer;
     public bool ShowFirstPerson = true;
@@ -630,6 +631,11 @@ public class OvrAvatar : MonoBehaviour
         {
             Driver.Mode = UseSDKPackets ? OvrAvatarDriver.PacketMode.SDK : OvrAvatarDriver.PacketMode.Unity;
         }
+
+        if (StartWithControllers)
+        {
+            RenderController = true;
+        }
     }
 
     void Update()
@@ -682,6 +688,8 @@ public class OvrAvatar : MonoBehaviour
                 UpdateExpressive();
             }
         }
+
+        ShowControllers(RenderController);
     }
 
     public static ovrAvatarHandInputState CreateInputState(ovrAvatarTransform transform, OvrAvatarDriver.ControllerPose pose)
