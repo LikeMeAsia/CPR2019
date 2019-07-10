@@ -73,7 +73,7 @@ public class OvrAvatar : MonoBehaviour
 
     [Header("Other")]
     public bool StartWithControllers;
-    public bool RenderController;
+    public bool renderController;
     public AvatarLayer FirstPersonLayer;
     public AvatarLayer ThirdPersonLayer;
     public bool ShowFirstPerson = true;
@@ -634,7 +634,7 @@ public class OvrAvatar : MonoBehaviour
 
         if (StartWithControllers)
         {
-            RenderController = true;
+            renderController = true;
         }
     }
 
@@ -689,7 +689,7 @@ public class OvrAvatar : MonoBehaviour
             }
         }
 
-        ShowControllers(RenderController);
+        ShowControllers(renderController);
     }
 
     public static ovrAvatarHandInputState CreateInputState(ovrAvatarTransform transform, OvrAvatarDriver.ControllerPose pose)
