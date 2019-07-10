@@ -63,8 +63,17 @@ public class OVRSystemProfilerPanel : EditorWindow {
 		if (showAndroidOptions)
 		{
 			GUILayout.BeginHorizontal();
-			EditorGUILayout.LabelField("Android SDK root path: ", androidSdkRootPath);
+			string newAndroidSdkRootPath = EditorGUILayout.DelayedTextField("Android SDK root path", androidSdkRootPath);
+			if (newAndroidSdkRootPath != androidSdkRootPath)
+			{
+				androidSdkRootPath = newAndroidSdkRootPath;
+				PlayerPrefs.SetString("OVRAndroidSdkRootPath", androidSdkRootPath);
+			}
 			GUILayout.EndHorizontal();
+			if (!OVRADBTool.IsAndroidSdkRootValid(androidSdkRootPath))
+			{
+				GUILayout.Label("Invalid Android SDK. Please set it to the Android SDK path in Unity Preferences / External Tools");
+			}
 
 			GUILayout.BeginHorizontal();
 			if (GUILayout.Button("Start Server"))
@@ -584,7 +593,14 @@ public class OVRSystemProfilerPanel : EditorWindow {
 
 	void InitializeAndroidSdkPath()
 	{
-		androidSdkRootPath = OVRConfig.Instance.GetAndroidSDKPath();
+		if (PlayerPrefs.HasKey("OVRAndroidSdkRootPath"))
+		{
+			androidSdkRootPath = PlayerPrefs.GetString("OVRAndroidSdkRootPath");
+		}
+		else
+		{
+			androidSdkRootPath = Environment.GetEnvironmentVariable("ANDROID_HOME");
+		}
 	}
 
 	// OnDestroy is called to close the EditorWindow window.

@@ -17,7 +17,7 @@ permissions and limitations under the License.
 using UnityEngine;
 using System.Collections.Generic;
 
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN || UNITY_ANDROID
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
 
 internal class OVRCompositionUtil {
 

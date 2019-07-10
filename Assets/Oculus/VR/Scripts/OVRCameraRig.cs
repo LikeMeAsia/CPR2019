@@ -90,12 +90,6 @@ public class OVRCameraRig : MonoBehaviour
 	/// \note: If the fixed update rate doesn't match the rendering framerate (OVRManager.display.appFramerate), the anchors will visibly judder.
 	/// </summary>
 	public bool useFixedUpdateForTracking = false;
-	/// <summary>
-	/// If true, the cameras on the eyeAnchors will be disabled.
-	/// \note: The main camera of the game will be used to provide VR rendering. And the tracking space anchors will still be updated to provide reference poses.
-	/// </summary>
-	public bool disableEyeAnchorCameras = false;
-
 
 	protected bool _skipUpdate = false;
 	protected readonly string trackingSpaceName = "TrackingSpace";
@@ -140,9 +134,6 @@ public class OVRCameraRig : MonoBehaviour
 
 	protected virtual void UpdateAnchors()
 	{
-		if (!OVRManager.OVRManagerinitialized)
-			return;
-
 		EnsureGameObjectIntegrity();
 
 		if (!Application.isPlaying)
@@ -344,27 +335,17 @@ public class OVRCameraRig : MonoBehaviour
 			}
 		}
 
-		if (disableEyeAnchorCameras)
+		// disable the right eye camera when in monoscopic mode
+		if (_centerEyeCamera.enabled == usePerEyeCameras ||
+			_leftEyeCamera.enabled == !usePerEyeCameras ||
+			_rightEyeCamera.enabled == !(usePerEyeCameras && (!monoscopic || OVRPlugin.EyeTextureArrayEnabled)))
 		{
-			_centerEyeCamera.enabled = false;
-			_leftEyeCamera.enabled = false;
-			_rightEyeCamera.enabled = false;
+			_skipUpdate = true;
 		}
-		else
-		{
-			// disable the right eye camera when in monoscopic mode
-			if (_centerEyeCamera.enabled == usePerEyeCameras ||
-					_leftEyeCamera.enabled == !usePerEyeCameras ||
-					_rightEyeCamera.enabled == !(usePerEyeCameras && (!monoscopic || OVRPlugin.EyeTextureArrayEnabled)))
-			{
-				_skipUpdate = true;
-			}
 
-			_centerEyeCamera.enabled = !usePerEyeCameras;
-			_leftEyeCamera.enabled = usePerEyeCameras;
-			_rightEyeCamera.enabled = (usePerEyeCameras && (!monoscopic || OVRPlugin.EyeTextureArrayEnabled));
-
-		}
+		_centerEyeCamera.enabled = !usePerEyeCameras;
+		_leftEyeCamera.enabled = usePerEyeCameras;
+		_rightEyeCamera.enabled = (usePerEyeCameras && (!monoscopic || OVRPlugin.EyeTextureArrayEnabled));
 	}
 
 	protected virtual Transform ConfigureAnchor(Transform root, string name)
@@ -400,14 +381,10 @@ public class OVRCameraRig : MonoBehaviour
 
 		// The ideal approach would be using UnityEngine.VR.VRNode.TrackingReference, then we would not have to depend on the OVRCameraRig. Unfortunately, it is not available in Unity 5.4.3
 
-		OVRPose headPose = OVRPose.identity;
+		OVRPose headPose;
 
-		Vector3 pos;
-		Quaternion rot;
-		if (OVRNodeStateProperties.GetNodeStatePropertyVector3(Node.Head, NodeStatePropertyType.Position, OVRPlugin.Node.Head, OVRPlugin.Step.Render, out pos))
-			headPose.position = pos;
-		if (OVRNodeStateProperties.GetNodeStatePropertyQuaternion(Node.Head, NodeStatePropertyType.Orientation, OVRPlugin.Node.Head, OVRPlugin.Step.Render, out rot))
-			headPose.orientation = rot;
+		headPose.position = InputTracking.GetLocalPosition(Node.Head);
+		headPose.orientation = InputTracking.GetLocalRotation(Node.Head);
 
 		OVRPose invHeadPose = headPose.Inverse();
 		Matrix4x4 invHeadMatrix = Matrix4x4.TRS(invHeadPose.position, invHeadPose.orientation, Vector3.one);

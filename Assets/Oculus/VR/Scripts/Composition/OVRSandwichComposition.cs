@@ -193,9 +193,7 @@ public class OVRSandwichComposition : OVRCameraComposition
 		{
 			OVRPose cameraPose = new OVRPose();
 			OVRPose trackingSpacePose = new OVRPose();
-			trackingSpacePose.position = OVRManager.instance.trackingOriginType == OVRManager.TrackingOrigin.EyeLevel ?
-				OVRMixedReality.fakeCameraEyeLevelPosition :
-				OVRMixedReality.fakeCameraFloorLevelPosition;
+			trackingSpacePose.position = OVRMixedReality.fakeCameraPositon;
 			trackingSpacePose.orientation = OVRMixedReality.fakeCameraRotation;
 
 			if (!cameraInTrackingSpace)
@@ -209,12 +207,11 @@ public class OVRSandwichComposition : OVRCameraComposition
 		{
 			OVRPlugin.CameraExtrinsics extrinsics;
 			OVRPlugin.CameraIntrinsics intrinsics;
-			OVRPlugin.Posef calibrationRawPose;
 
 			// So far, only support 1 camera for MR and always use camera index 0
-			if (OVRPlugin.GetMixedRealityCameraInfo(0, out extrinsics, out intrinsics, out calibrationRawPose))
+			if (OVRPlugin.GetMixedRealityCameraInfo(0, out extrinsics, out intrinsics))
 			{
-				OVRPose cameraPose = cameraInTrackingSpace ? ComputeCameraTrackingSpacePose(extrinsics, calibrationRawPose) : ComputeCameraWorldSpacePose(extrinsics, calibrationRawPose);
+				OVRPose cameraPose = cameraInTrackingSpace ? ComputeCameraTrackingSpacePose(extrinsics) : ComputeCameraWorldSpacePose(extrinsics);
 
 				float fovY = Mathf.Atan(intrinsics.FOVPort.UpTan) * Mathf.Rad2Deg * 2;
 				float aspect = intrinsics.FOVPort.LeftTan / intrinsics.FOVPort.UpTan;

@@ -77,9 +77,7 @@ public class OVRDirectComposition : OVRCameraComposition
 		if (OVRMixedReality.useFakeExternalCamera || OVRPlugin.GetExternalCameraCount() == 0)
 		{
 			OVRPose trackingSpacePose = new OVRPose();
-			trackingSpacePose.position = OVRManager.instance.trackingOriginType == OVRManager.TrackingOrigin.EyeLevel ? 
-				OVRMixedReality.fakeCameraEyeLevelPosition : 
-				OVRMixedReality.fakeCameraFloorLevelPosition;
+			trackingSpacePose.position = OVRMixedReality.fakeCameraPositon;
 			trackingSpacePose.orientation = OVRMixedReality.fakeCameraRotation;
 			directCompositionCamera.fieldOfView = OVRMixedReality.fakeCameraFov;
 			directCompositionCamera.aspect = OVRMixedReality.fakeCameraAspect;
@@ -98,10 +96,9 @@ public class OVRDirectComposition : OVRCameraComposition
 		{
 			OVRPlugin.CameraExtrinsics extrinsics;
 			OVRPlugin.CameraIntrinsics intrinsics;
-			OVRPlugin.Posef calibrationRawPose;
 
 			// So far, only support 1 camera for MR and always use camera index 0
-			if (OVRPlugin.GetMixedRealityCameraInfo(0, out extrinsics, out intrinsics, out calibrationRawPose))
+			if (OVRPlugin.GetMixedRealityCameraInfo(0, out extrinsics, out intrinsics))
 			{
 				float fovY = Mathf.Atan(intrinsics.FOVPort.UpTan) * Mathf.Rad2Deg * 2;
 				float aspect = intrinsics.FOVPort.LeftTan / intrinsics.FOVPort.UpTan;
@@ -109,12 +106,12 @@ public class OVRDirectComposition : OVRCameraComposition
 				directCompositionCamera.aspect = aspect;
 				if (cameraInTrackingSpace)
 				{
-					OVRPose trackingSpacePose = ComputeCameraTrackingSpacePose(extrinsics, calibrationRawPose);
+					OVRPose trackingSpacePose = ComputeCameraTrackingSpacePose(extrinsics);
 					directCompositionCamera.transform.FromOVRPose(trackingSpacePose, true);
 				}
 				else
 				{
-					OVRPose worldSpacePose = ComputeCameraWorldSpacePose(extrinsics, calibrationRawPose);
+					OVRPose worldSpacePose = ComputeCameraWorldSpacePose(extrinsics);
 					directCompositionCamera.transform.FromOVRPose(worldSpacePose);
 				}
 			}

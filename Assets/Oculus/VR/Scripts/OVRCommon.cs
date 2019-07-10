@@ -45,15 +45,10 @@ public static class OVRExtensions
 	/// </summary>
 	public static OVRPose ToTrackingSpacePose(this Transform transform, Camera camera)
 	{
-		//Initializing to identity, but for all Oculus headsets, down below the pose will be initialized to the runtime's pose value, so identity will never be returned.
-		OVRPose headPose = OVRPose.identity;
+		OVRPose headPose;
 
-		Vector3 pos;
-		Quaternion rot;
-		if (OVRNodeStateProperties.GetNodeStatePropertyVector3(Node.Head, NodeStatePropertyType.Position, OVRPlugin.Node.Head, OVRPlugin.Step.Render, out pos))
-			headPose.position = pos;
-		if (OVRNodeStateProperties.GetNodeStatePropertyQuaternion(Node.Head, NodeStatePropertyType.Orientation, OVRPlugin.Node.Head, OVRPlugin.Step.Render, out rot))
-			headPose.orientation = rot;
+		headPose.position = InputTracking.GetLocalPosition(Node.Head);
+		headPose.orientation = InputTracking.GetLocalRotation(Node.Head);
 
 		var ret = headPose * transform.ToHeadSpacePose(camera);
 
@@ -66,14 +61,10 @@ public static class OVRExtensions
 	/// </summary>
 	public static OVRPose ToWorldSpacePose(OVRPose trackingSpacePose)
 	{
-		OVRPose headPose = OVRPose.identity;
+		OVRPose headPose;
 
-		Vector3 pos;
-		Quaternion rot;
-		if (OVRNodeStateProperties.GetNodeStatePropertyVector3(Node.Head, NodeStatePropertyType.Position, OVRPlugin.Node.Head, OVRPlugin.Step.Render, out pos))
-			headPose.position = pos;
-		if (OVRNodeStateProperties.GetNodeStatePropertyQuaternion(Node.Head, NodeStatePropertyType.Orientation, OVRPlugin.Node.Head, OVRPlugin.Step.Render, out rot))
-			headPose.orientation = rot;
+		headPose.position = InputTracking.GetLocalPosition(Node.Head);
+		headPose.orientation = InputTracking.GetLocalRotation(Node.Head);
 
 		// Transform from tracking-Space to head-Space
 		OVRPose poseInHeadSpace = headPose.Inverse() * trackingSpacePose;
@@ -231,8 +222,6 @@ public static class OVRNodeStateProperties
 
 	public static bool IsHmdPresent()
 	{
-		if (OVRManager.OVRManagerinitialized && OVRManager.loadedXRDevice == OVRManager.XRDevice.Oculus)
-			return OVRPlugin.hmdPresent;
 		return Device.isPresent;
 	}
 
@@ -242,63 +231,62 @@ public static class OVRNodeStateProperties
 		switch (propertyType)
 		{
 			case NodeStatePropertyType.Acceleration:
+#if UNITY_2017_1_OR_NEWER
+				if (GetUnityXRNodeStateVector3(nodeType, NodeStatePropertyType.Acceleration, out retVec))
+					return true;
+#endif
 				if (OVRManager.loadedXRDevice == OVRManager.XRDevice.Oculus)
 				{
 					retVec = OVRPlugin.GetNodeAcceleration(ovrpNodeType, stepType).FromFlippedZVector3f();
 					return true;
 				}
-#if UNITY_2017_1_OR_NEWER
-				if (GetUnityXRNodeStateVector3(nodeType, NodeStatePropertyType.Acceleration, out retVec))
-					return true;
-#endif
 				break;
 
 			case NodeStatePropertyType.AngularAcceleration:
+#if UNITY_2017_2_OR_NEWER
+				if (GetUnityXRNodeStateVector3(nodeType, NodeStatePropertyType.AngularAcceleration, out retVec))
+					return true;
+#endif
 				if (OVRManager.loadedXRDevice == OVRManager.XRDevice.Oculus)
 				{
 					retVec = OVRPlugin.GetNodeAngularAcceleration(ovrpNodeType, stepType).FromFlippedZVector3f();
 					return true;
 				}
-#if UNITY_2017_2_OR_NEWER
-				if (GetUnityXRNodeStateVector3(nodeType, NodeStatePropertyType.AngularAcceleration, out retVec))
-					return true;
-#endif
 				break;
 
 			case NodeStatePropertyType.Velocity:
+#if UNITY_2017_1_OR_NEWER
+				if (GetUnityXRNodeStateVector3(nodeType, NodeStatePropertyType.Velocity, out retVec))
+					return true;
+#endif
 				if (OVRManager.loadedXRDevice == OVRManager.XRDevice.Oculus)
 				{
 					retVec = OVRPlugin.GetNodeVelocity(ovrpNodeType, stepType).FromFlippedZVector3f();
 					return true;
 				}
-#if UNITY_2017_1_OR_NEWER
-				if (GetUnityXRNodeStateVector3(nodeType, NodeStatePropertyType.Velocity, out retVec))
-					return true;
-#endif
 				break;
 
 			case NodeStatePropertyType.AngularVelocity:
+#if UNITY_2017_2_OR_NEWER
+				if (GetUnityXRNodeStateVector3(nodeType, NodeStatePropertyType.AngularVelocity, out retVec))
+					return true;
+#endif
 				if (OVRManager.loadedXRDevice == OVRManager.XRDevice.Oculus)
 				{
 					retVec = OVRPlugin.GetNodeAngularVelocity(ovrpNodeType, stepType).FromFlippedZVector3f();
 					return true;
 				}
-#if UNITY_2017_2_OR_NEWER
-				if (GetUnityXRNodeStateVector3(nodeType, NodeStatePropertyType.AngularVelocity, out retVec))
-					return true;
-#endif
 				break;
 
 			case NodeStatePropertyType.Position:
-				if (OVRManager.loadedXRDevice == OVRManager.XRDevice.Oculus)
-				{
-					retVec = OVRPlugin.GetNodePose(ovrpNodeType, stepType).ToOVRPose().position;
-					return true;
-				}
 #if UNITY_2017_1_OR_NEWER
 				if (GetUnityXRNodeStateVector3(nodeType, NodeStatePropertyType.Position, out retVec))
 					return true;
 #endif
+				if (OVRManager.loadedXRDevice == OVRManager.XRDevice.Oculus){
+					retVec = OVRPlugin.GetNodePose(ovrpNodeType, stepType).ToOVRPose().position;
+					return true;
+				}
 				break;
 		}
 
@@ -311,15 +299,14 @@ public static class OVRNodeStateProperties
 		switch (propertyType)
 		{
 			case NodeStatePropertyType.Orientation:
-				if (OVRManager.loadedXRDevice == OVRManager.XRDevice.Oculus)
-				{
-					retQuat = OVRPlugin.GetNodePose(ovrpNodeType, stepType).ToOVRPose().orientation;
-					return true;
-				}
 #if UNITY_2017_1_OR_NEWER
 				if (GetUnityXRNodeStateQuaternion(nodeType, NodeStatePropertyType.Orientation, out retQuat))
 					return true;
 #endif
+				if (OVRManager.loadedXRDevice == OVRManager.XRDevice.Oculus){
+					retQuat = OVRPlugin.GetNodePose(ovrpNodeType, stepType).ToOVRPose().orientation;
+					return true;
+				}
 				break;
 		}
 		return false;
@@ -359,7 +346,7 @@ public static class OVRNodeStateProperties
 
 		if (!ValidateProperty(nodeType, ref requestedNodeState))
 			return false;
-
+		
 		if (propertyType == NodeStatePropertyType.Acceleration)
 		{
 			if (requestedNodeState.TryGetAcceleration(out retVec))

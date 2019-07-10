@@ -149,7 +149,6 @@ public class OVRPlayerController : MonoBehaviour
 	private float SimulationRate = 60f;
 	private float buttonRotation = 0f;
 	private bool ReadyToSnapTurn; // Set to true when a snap turn has occurred, code requires one frame of centered thumbstick to enable another snap turn.
-	private bool playerControllerEnabled = false;
 
 	void Start()
 	{
@@ -182,39 +181,26 @@ public class OVRPlayerController : MonoBehaviour
 
 	void OnEnable()
 	{
+		OVRManager.display.RecenteredPose += ResetOrientation;
+
+		if (CameraRig != null)
+		{
+			CameraRig.UpdatedAnchors += UpdateTransform;
+		}
 	}
 
 	void OnDisable()
 	{
-		if (playerControllerEnabled)
-		{
-			OVRManager.display.RecenteredPose -= ResetOrientation;
+		OVRManager.display.RecenteredPose -= ResetOrientation;
 
-			if (CameraRig != null)
-			{
-				CameraRig.UpdatedAnchors -= UpdateTransform;
-			}
-			playerControllerEnabled = false;
+		if (CameraRig != null)
+		{
+			CameraRig.UpdatedAnchors -= UpdateTransform;
 		}
 	}
 
 	void Update()
 	{
-		if (!playerControllerEnabled)
-		{
-			if (OVRManager.OVRManagerinitialized)
-			{
-				OVRManager.display.RecenteredPose += ResetOrientation;
-
-				if (CameraRig != null)
-				{
-					CameraRig.UpdatedAnchors += UpdateTransform;
-				}
-				playerControllerEnabled = true;
-			}
-			else
-				return;
-		}
 		//Use keys to ratchet rotation
 		if (Input.GetKeyDown(KeyCode.Q))
 			buttonRotation -= RotationRatchet;
