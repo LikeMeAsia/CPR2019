@@ -21,7 +21,7 @@ public class ScenarioControl : MonoBehaviour
     public Player playerScript;
     public GameObject player;
     public float moveSpeed;
-    public Animator playerAnim;
+    //public Animator playerAnim;
 
     [Header("Object")]
     public DoorKnob doorKnob;
@@ -53,7 +53,7 @@ public class ScenarioControl : MonoBehaviour
     void Start()
     {
         shotIndex = 0;
-        playerAnim.SetTrigger("fade in");
+        //playerAnim.SetTrigger("fade in");
     }
 
     void Update()

@@ -65,12 +65,12 @@ public class Player : MonoBehaviour
         if (l_controllerMesh == null)
         {
             l_controllerMesh = GameObject.Find("lctrl:left_touch_controller_world");
-            l_controllerMesh.AddComponent<Outline>();
+            //l_controllerMesh.AddComponent<Outline>();
         }
         if (l_controllerMesh_button01 == null)
         {
             l_controllerMesh_button01 = GameObject.Find("lctrl:b_button01");
-            l_controllerMesh_button01.AddComponent<Outline>();
+            //l_controllerMesh_button01.AddComponent<Outline>();
         }
         if (l_controllerMesh_button02 == null)
             l_controllerMesh_button02 = GameObject.Find("lctrl:b_button02");
