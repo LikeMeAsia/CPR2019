@@ -47,13 +47,13 @@ class ONSPPropagationSerializationManager
         Debug.Log("ONSPPropagationSerializationManager.OnPreprocessBuild for target " + target + " at path " + path);
     }
 
-    [MenuItem("OculusSpatializer/Build audio geometry for current scene")]
+    [MenuItem("Oculus/Oculus Spatializer/Build audio geometry for current scene")]
     public static void BuildAudioGeometryForCurrentScene()
     {
         BuildAudioGeometryForScene(EditorSceneManager.GetActiveScene());
     }
 
-    [MenuItem("OculusSpatializer/Rebuild audio geometry all scenes")]
+    [MenuItem("Oculus/Oculus Spatializer/Rebuild audio geometry all scenes")]
     public static void RebuildAudioGeometryForAllScenes()
     {
         Debug.Log("Rebuilding geometry for all scenes");
