@@ -209,6 +209,7 @@ public class ScenarioControl : MonoBehaviour
 
     private void CheckHandFul()
     {
+        if (playerScript == null) return;
         if ((playerScript.l_ful && playerScript.l_ful) && handfulTimer < handfulTime)
         {
             handfulTimer += Time.deltaTime;
