@@ -9,7 +9,7 @@ public class ShakeShoulder : MonoBehaviour
 
     int countCheckShake;
 
-    public int CountStart;
+    public int maxHit;
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +21,7 @@ public class ShakeShoulder : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (countCheckShake == CountStart)
+        if (countCheckShake == maxHit)
         {
             CircleBump.SetActive(true);
             gameObject.SetActive(false);
@@ -33,7 +33,8 @@ public class ShakeShoulder : MonoBehaviour
         if (other.gameObject.CompareTag("hand"))
         {
             countCheckShake++;
-            Debug.Log("Shake!");
+            Debug.Log("Shake!" + countCheckShake + "/"+ maxHit) ;
+
         }
     }
 }

@@ -169,18 +169,7 @@ public class BeatController : MonoBehaviour
         if (other.gameObject.CompareTag("Hand Checker"))
         {
             Debug.Log("Hit");
-            if (CheckGoodHitBeat())//0-1
-            {
-                Debug.Log("Good Hit");
-                circle.color = goodColor;
-                HitBump++;
-                if (countDownBump <= HitBump)
-                {
-                    curScore += scorePerHit;
-                    goodHit++;
-                    comboHit++;
-                }
-            }
+ 
 
             if (CheckPerfectHitBeat())//0-0.5
             {
@@ -194,7 +183,18 @@ public class BeatController : MonoBehaviour
                     comboHit++;
                 }
             }
-           
+            else if (CheckGoodHitBeat())//0-1
+            {
+                Debug.Log("Good Hit");
+                circle.color = goodColor;
+                HitBump++;
+                if (countDownBump <= HitBump)
+                {
+                    curScore += scorePerHit;
+                    goodHit++;
+                    comboHit++;
+                }
+            }
             else
             {
                 Debug.Log("Miss");
