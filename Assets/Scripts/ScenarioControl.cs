@@ -42,12 +42,12 @@ public class ScenarioControl : MonoBehaviour
     public float handpalmTime = 2;
     public float handpalmTimer;
     public bool handpalmComplete;
-    public bool[] manual;
+    //public bool[] manual;
 
-
+    public CutsceneEndCheck cutsceneCheck;
     float teleportTimer = 0;
-    float moveTimer = 0;
-    bool isMove;
+    public float moveTimer = 0;
+    public bool isMove;
     #endregion
 
     void Start()
@@ -58,6 +58,27 @@ public class ScenarioControl : MonoBehaviour
 
     void Update()
     {
+        //Peter Test vvvvv
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Debug.Log("Debug when start playing CutScene1");
+            RunCutScene1();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Debug.Log("Debug when start playing CutScene2");
+            RunCutScene2();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            Debug.Log("Debug when start playing GoodEnd");
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            Debug.Log("Debug when start playing BadEnd");
+        }
+        //Peter Test ^^^^^
+
         if (Input.GetKeyDown(KeyCode.Space) || OVRInput.GetDown(OVRInput.Button.One))
         {
             shotIndex++;
@@ -93,49 +114,72 @@ public class ScenarioControl : MonoBehaviour
             SnapObjectToHand(phone, phone.GetComponent<Phone>().hand);
         }
 
-        if (!handfulComplete)
+        if (!handfulComplete)//กำ
         {
             CheckHandFul();
             handfulCanvas.SetActive(true);
         }
-        else if (handfulComplete  && !handpalmComplete)
+        else if (handfulComplete  && !handpalmComplete)//แบ
         {
             CheckHandPalm();
             handfulCanvas.GetComponent<Animator>().SetBool("disable",true);
             handpalmCanvas.SetActive(true);
         }
-        else if (handpalmComplete && !pointingComplete)
+        else if (handpalmComplete && !pointingComplete)//ชื้
         {
             CheckPointing();
             handpalmCanvas.GetComponent<Animator>().SetBool("disable", true);
             pointingCanvas.SetActive(true);
         }
-        else if (pointingComplete && !doorKnob.doorOpen)
+        else if (pointingComplete && !doorKnob.doorOpen)//เดินไปประตู
         {
             pointingCanvas.GetComponent<Animator>().SetBool("disable", true);
             doorCanvas.SetActive(true);
             MoveObjectAtoB(player, player.transform, pos[0], moveSpeed, 3);
         }
-        else if (doorKnob.doorOpen && !manual[0] && !manual[1])
+        else if (doorKnob.doorOpen && !cutsceneCheck.cutsceneIsEnd/*!manual[0] && !manual[1]*/)//เปิดประตู
         {
+            //isMove = false;
             doorCanvas.GetComponent<Animator>().SetBool("disable", true);
-            phoneCanvas.SetActive(true);
-            portal.SetActive(true);
-            grim.SetActive(true);
-            MoveObjectAtoB(player, player.transform, pos[1], moveSpeed, 3);
+            //phoneCanvas.SetActive(true);
+            //portal.SetActive(true);
+            //grim.SetActive(true);
+            MoveObjectAtoB(player, player.transform, pos[1], moveSpeed, 1);
         }
-        else if (manual[0] && !manual[1])
+        else if (cutsceneCheck.cutsceneIsEnd)
         {
-            manual[0] = false;
-            phoneCanvas.GetComponent<Animator>().SetBool("disable", true);
-            MoveObjectAtoB(player, player.transform, pos[2], moveSpeed, 3);
+            //isMove = false;
+            //phoneCanvas.GetComponent<Animator>().SetBool("disable", true);
+            MoveObjectAtoB(player, player.transform, pos[2], moveSpeed, 1);
         }
-        else if (!manual[0] && manual[1])
+        /*else if (/*!manual[0] && manual[1])
         {
-            manual[1] = false;
+            //manual[1] = false;
             cprCanvas.SetActive(true);
-        }
+        }*/
+
+        //Cutscene Peter
     }
+
+    //peter test zone
+    void RunCutScene1()
+    {
+        CutSceneManager.playCs1 = true;
+    }
+    void RunCutScene2()
+    {
+        CutSceneManager.playCs2 = true;
+    }
+    void RunCutSceneGoodEnd()
+    {
+
+    }
+    void RunCutSceneBadEnd()
+    {
+
+    }
+    //Peter test zone
+
 
     public void MoveObjectAtoB(GameObject _object, Transform from, Transform to, float moveSpeed, float moveDelay)
     {
@@ -163,6 +207,7 @@ public class ScenarioControl : MonoBehaviour
             
             to.position = new Vector3(to.position.x, _object.transform.position.y, to.position.z);
             _object.transform.position = Vector3.Lerp(from.position, to.position, moveSpeed);
+            
         }
 
         

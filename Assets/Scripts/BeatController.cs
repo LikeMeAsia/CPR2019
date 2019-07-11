@@ -230,7 +230,6 @@ public class BeatController : MonoBehaviour
         if (other.gameObject.CompareTag("Hand Checker"))
         {
             Debug.Log("Hit");
-
             if (CheckPerfectHitBeat())//0-0.5
             {
                 Debug.Log("Perfect Hit");
@@ -259,7 +258,6 @@ public class BeatController : MonoBehaviour
                     curhpDad++;
                 }
             }
-
             else
             {
                 Debug.Log("Miss");
