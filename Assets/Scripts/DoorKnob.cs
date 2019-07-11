@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class DoorKnob : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class DoorKnob : MonoBehaviour
         {
             doorAnim.SetBool("open", true);
             doorOpen = true;
+            CutSceneManager.playCs1 = true;
         }
     }
 }
