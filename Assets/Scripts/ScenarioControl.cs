@@ -58,6 +58,27 @@ public class ScenarioControl : MonoBehaviour
 
     void Update()
     {
+        //Peter Test vvvvv
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Debug.Log("Debug when start playing CutScene1");
+            RunCutScene1();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Debug.Log("Debug when start playing CutScene2");
+            RunCutScene2();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            Debug.Log("Debug when start playing GoodEnd");
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            Debug.Log("Debug when start playing BadEnd");
+        }
+        //Peter Test ^^^^^
+
         if (Input.GetKeyDown(KeyCode.Space) || OVRInput.GetDown(OVRInput.Button.One))
         {
             shotIndex++;
@@ -139,6 +160,26 @@ public class ScenarioControl : MonoBehaviour
 
         //Cutscene Peter
     }
+
+    //peter test zone
+    void RunCutScene1()
+    {
+        CutSceneManager.playCs1 = true;
+    }
+    void RunCutScene2()
+    {
+        CutSceneManager.playCs2 = true;
+    }
+    void RunCutSceneGoodEnd()
+    {
+
+    }
+    void RunCutSceneBadEnd()
+    {
+
+    }
+    //Peter test zone
+
 
     public void MoveObjectAtoB(GameObject _object, Transform from, Transform to, float moveSpeed, float moveDelay)
     {
