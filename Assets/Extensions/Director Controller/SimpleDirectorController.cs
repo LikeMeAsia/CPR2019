@@ -45,6 +45,7 @@ public class SimpleDirectorController : MonoBehaviour {
 #if !UNITY_EDITOR
         trackId = 0;
 #endif
+        interruptable = true;
         if (playOnAwake) {
             PlayTrack(trackId);
         }
@@ -56,32 +57,44 @@ public class SimpleDirectorController : MonoBehaviour {
     }
 
 	public void PlayTrack(int iTrack){
-		if (!interruptable && (iTrack < 0 || iTrack >= tracks.Length))
-        {
+        if (director == null) {
+            Debug.Log("SimpleDirectorController: Director not found");
             return;
         }
-        trackId = iTrack;
-        StartCoroutine (IPlayTrack());
+        if (iTrack < 0 || iTrack >= tracks.Length)
+        {
+            Debug.Log("SimpleDirectorController: Track ID not in range ["+ iTrack + "]");
+            return;
+        }
+        if (tracks[iTrack] == null)
+        {
+            Debug.Log("SimpleDirectorController: No track in this ID");
+            return;
+        }
+        Debug.Log("SimpleDirectorController: PlayTrack [" + tracks[iTrack].EventPlayableAsset.name + "]");
+        StartCoroutine (IPlayTrack(iTrack));
 	}
 
 	public void PlayNextTrack(){
-		if (!interruptable)
-			return;
         if (trackId+1 >= tracks.Length)
         {
             return;
         }
-        trackId++;
-        StartCoroutine (IPlayTrack());
+        StartCoroutine (IPlayTrack(trackId + 1));
 	}
 
 
-    IEnumerator IPlayTrack(){
+    IEnumerator IPlayTrack(int nextTrack){
+        if (!interruptable) {
+            yield return new WaitUntil(() => interruptable);
+        }
 		interruptable = false;
+        trackId = nextTrack;
         if (tracks[trackId].BeforePlayEvent != null){
 			tracks [trackId].BeforePlayEvent.Invoke ();
 		}
-        if (director.playableAsset!=null && trackId > 1 && tracks[trackId-1].TransactionPlayableAsset == director.playableAsset) {
+        if (director.playableAsset != null && trackId > 1 && tracks[trackId - 1].TransactionPlayableAsset == director.playableAsset)
+        {
             director.extrapolationMode = DirectorWrapMode.Hold;
             yield return new WaitUntil(() => director.time >= director.playableAsset.duration);
         }

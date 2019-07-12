@@ -18,7 +18,7 @@ public class CutSceneManager : MonoBehaviour
     void Start()
     {
         cutScene1.Stop();
-        cutScene2.Stop();/*
+        /*cutScene2.Stop();
         cutSceneGoodEnd.Stop();
         cutSceneBadEnd.Stop();*/
 
@@ -34,7 +34,7 @@ public class CutSceneManager : MonoBehaviour
         if (playCs1)
         {
             playCs1 = false;
-            SimpleDirectorController.Instance.PlayTrack(0);
+            //SimpleDirectorController.Instance.PlayTrack(0);
             //cutScene1.Play();
             Debug.Log("Playing Cutscene Father down");
         }

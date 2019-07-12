@@ -59,7 +59,7 @@ public class ScenarioControl : MonoBehaviour
     void Update()
     {
         //Peter Test vvvvv
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        /*if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             Debug.Log("Debug when start playing CutScene1");
             RunCutScene1();
@@ -76,7 +76,7 @@ public class ScenarioControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             Debug.Log("Debug when start playing BadEnd");
-        }
+        }*/
         //Peter Test ^^^^^
 
         if (Input.GetKeyDown(KeyCode.Space) || OVRInput.GetDown(OVRInput.Button.One))
@@ -164,11 +164,11 @@ public class ScenarioControl : MonoBehaviour
     //peter test zone
     void RunCutScene1()
     {
-        CutSceneManager.playCs1 = true;
+        SimpleDirectorController.Instance.PlayTrack(0);
     }
     void RunCutScene2()
     {
-        CutSceneManager.playCs2 = true;
+        SimpleDirectorController.Instance.PlayTrack(1);
     }
     void RunCutSceneGoodEnd()
     {
