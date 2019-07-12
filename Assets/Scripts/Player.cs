@@ -59,6 +59,7 @@ public class Player : MonoBehaviour
         yield return waitInst_LHand;
         l_hand = GameObject.Find("hand_left_renderPart_0").GetComponent<Transform>();
 
+
         // Wait instantiate Right Hand
         WaitWhile waitInst_RHand = new WaitWhile(() => { return GameObject.Find("hand_right_renderPart_0") == null; });
         yield return waitInst_RHand;
@@ -153,6 +154,11 @@ public class Player : MonoBehaviour
             yield return waitInst_RTrigger;
             r_controllerMesh_trigger = GameObject.Find("rctrl:b_trigger");
             controller.Add(r_controllerMesh_trigger);
+
+            foreach (var item in controller)
+            {
+                item.AddComponent<Outline>();
+            }
         }
         #endregion
         ready = true;
