@@ -50,6 +50,30 @@ public class SimpleDirectorController : MonoBehaviour {
         }
     }
 
+    //Test Playing Custom Timeline manually by keyboard input (1 2 3 and 4)
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.Alpha1))
+        {
+            trackId = 0;
+            PlayTrack(trackId);
+            Debug.Log("Test manual playing cutscene 1");
+        }
+        if (Input.GetKey(KeyCode.Alpha2))
+        {
+            trackId = 1;
+            PlayTrack(trackId);
+            Debug.Log("Test manual playing cutscene 2");
+        }
+        if (Input.GetKey(KeyCode.Alpha3))
+        {
+            Debug.Log("Test manual playing cutscene GoodEnd");
+        }
+        if (Input.GetKey(KeyCode.Alpha4))
+        {
+            Debug.Log("Test manual playing cutscene BadEnd");
+        }
+    }
     public void ReplayTrack()
     {
         PlayTrack(trackId);
