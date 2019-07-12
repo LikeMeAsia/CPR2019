@@ -27,22 +27,29 @@ public class Player : MonoBehaviour
     public Vector3 centerPoint;
     public GameObject cprHand;
 
-    [Header("Controller")]
-    public List<GameObject> controller;
-    public GameObject l_controllerMesh;
-    public GameObject l_controllerMesh_button01;
-    public GameObject l_controllerMesh_button02;
-    public GameObject l_controllerMesh_button03;
-    public GameObject l_controllerMesh_hold;
-    public GameObject l_controllerMesh_stick;
-    public GameObject l_controllerMesh_trigger;
-    public GameObject r_controllerMesh;
-    public GameObject r_controllerMesh_button01;
-    public GameObject r_controllerMesh_button02;
-    public GameObject r_controllerMesh_button03;
-    public GameObject r_controllerMesh_hold;
-    public GameObject r_controllerMesh_stick;
-    public GameObject r_controllerMesh_trigger;
+    [Header("Left Controller")]
+    public GameObject l_button01;
+    public GameObject l_button02;
+    public GameObject l_side_trigger;
+    public GameObject l_trigger;
+    public GameObject l_stick;
+    [Header("Right Controller")]
+    public GameObject r_button01;
+    public GameObject r_button02;
+    public GameObject r_side_trigger;
+    public GameObject r_trigger;
+    public GameObject r_stick;
+    [Header("For Debug")]
+    public bool l_button01_outline;
+    public bool l_button02_outline;
+    public bool l_side_trigger_outline;
+    public bool l_trigger_outline;
+    public bool l_stick_outline;
+    public bool r_button01_outline;
+    public bool r_button02_outline;
+    public bool r_side_trigger_outline;
+    public bool r_trigger_outline;
+    public bool r_stick_outline;
 
     public bool l_handIsUnder;
     public bool r_handIsUnder;
@@ -53,7 +60,7 @@ public class Player : MonoBehaviour
     IEnumerator Start()
     {
         ready = false;
-        #region FindHandAndController
+        #region FindHand
         // Wait instantiate Left Hand
         WaitWhile waitInst_LHand = new WaitWhile(() => { return GameObject.Find("hand_left_renderPart_0") == null; });
         yield return waitInst_LHand;
@@ -65,103 +72,111 @@ public class Player : MonoBehaviour
         yield return waitInst_RHand;
         r_hand = GameObject.Find("hand_right_renderPart_0").GetComponent<Transform>();
 
+        #region Controller Unuse;
         // Setup Touch Controllers
         // Only work when start with controllers
-        if (m_OvrAvatar.StartWithControllers)
-        {
-            // Wait instantiate Left Touch Controller
-            WaitWhile waitInst_LTouchCtrl = new WaitWhile(() => { return GameObject.Find("lctrl:left_touch_controller_world") == null; });
-            yield return waitInst_LTouchCtrl;
-            l_controllerMesh = GameObject.Find("lctrl:left_touch_controller_world");
-            //l_controllerMesh.AddComponent<Outline>();
-            controller.Add(l_controllerMesh);
+        /* if (m_OvrAvatar.StartWithControllers)
+         {
+             // Wait instantiate Left Touch Controller
+             WaitWhile waitInst_LTouchCtrl = new WaitWhile(() => { return GameObject.Find("lctrl:left_touch_controller_world") == null; });
+             yield return waitInst_LTouchCtrl;
+             l_controllerMesh = GameObject.Find("lctrl:left_touch_controller_world");
+             //l_controllerMesh.AddComponent<Outline>();
+             controller.Add(l_controllerMesh);
 
-            // Wait instantiate Right Touch Controller
-            WaitWhile waitInst_RTouchCtrl = new WaitWhile(() => { return GameObject.Find("rctrl:right_touch_controller_world") == null; });
-            yield return waitInst_RTouchCtrl;
-            r_controllerMesh = GameObject.Find("rctrl:right_touch_controller_world");
-            controller.Add(r_controllerMesh);
+             // Wait instantiate Right Touch Controller
+             WaitWhile waitInst_RTouchCtrl = new WaitWhile(() => { return GameObject.Find("rctrl:right_touch_controller_world") == null; });
+             yield return waitInst_RTouchCtrl;
+             r_controllerMesh = GameObject.Find("rctrl:right_touch_controller_world");
+             controller.Add(r_controllerMesh);
 
-            // Wait instantiate Left Button 1
-            WaitWhile waitInst_LBtn01 = new WaitWhile(() => { return GameObject.Find("lctrl:b_button01") == null; });
-            yield return waitInst_LBtn01;
-            l_controllerMesh_button01 = GameObject.Find("lctrl:b_button01");
-            //l_controllerMesh_button01.AddComponent<Outline>();
-            controller.Add(l_controllerMesh_button01);
+             // Wait instantiate Left Button 1
+             WaitWhile waitInst_LBtn01 = new WaitWhile(() => { return GameObject.Find("lctrl:b_button01") == null; });
+             yield return waitInst_LBtn01;
+             l_controllerMesh_button01 = GameObject.Find("lctrl:b_button01");
+             //l_controllerMesh_button01.AddComponent<Outline>();
+             controller.Add(l_controllerMesh_button01);
 
-            // Wait instantiate Right Button 1
-            WaitWhile waitInst_RBtn01 = new WaitWhile(() => { return GameObject.Find("rctrl:b_button01") == null; });
-            yield return waitInst_RBtn01;
-            r_controllerMesh_button01 = GameObject.Find("rctrl:b_button01");
-            controller.Add(r_controllerMesh_button01);
+             // Wait instantiate Right Button 1
+             WaitWhile waitInst_RBtn01 = new WaitWhile(() => { return GameObject.Find("rctrl:b_button01") == null; });
+             yield return waitInst_RBtn01;
+             r_controllerMesh_button01 = GameObject.Find("rctrl:b_button01");
+             controller.Add(r_controllerMesh_button01);
 
-            // Wait instantiate Left Button 2
-            WaitWhile waitInst_LBtn02 = new WaitWhile(() => { return GameObject.Find("lctrl:b_button02") == null; });
-            yield return waitInst_LBtn02;
-            l_controllerMesh_button02 = GameObject.Find("lctrl:b_button02");
-            controller.Add(l_controllerMesh_button02);
+             // Wait instantiate Left Button 2
+             WaitWhile waitInst_LBtn02 = new WaitWhile(() => { return GameObject.Find("lctrl:b_button02") == null; });
+             yield return waitInst_LBtn02;
+             l_controllerMesh_button02 = GameObject.Find("lctrl:b_button02");
+             controller.Add(l_controllerMesh_button02);
 
-            // Wait instantiate Right Button 2
-            WaitWhile waitInst_RBtn02 = new WaitWhile(() => { return GameObject.Find("rctrl:b_button02") == null; });
-            yield return waitInst_RBtn02;
-            r_controllerMesh_button02 = GameObject.Find("rctrl:b_button02");
-            controller.Add(r_controllerMesh_button02);
+             // Wait instantiate Right Button 2
+             WaitWhile waitInst_RBtn02 = new WaitWhile(() => { return GameObject.Find("rctrl:b_button02") == null; });
+             yield return waitInst_RBtn02;
+             r_controllerMesh_button02 = GameObject.Find("rctrl:b_button02");
+             controller.Add(r_controllerMesh_button02);
 
-            // Wait instantiate Left Button 3
-            WaitWhile waitInst_LBtn03 = new WaitWhile(() => { return GameObject.Find("lctrl:b_button03") == null; });
-            yield return waitInst_LBtn03;
-            l_controllerMesh_button03 = GameObject.Find("lctrl:b_button03");
-            controller.Add(l_controllerMesh_button03);
+             // Wait instantiate Left Button 3
+             WaitWhile waitInst_LBtn03 = new WaitWhile(() => { return GameObject.Find("lctrl:b_button03") == null; });
+             yield return waitInst_LBtn03;
+             l_controllerMesh_button03 = GameObject.Find("lctrl:b_button03");
+             controller.Add(l_controllerMesh_button03);
 
-            // Wait instantiate Right Button 3
-            WaitWhile waitInst_RBtn03 = new WaitWhile(() => { return GameObject.Find("rctrl:b_button03") == null; });
-            yield return waitInst_RBtn03;
-            r_controllerMesh_button03 = GameObject.Find("rctrl:b_button03");
-            controller.Add(r_controllerMesh_button03);
+             // Wait instantiate Right Button 3
+             WaitWhile waitInst_RBtn03 = new WaitWhile(() => { return GameObject.Find("rctrl:b_button03") == null; });
+             yield return waitInst_RBtn03;
+             r_controllerMesh_button03 = GameObject.Find("rctrl:b_button03");
+             controller.Add(r_controllerMesh_button03);
 
-            // Wait instantiate Left Hold
-            WaitWhile waitInst_LHold = new WaitWhile(() => { return GameObject.Find("lctrl:b_hold") == null; });
-            yield return waitInst_LHold;
-            l_controllerMesh_hold = GameObject.Find("lctrl:b_hold");
-            controller.Add(l_controllerMesh_hold);
+             // Wait instantiate Left Hold
+             WaitWhile waitInst_LHold = new WaitWhile(() => { return GameObject.Find("lctrl:b_hold") == null; });
+             yield return waitInst_LHold;
+             l_controllerMesh_hold = GameObject.Find("lctrl:b_hold");
+             controller.Add(l_controllerMesh_hold);
 
-            // Wait instantiate Right Hold
-            WaitWhile waitInst_RHold = new WaitWhile(() => { return GameObject.Find("rctrl:b_hold") == null; });
-            yield return waitInst_RHold;
-            r_controllerMesh_hold = GameObject.Find("rctrl:b_hold");
-            controller.Add(r_controllerMesh_hold);
+             // Wait instantiate Right Hold
+             WaitWhile waitInst_RHold = new WaitWhile(() => { return GameObject.Find("rctrl:b_hold") == null; });
+             yield return waitInst_RHold;
+             r_controllerMesh_hold = GameObject.Find("rctrl:b_hold");
+             controller.Add(r_controllerMesh_hold);
 
-            // Wait instantiate Left Stick
-            WaitWhile waitInst_LStick = new WaitWhile(() => { return GameObject.Find("lctrl:b_stick") == null; });
-            yield return waitInst_LStick;
-            l_controllerMesh_stick = GameObject.Find("lctrl:b_stick");
-            controller.Add(l_controllerMesh_stick);
+             // Wait instantiate Left Stick
+             WaitWhile waitInst_LStick = new WaitWhile(() => { return GameObject.Find("lctrl:b_stick") == null; });
+             yield return waitInst_LStick;
+             l_controllerMesh_stick = GameObject.Find("lctrl:b_stick");
+             controller.Add(l_controllerMesh_stick);
 
-            // Wait instantiate Right Stick
-            WaitWhile waitInst_RStick = new WaitWhile(() => { return GameObject.Find("rctrl:b_stick") == null; });
-            yield return waitInst_RStick;
-            r_controllerMesh_stick = GameObject.Find("rctrl:b_stick");
-            controller.Add(r_controllerMesh_stick);
+             // Wait instantiate Right Stick
+             WaitWhile waitInst_RStick = new WaitWhile(() => { return GameObject.Find("rctrl:b_stick") == null; });
+             yield return waitInst_RStick;
+             r_controllerMesh_stick = GameObject.Find("rctrl:b_stick");
+             controller.Add(r_controllerMesh_stick);
 
-            // Wait instantiate Left Trigger
-            WaitWhile waitInst_LTrigger = new WaitWhile(() => { return GameObject.Find("lctrl:b_trigger") == null; });
-            yield return waitInst_LTrigger;
-            l_controllerMesh_trigger = GameObject.Find("lctrl:b_trigger");
-            controller.Add(l_controllerMesh_trigger);
+             // Wait instantiate Left Trigger
+             WaitWhile waitInst_LTrigger = new WaitWhile(() => { return GameObject.Find("lctrl:b_trigger") == null; });
+             yield return waitInst_LTrigger;
+             l_controllerMesh_trigger = GameObject.Find("lctrl:b_trigger");
+             controller.Add(l_controllerMesh_trigger);
 
-            // Wait instantiate Right Trigger
-            WaitWhile waitInst_RTrigger = new WaitWhile(() => { return GameObject.Find("rctrl:b_trigger") == null; });
-            yield return waitInst_RTrigger;
-            r_controllerMesh_trigger = GameObject.Find("rctrl:b_trigger");
-            controller.Add(r_controllerMesh_trigger);
-
-            foreach (var item in controller)
-            {
-                item.AddComponent<Outline>();
-            }
-        }
+             // Wait instantiate Right Trigger
+             WaitWhile waitInst_RTrigger = new WaitWhile(() => { return GameObject.Find("rctrl:b_trigger") == null; });
+             yield return waitInst_RTrigger;
+             r_controllerMesh_trigger = GameObject.Find("rctrl:b_trigger");
+             controller.Add(r_controllerMesh_trigger);
         #endregion
-        ready = true;
+    }*/
+        #endregion
+        #endregion
+        l_button01.SetActive(false);
+        l_button02.SetActive(false);
+        l_side_trigger.SetActive(false);
+        l_trigger.SetActive(false);
+        l_stick.SetActive(false);
+        r_button01.SetActive(false);
+        r_button02.SetActive(false);
+        r_side_trigger.SetActive(false);
+        r_trigger.SetActive(false);
+        r_stick.SetActive(false);
+    ready = true;
     }
 
     void Update()
@@ -260,6 +275,19 @@ public class Player : MonoBehaviour
         UpdateCapTouchStates();
         CheckUnderController();
         SnapHandTogether();
+        #region Debug Outline
+        EnableOutline(l_button01, l_button01_outline);
+        EnableOutline(l_button02, l_button01_outline);
+        EnableOutline(l_stick, l_stick_outline);
+        EnableOutline(l_trigger, l_trigger_outline);
+        EnableOutline(l_side_trigger, l_side_trigger_outline);
+
+        EnableOutline(r_button01, r_button01_outline);
+        EnableOutline(r_button02, r_button01_outline);
+        EnableOutline(r_stick, r_stick_outline);
+        EnableOutline(r_trigger, r_trigger_outline);
+        EnableOutline(r_side_trigger, r_side_trigger_outline);
+        #endregion
     }
 
     private void UpdateCapTouchStates()
@@ -336,5 +364,10 @@ public class Player : MonoBehaviour
             r_hand.gameObject.SetActive(true);
             cprHand.SetActive(false);
         }
+    }
+
+    private void EnableOutline(GameObject button, bool enable)
+    {
+        button.SetActive(enable);
     }
 }
