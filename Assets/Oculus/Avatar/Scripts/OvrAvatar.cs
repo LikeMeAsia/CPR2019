@@ -682,6 +682,7 @@ public class OvrAvatar : MonoBehaviour
                 UpdateExpressive();
             }
         }
+
     }
 
     public static ovrAvatarHandInputState CreateInputState(ovrAvatarTransform transform, OvrAvatarDriver.ControllerPose pose)

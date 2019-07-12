@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public class Player_Script_Temp : MonoBehaviour
+public class Player : MonoBehaviour
 {
     public OvrAvatar m_OvrAvatar;
 
