@@ -59,7 +59,7 @@ public class ScenarioControl : MonoBehaviour
     void Update()
     {
         //Peter Test vvvvv
-        /*if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             Debug.Log("Debug when start playing CutScene1");
             RunCutScene1();
@@ -76,7 +76,7 @@ public class ScenarioControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             Debug.Log("Debug when start playing BadEnd");
-        }*/
+        }
         //Peter Test ^^^^^
 
         if (Input.GetKeyDown(KeyCode.Space) || OVRInput.GetDown(OVRInput.Button.One))
@@ -204,19 +204,19 @@ public class ScenarioControl : MonoBehaviour
 
         if (isMove)
         {
-            
+
             to.position = new Vector3(to.position.x, _object.transform.position.y, to.position.z);
             _object.transform.position = Vector3.Lerp(from.position, to.position, moveSpeed);
-            
+
         }
 
-        
+
         Debug.Log("move pass");
     }
 
     public void TeleportObjectAtoB(GameObject _object, Transform from, Transform to, float teleportDelay)
     {
-        
+
         if (_object == null)
         {
             _object = GameObject.FindGameObjectWithTag("Player");
