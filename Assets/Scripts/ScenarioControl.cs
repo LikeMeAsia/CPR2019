@@ -7,7 +7,7 @@ public class ScenarioControl : MonoBehaviour
 {
     #region Variable
     [Header("Game Object")]
-    [SerializeField] private int shotIndex;
+    //[SerializeField] private int shotIndex;
     public GameObject handfulCanvas;
     public GameObject handpalmCanvas;
     public GameObject pointingCanvas;
@@ -21,7 +21,6 @@ public class ScenarioControl : MonoBehaviour
     public Player playerScript;
     public GameObject player;
     public float moveSpeed;
-    //public Animator playerAnim;
 
     [Header("Object")]
     public DoorKnob doorKnob;
@@ -42,7 +41,6 @@ public class ScenarioControl : MonoBehaviour
     public float handpalmTime = 2;
     public float handpalmTimer;
     public bool handpalmComplete;
-    //public bool[] manual;
 
     public CutsceneEndCheck cutsceneCheck;
     float teleportTimer = 0;
@@ -52,8 +50,7 @@ public class ScenarioControl : MonoBehaviour
 
     void Start()
     {
-        shotIndex = 0;
-        //playerAnim.SetTrigger("fade in");
+
     }
 
     void Update()
@@ -78,12 +75,6 @@ public class ScenarioControl : MonoBehaviour
             Debug.Log("Debug when start playing BadEnd");
         }
         //Peter Test ^^^^^
-
-        if (Input.GetKeyDown(KeyCode.Space) || OVRInput.GetDown(OVRInput.Button.One))
-        {
-            shotIndex++;
-            isMove = false;
-        }
 
         #region Unused
         /*
@@ -137,19 +128,13 @@ public class ScenarioControl : MonoBehaviour
             doorCanvas.SetActive(true);
             MoveObjectAtoB(player, player.transform, pos[0], moveSpeed, 3);
         }
-        else if (doorKnob.doorOpen && !cutsceneCheck.cutsceneIsEnd/*!manual[0] && !manual[1]*/)//เปิดประตู
+        else if (doorKnob.doorOpen && !cutsceneCheck.cutsceneIsEnd)//เปิดประตู
         {
-            //isMove = false;
             doorCanvas.GetComponent<Animator>().SetBool("disable", true);
-            //phoneCanvas.SetActive(true);
-            //portal.SetActive(true);
-            //grim.SetActive(true);
             MoveObjectAtoB(player, player.transform, pos[1], moveSpeed, 1);
         }
         else if (cutsceneCheck.cutsceneIsEnd)
         {
-            //isMove = false;
-            //phoneCanvas.GetComponent<Animator>().SetBool("disable", true);
             MoveObjectAtoB(player, player.transform, pos[2], moveSpeed, 1);
         }
         /*else if (/*!manual[0] && manual[1])
@@ -208,6 +193,11 @@ public class ScenarioControl : MonoBehaviour
             to.position = new Vector3(to.position.x, _object.transform.position.y, to.position.z);
             _object.transform.position = Vector3.Lerp(from.position, to.position, moveSpeed);
             
+        }
+
+        if (_object.transform.position == to.position)
+        {
+            isMove = false;
         }
 
         

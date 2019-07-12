@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class Player : MonoBehaviour
 {
@@ -53,6 +56,8 @@ public class Player : MonoBehaviour
 
     public bool l_handIsUnder;
     public bool r_handIsUnder;
+    [Header(" ")]
+    public bool showController;
 
     // Check initial all required parameters
     public bool ready = false;
@@ -71,6 +76,9 @@ public class Player : MonoBehaviour
         WaitWhile waitInst_RHand = new WaitWhile(() => { return GameObject.Find("hand_right_renderPart_0") == null; });
         yield return waitInst_RHand;
         r_hand = GameObject.Find("hand_right_renderPart_0").GetComponent<Transform>();
+
+        l_hand.gameObject.layer = LayerMask.NameToLayer("Heart");
+        r_hand.gameObject.layer = LayerMask.NameToLayer("Heart");
 
         #region Controller Unuse;
         // Setup Touch Controllers
@@ -370,4 +378,41 @@ public class Player : MonoBehaviour
     {
         button.SetActive(enable);
     }
+
+#if UNITY_EDITOR
+    [CustomPropertyDrawer(typeof(Player))]
+    [ExecuteInEditMode]
+    public class PlayerPropertyDrawer : Editor
+    {
+        private bool trackShowController;
+        private Player player;
+        public void OnEnable()
+        {
+            Player player = (Player)target;
+            trackShowController = player.showController;
+        }
+        public override void OnInspectorGUI()
+        {
+            // Update the serializedProperty - always do this in the beginning of OnInspectorGUI.
+            serializedObject.Update();
+            EditorGUI.BeginChangeCheck();
+            DrawDefaultInspector();
+            if (player == null) {
+                Player player = (Player)target;
+            }
+            else {
+                if (player.showController != trackShowController)
+                {
+                    player.m_OvrAvatar.ShowControllers(player.showController);
+                    player.showController = trackShowController;
+                }
+            }
+            // Apply changes to the serializedProperty - always do this in the end of OnInspectorGUI.
+            if (EditorGUI.EndChangeCheck())
+            {
+                serializedObject.ApplyModifiedProperties();
+            }
+        }
+    }
+#endif
 }
