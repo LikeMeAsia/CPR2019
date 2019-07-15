@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class DoorKnob : MonoBehaviour
 {
@@ -10,14 +11,16 @@ public class DoorKnob : MonoBehaviour
 
     private void Start()
     {
+        doorOpen = false;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("hand") && (player.l_ful || player.r_ful))
+        if (!doorOpen && other.CompareTag("hand") && (player.l_ful || player.r_ful))
         {
             doorAnim.SetBool("open", true);
             doorOpen = true;
+            SimpleDirectorController.Instance.PlayTrack(0);
         }
     }
 }

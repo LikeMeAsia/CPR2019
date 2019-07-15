@@ -5,9 +5,10 @@ using UnityEngine.UI;
 
 public class BeatController : MonoBehaviour
 {
-
+    public GameObject HpBarDad;
     public GameObject TimeAndScore;
     public GameObject Ghost;
+
 
     public bool Gamestart;
     public Image beatRing;
@@ -37,6 +38,7 @@ public class BeatController : MonoBehaviour
     public Text perfectHitText;
     public Text gooHitText;
     public Text missText;
+    public Text winOrLoseText;
 
 
     public float alphaLevel;
@@ -44,16 +46,45 @@ public class BeatController : MonoBehaviour
     public int scorePerHit = 10;
     public int scorePerPerfectHit = 30;
 
+    [Header("utorial Bump")]
+    public bool tutorialBump;
     public float countDownBump;
-    float HitBump;
+    [SerializeField]
+    [ReadOnly]
+    private float hitBump;
 
     public static float timeCount;
+
+    public float cutSceneTime;
+    public float countDownStart;
+    int CutSceneTimer;
+    int CountDownStart;
+    public Text cutSceneText;
+    public Text countDownStartText;
+    public GameObject cutScene;
+    public GameObject sceneCountStart;
 
     int comboHit;
     int highCombo;
     int perfectHit;
     int goodHit;
     int missHit;
+
+
+    public Text hpdadText;
+    public float curhpDad = 0;
+    public float maxHp;
+
+    public Image hpBar;
+    private float hpBarValue;
+
+
+    public AudioClip[] audioClips = null;
+
+    private void Awake()
+    {
+        tutorialBump = false;
+    }
 
     void Start()
     {
@@ -71,23 +102,29 @@ public class BeatController : MonoBehaviour
         beatTimer = 0;
         defaultColor = circle.color;
 
-        scoreText.text = "Score: 0";
-        HitBump = 0;
+        scoreText.text = ""+ curScore;
+        hitBump = 0;
         highCombo = 0;
         comboHit = 0;
         perfectHit = 0;
         goodHit = 0;
         missHit = 0;
 
+
+        maxHp = 120;
+        curhpDad = maxHp / 2;
+
+        cutSceneTime = 5;
+        countDownStart = 3;
     }
 
     void FadeColor()
     {
-      /*  Color fadeColor = beatRing.color;
-        fadeColor.a = alphaLevel;
-        beatRing.color = fadeColor;
+        /*  Color fadeColor = beatRing.color;
+          fadeColor.a = alphaLevel;
+          beatRing.color = fadeColor;
 
-        alphaLevel = startAlpha + (deltaAlpha * Mathf.Clamp01(beatTimer / beatTime));*/
+          alphaLevel = startAlpha + (deltaAlpha * Mathf.Clamp01(beatTimer / beatTime));*/
         alphaLevel = 0;
         beatRing.color = new Color(beatRing.color.r, beatRing.color.g, beatRing.color.b, alphaLevel);
     }
@@ -106,10 +143,10 @@ public class BeatController : MonoBehaviour
             Gamestart = true;
         }
 
-       if (Gamestart == true)
+        if (Gamestart == true)
         {
 
-             beatTimer += Time.deltaTime;
+            beatTimer += Time.deltaTime;
             /* beatRadius = startExpand + (deltaExpend * Mathf.Clamp01(beatTimer / beatTime));
             beatRing.rectTransform.localScale = new Vector3(beatRadius, beatRadius, beatRadius);*/
             ExpandRing();
@@ -129,38 +166,75 @@ public class BeatController : MonoBehaviour
                 circleRing.color = defaultColor;
             }
 
-
-            if (timeCount >= 10)
-            {
-                Ghost.SetActive(true);
-               // FadeColor();
-                Debug.Log("StartFade");
-            }
-            else
-            {
-                Ghost.SetActive(false);
-                alphaLevel = 1;
-                beatRing.color = new Color(beatRing.color.r, beatRing.color.g, beatRing.color.b, alphaLevel);
-            }
-
-
-            if (countDownBump == HitBump)
-            {
-                TimeAndScore.SetActive(true);               
-            }
-
+            GhostAppear();
             CountHighCombo();
-
-            scoreText.text = "Score: " + curScore;
-            totalScoreText.text = "Score: " + curScore;
-            comboText.text = "Combo x " + highCombo;
-            perfectHitText.text = "Perfect: " + perfectHit;
-            gooHitText.text = "Good: " + goodHit;
-            missText.text = "Miss: " + missHit;
+            TotalScoreBoard();
 
         }
+    }
 
+    public void StartCountDownGamePlay()
+    {
+        sceneCountStart.SetActive(true);
+        StartCoroutine(ICountDownGamePlay());
+        /*
+        countDownStart -= 1 * Time.deltaTime;
+        CountDownStart = Mathf.RoundToInt(countDownStart);
+        countDownStartText.text = "" + CountDownStart;
 
+        if (countDownStart <= 0.0f)
+        {
+            sceneCountStart.SetActive(false);
+            countDownStart = 0;
+            TimeAndScore.SetActive(true);
+            HpDad();
+        }*/
+    }
+
+    IEnumerator ICountDownGamePlay() {
+        WaitForSeconds waitOneSec = new WaitForSeconds(1);
+        for (int i = 3; i >= 0; i--) {
+            countDownStartText.text = "" + i;
+            yield return waitOneSec;
+        }
+        sceneCountStart.SetActive(false);
+        countDownStart = 0;
+        TimeAndScore.SetActive(true);
+        HpBarDad.SetActive(true);
+        HpDad();
+    }
+
+    void GhostAppear()
+    {
+        if (timeCount >= 10)
+        {
+            Ghost.SetActive(true);
+            // FadeColor();
+            Debug.Log("StartFade");
+        }
+        else
+        {
+            Ghost.SetActive(false);
+            alphaLevel = 1;
+            beatRing.color = new Color(beatRing.color.r, beatRing.color.g, beatRing.color.b, alphaLevel);
+        }
+    }
+
+    void HpDad()
+    {
+        
+        curhpDad -= 1 * Time.deltaTime;
+        hpBarValue = curhpDad / maxHp;
+        //hpdadText.text = "Hp:" + curhpDad + "/" + maxHp;
+        hpBar.fillAmount = hpBarValue;
+        if (curhpDad <= 0.0f)
+        {
+            curhpDad = 0;
+        }
+        else if (curhpDad >= 120.0f)
+        {
+            curhpDad = 120;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -169,40 +243,54 @@ public class BeatController : MonoBehaviour
         if (other.gameObject.CompareTag("Hand Checker"))
         {
             Debug.Log("Hit");
-            if (CheckGoodHitBeat())//0-1
-            {
-                Debug.Log("Good Hit");
-                circle.color = goodColor;
-                HitBump++;
-                if (countDownBump <= HitBump)
-                {
-                    curScore += scorePerHit;
-                    goodHit++;
-                    comboHit++;
-                }
-            }
-
             if (CheckPerfectHitBeat())//0-0.5
             {
                 Debug.Log("Perfect Hit");
                 circle.color = goodColor;
-                HitBump++;
-                if (countDownBump <= HitBump)
+                hitBump++;
+                AudioPlayer.PlayAudioClip(audioClips[0]);
+                if (countDownStart <= 0.0f)
                 {
                     curScore += scorePerPerfectHit;
                     perfectHit++;
                     comboHit++;
+                    curhpDad += 2;
                 }
             }
-           
+            else if (CheckGoodHitBeat())//0-1
+            {
+                Debug.Log("Good Hit");
+                circle.color = goodColor;
+                hitBump++;
+                AudioPlayer.PlayAudioClip(audioClips[0]);
+                if (countDownStart <= 0.0f)
+                {
+                    curScore += scorePerHit;
+                    goodHit++;
+                    comboHit++;
+                    curhpDad++;
+                }
+            }
             else
             {
                 Debug.Log("Miss");
                 circle.color = Color.red;
-                missHit++;
-                comboHit = 0;
+                AudioPlayer.PlayAudioClip(audioClips[1]);
+                if (countDownStart <= 0.0f)
+                {
+                    missHit++;
+                    comboHit = 0;
+                    curhpDad -= 1;
+                }
             }
 
+        }
+
+        if (tutorialBump && hitBump >= countDownBump)
+        {
+            tutorialBump = false;
+            SimpleDirectorController.Instance.PlayTrack(1);
+            StartCountDownGamePlay();
         }
     }
 
@@ -215,9 +303,29 @@ public class BeatController : MonoBehaviour
 
     }
 
+    void TotalScoreBoard()
+    {
+        scoreText.text = "" + curScore;
+        totalScoreText.text = "Score: " + curScore;
+        comboText.text = "Combo x " + highCombo;
+        perfectHitText.text = "Perfect: " + perfectHit;
+        gooHitText.text = "Good: " + goodHit;
+        missText.text = "Miss: " + missHit;
+        if (curhpDad >= 60)
+        {
+            winOrLoseText.text = "Save lives";
+        }
+        else if (curhpDad < 60)
+        {
+            winOrLoseText.text = "Rescue Fail";
+        }
+    }
+
     private void OnTriggerExit(Collider other)
     {
         circle.color = defaultColor;
+        AudioPlayer.PlayAudioClip(audioClips[2]);  
+
     }
 
     public bool CheckGoodHitBeat()
@@ -227,6 +335,6 @@ public class BeatController : MonoBehaviour
 
     public bool CheckPerfectHitBeat()
     {
-        return beatRadius > hit - errCorrectionHit/2 && beatRadius < hit + errCorrectionHit/2;
+        return beatRadius > hit - errCorrectionHit / 2 && beatRadius < hit + errCorrectionHit / 2;
     }
 }
