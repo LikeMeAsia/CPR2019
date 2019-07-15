@@ -52,6 +52,7 @@ public class ScenarioControl : MonoBehaviour
 
     void Start()
     {
+       
         shotIndex = 0;
         //playerAnim.SetTrigger("fade in");
     }
@@ -136,6 +137,7 @@ public class ScenarioControl : MonoBehaviour
             pointingCanvas.GetComponent<Animator>().SetBool("disable", true);
             doorCanvas.SetActive(true);
             MoveObjectAtoB(player, player.transform, pos[0], moveSpeed, 3);
+
         }
         else if (doorKnob.doorOpen && !cutsceneCheck.cutsceneIsEnd/*!manual[0] && !manual[1]*/)//เปิดประตู
         {
