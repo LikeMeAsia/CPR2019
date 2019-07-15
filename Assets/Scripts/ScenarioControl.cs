@@ -14,8 +14,6 @@ public class ScenarioControl : MonoBehaviour
     public GameObject doorCanvas;
     public GameObject phoneCanvas;
     public GameObject cprCanvas;
-    public GameObject portal;
-    public GameObject grim;
 
     [Header("Player")]
     public Player playerScript;
@@ -41,7 +39,8 @@ public class ScenarioControl : MonoBehaviour
     public float handpalmTime = 2;
     public float handpalmTimer;
     public bool handpalmComplete;
-
+    [Header(" ")]
+    public SnapHand snapHand;
     public CutsceneEndCheck cutsceneCheck;
     float teleportTimer = 0;
     public float moveTimer = 0;
@@ -131,13 +130,12 @@ public class ScenarioControl : MonoBehaviour
         }
         else if (doorKnob.doorOpen && !cutsceneCheck.cutsceneIsEnd)//เปิดประตู
         {
-            //isMove = false;
             doorCanvas.GetComponent<Animator>().SetBool("disable", true);
             MoveObjectAtoB(player, player.transform, pos[1], moveSpeed, 1);
         }
-        else if (cutsceneCheck.cutsceneIsEnd)
+        else if (cutsceneCheck.cutsceneIsEnd)//เดินไปหาพ่อ
         {
-            //isMove = false;
+            snapHand.lockSnap = false;
             MoveObjectAtoB(player, player.transform, pos[2], moveSpeed, 1);
         }
         /*else if (/*!manual[0] && manual[1])

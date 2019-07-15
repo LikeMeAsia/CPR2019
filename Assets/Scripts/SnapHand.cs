@@ -25,18 +25,11 @@ public class SnapHand : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(DelayStart());
+
     }
 
     void Update()
     {
         
-    }
-
-    IEnumerator DelayStart()
-    {
-        lockSnap = true;
-        yield return new WaitForSeconds(3);
-        lockSnap = false;
     }
 }
