@@ -398,9 +398,66 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void EnableOutline(GameObject button, bool enable)
+    public void EnableOutline(GameObject button, bool enable)
     {
         button.SetActive(enable);
     }
-    
+
+    public void EnableOutlineHandFul()
+    {
+        EnableOutline(l_button01, true);
+        EnableOutline(l_button02, true);
+        EnableOutline(l_side_trigger, true);
+        EnableOutline(l_trigger, true);
+    }
+
+    public void EnableOutlinePointing()
+    {
+        EnableOutline(l_side_trigger, true);
+    }
+
+    public void EnableOutlineByName(string buttonName, bool enable)
+    {
+        if (buttonName == "l_botton1")
+        {
+            EnableOutline(l_button01, enable);
+        }
+        else if (buttonName == "l_botton2")
+        {
+            EnableOutline(l_button02, enable);
+        }
+        else if (buttonName == "l_trigger")
+        {
+            EnableOutline(l_trigger, enable);
+        }
+        else if (buttonName == "l_sideTrigger")
+        {
+            EnableOutline(l_side_trigger, enable);
+        }
+        else if (buttonName == "l_stick")
+        {
+            EnableOutline(l_stick, enable);
+        }
+
+        if (buttonName == "r_botton1")
+        {
+            EnableOutline(r_button01, enable);
+        }
+        else if (buttonName == "r_botton2")
+        {
+            EnableOutline(r_button02, enable);
+        }
+        else if (buttonName == "r_trigger")
+        {
+            EnableOutline(r_trigger, enable);
+        }
+        else if (buttonName == "r_sideTrigger")
+        {
+            EnableOutline(r_side_trigger, enable);
+        }
+        else if (buttonName == "r_stick")
+        {
+            EnableOutline(r_stick, enable);
+        }
+    }
 }

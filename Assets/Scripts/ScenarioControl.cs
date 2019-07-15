@@ -107,6 +107,7 @@ public class ScenarioControl : MonoBehaviour
         if (!handfulComplete)//กำ
         {
             CheckHandFul();
+            playerScript.EnableOutlineHandFul();
             handfulCanvas.SetActive(true);
         }
         else if (handfulComplete  && !handpalmComplete)//แบ
@@ -118,6 +119,7 @@ public class ScenarioControl : MonoBehaviour
         else if (handpalmComplete && !pointingComplete)//ชื้
         {
             CheckPointing();
+            playerScript.EnableOutlineHandFul();
             handpalmCanvas.GetComponent<Animator>().SetBool("disable", true);
             pointingCanvas.SetActive(true);
         }
