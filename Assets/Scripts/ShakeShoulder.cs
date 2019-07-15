@@ -6,7 +6,7 @@ public class ShakeShoulder : MonoBehaviour
 {
 
     public GameObject CircleBump;
-
+    public BeatController beatController;
     int countCheckShake;
 
     public int maxHit;
@@ -18,23 +18,19 @@ public class ShakeShoulder : MonoBehaviour
         CircleBump.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (countCheckShake == maxHit)
-        {
-            CircleBump.SetActive(true);
-            gameObject.SetActive(false);
-        }
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("hand"))
         {
             countCheckShake++;
             Debug.Log("Shake!" + countCheckShake + "/"+ maxHit) ;
-
+            if (countCheckShake == maxHit)
+            {
+                CircleBump.SetActive(true);
+                beatController.tutorialBump = true;
+                gameObject.SetActive(false);
+            }
         }
+
     }
 }

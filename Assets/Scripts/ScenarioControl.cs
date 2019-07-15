@@ -149,11 +149,11 @@ public class ScenarioControl : MonoBehaviour
     //peter test zone
     void RunCutScene1()
     {
-        CutSceneManager.playCs1 = true;
+        SimpleDirectorController.Instance.PlayTrack(0);
     }
     void RunCutScene2()
     {
-        CutSceneManager.playCs2 = true;
+        SimpleDirectorController.Instance.PlayTrack(1);
     }
     void RunCutSceneGoodEnd()
     {
@@ -189,10 +189,10 @@ public class ScenarioControl : MonoBehaviour
 
         if (isMove)
         {
-            
+
             to.position = new Vector3(to.position.x, _object.transform.position.y, to.position.z);
             _object.transform.position = Vector3.Lerp(from.position, to.position, moveSpeed);
-            
+
         }
 
         if (_object.transform.position == to.position)
@@ -200,13 +200,13 @@ public class ScenarioControl : MonoBehaviour
             isMove = false;
         }
 
-        
+
         Debug.Log("move pass");
     }
 
     public void TeleportObjectAtoB(GameObject _object, Transform from, Transform to, float teleportDelay)
     {
-        
+
         if (_object == null)
         {
             _object = GameObject.FindGameObjectWithTag("Player");

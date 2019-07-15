@@ -46,10 +46,15 @@ public class BeatController : MonoBehaviour
     public int scorePerHit = 10;
     public int scorePerPerfectHit = 30;
 
+    [Header("utorial Bump")]
+    public bool tutorialBump;
     public float countDownBump;
-    float HitBump;
+    [SerializeField]
+    [ReadOnly]
+    private float hitBump;
 
     public static float timeCount;
+
     public float cutSceneTime;
     public float countDownStart;
     int CutSceneTimer;
@@ -73,7 +78,13 @@ public class BeatController : MonoBehaviour
     public Image hpBar;
     private float hpBarValue;
 
-    public AudioSource[] AudioClips = null;
+
+    public AudioClip[] audioClips = null;
+
+    private void Awake()
+    {
+        tutorialBump = false;
+    }
 
     void Start()
     {
@@ -91,8 +102,8 @@ public class BeatController : MonoBehaviour
         beatTimer = 0;
         defaultColor = circle.color;
 
-        scoreText.text = "Score: 0";
-        HitBump = 0;
+        scoreText.text = ""+ curScore;
+        hitBump = 0;
         highCombo = 0;
         comboHit = 0;
         perfectHit = 0;
@@ -105,7 +116,6 @@ public class BeatController : MonoBehaviour
 
         cutSceneTime = 5;
         countDownStart = 3;
-
     }
 
     void FadeColor()
@@ -156,40 +166,42 @@ public class BeatController : MonoBehaviour
                 circleRing.color = defaultColor;
             }
 
-
-
-
-            if (countDownBump <= HitBump)
-            {
-                cutScene.SetActive(true);
-                cutSceneTime -= 1 * Time.deltaTime;
-                CutSceneTimer = Mathf.RoundToInt(cutSceneTime);
-                cutSceneText.text = "" + CutSceneTimer;
-
-                if (cutSceneTime <= 0.0f)
-                {
-                    cutScene.SetActive(false);
-                    cutSceneTime = 0;
-                    sceneCountStart.SetActive(true);
-                    countDownStart -= 1 * Time.deltaTime;
-                    CountDownStart = Mathf.RoundToInt(countDownStart);
-                    countDownStartText.text = "" + CountDownStart;
-
-                    if (countDownStart <= 0.0f)
-                    {
-                        sceneCountStart.SetActive(false);
-                        countDownStart = 0;
-                        TimeAndScore.SetActive(true);
-                        HpDad();
-                    }
-                }
-            }
-
             GhostAppear();
             CountHighCombo();
             TotalScoreBoard();
 
         }
+    }
+
+    public void StartCountDownGamePlay()
+    {
+        sceneCountStart.SetActive(true);
+        StartCoroutine(ICountDownGamePlay());
+        /*
+        countDownStart -= 1 * Time.deltaTime;
+        CountDownStart = Mathf.RoundToInt(countDownStart);
+        countDownStartText.text = "" + CountDownStart;
+
+        if (countDownStart <= 0.0f)
+        {
+            sceneCountStart.SetActive(false);
+            countDownStart = 0;
+            TimeAndScore.SetActive(true);
+            HpDad();
+        }*/
+    }
+
+    IEnumerator ICountDownGamePlay() {
+        WaitForSeconds waitOneSec = new WaitForSeconds(1);
+        for (int i = 3; i >= 0; i--) {
+            countDownStartText.text = "" + i;
+            yield return waitOneSec;
+        }
+        sceneCountStart.SetActive(false);
+        countDownStart = 0;
+        TimeAndScore.SetActive(true);
+        HpBarDad.SetActive(true);
+        HpDad();
     }
 
     void GhostAppear()
@@ -210,15 +222,16 @@ public class BeatController : MonoBehaviour
 
     void HpDad()
     {
+        
         curhpDad -= 1 * Time.deltaTime;
         hpBarValue = curhpDad / maxHp;
-        hpdadText.text = "Hp:" + curhpDad + "/" + maxHp;
+        //hpdadText.text = "Hp:" + curhpDad + "/" + maxHp;
         hpBar.fillAmount = hpBarValue;
         if (curhpDad <= 0.0f)
         {
             curhpDad = 0;
         }
-        if (curhpDad >= 120.0f)
+        else if (curhpDad >= 120.0f)
         {
             curhpDad = 120;
         }
@@ -234,8 +247,8 @@ public class BeatController : MonoBehaviour
             {
                 Debug.Log("Perfect Hit");
                 circle.color = goodColor;
-                HitBump++;
-                AudioClips[0].Play();
+                hitBump++;
+                AudioPlayer.PlayAudioClip(audioClips[0]);
                 if (countDownStart <= 0.0f)
                 {
                     curScore += scorePerPerfectHit;
@@ -248,8 +261,8 @@ public class BeatController : MonoBehaviour
             {
                 Debug.Log("Good Hit");
                 circle.color = goodColor;
-                HitBump++;
-                AudioClips[0].Play();
+                hitBump++;
+                AudioPlayer.PlayAudioClip(audioClips[0]);
                 if (countDownStart <= 0.0f)
                 {
                     curScore += scorePerHit;
@@ -262,7 +275,7 @@ public class BeatController : MonoBehaviour
             {
                 Debug.Log("Miss");
                 circle.color = Color.red;
-                AudioClips[1].Play();
+                AudioPlayer.PlayAudioClip(audioClips[1]);
                 if (countDownStart <= 0.0f)
                 {
                     missHit++;
@@ -271,6 +284,13 @@ public class BeatController : MonoBehaviour
                 }
             }
 
+        }
+
+        if (tutorialBump && hitBump >= countDownBump)
+        {
+            tutorialBump = false;
+            SimpleDirectorController.Instance.PlayTrack(1);
+            StartCountDownGamePlay();
         }
     }
 
@@ -285,7 +305,7 @@ public class BeatController : MonoBehaviour
 
     void TotalScoreBoard()
     {
-        scoreText.text = "Score: " + curScore;
+        scoreText.text = "" + curScore;
         totalScoreText.text = "Score: " + curScore;
         comboText.text = "Combo x " + highCombo;
         perfectHitText.text = "Perfect: " + perfectHit;
@@ -295,7 +315,7 @@ public class BeatController : MonoBehaviour
         {
             winOrLoseText.text = "Save lives";
         }
-        if (curhpDad < 60)
+        else if (curhpDad < 60)
         {
             winOrLoseText.text = "Rescue Fail";
         }
@@ -304,7 +324,8 @@ public class BeatController : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         circle.color = defaultColor;
-        AudioClips[2].Play();
+        AudioPlayer.PlayAudioClip(audioClips[2]);  
+
     }
 
     public bool CheckGoodHitBeat()

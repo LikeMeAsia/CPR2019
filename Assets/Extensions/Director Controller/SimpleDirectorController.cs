@@ -45,43 +45,80 @@ public class SimpleDirectorController : MonoBehaviour {
 #if !UNITY_EDITOR
         trackId = 0;
 #endif
+        interruptable = true;
         if (playOnAwake) {
             PlayTrack(trackId);
         }
     }
 
+    //Test Playing Custom Timeline manually by keyboard input (1 2 3 and 4)
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.Alpha1))
+        {
+            trackId = 0;
+            PlayTrack(trackId);
+            Debug.Log("Test manual playing cutscene 1");
+        }
+        if (Input.GetKey(KeyCode.Alpha2))
+        {
+            trackId = 1;
+            PlayTrack(trackId);
+            Debug.Log("Test manual playing cutscene 2");
+        }
+        if (Input.GetKey(KeyCode.Alpha3))
+        {
+            Debug.Log("Test manual playing cutscene GoodEnd");
+        }
+        if (Input.GetKey(KeyCode.Alpha4))
+        {
+            Debug.Log("Test manual playing cutscene BadEnd");
+        }
+    }
     public void ReplayTrack()
     {
         PlayTrack(trackId);
     }
 
 	public void PlayTrack(int iTrack){
-		if (!interruptable && (iTrack < 0 || iTrack >= tracks.Length))
-        {
+        if (director == null) {
+            Debug.Log("SimpleDirectorController: Director not found");
             return;
         }
-        trackId = iTrack;
-        StartCoroutine (IPlayTrack());
+        if (iTrack < 0 || iTrack >= tracks.Length)
+        {
+            Debug.Log("SimpleDirectorController: Track ID not in range ["+ iTrack + "]");
+            return;
+        }
+        if (tracks[iTrack] == null)
+        {
+            Debug.Log("SimpleDirectorController: No track in this ID");
+            return;
+        }
+        Debug.Log("SimpleDirectorController: PlayTrack [" + tracks[iTrack].EventPlayableAsset.name + "]");
+        StartCoroutine (IPlayTrack(iTrack));
 	}
 
 	public void PlayNextTrack(){
-		if (!interruptable)
-			return;
         if (trackId+1 >= tracks.Length)
         {
             return;
         }
-        trackId++;
-        StartCoroutine (IPlayTrack());
+        StartCoroutine (IPlayTrack(trackId + 1));
 	}
 
 
-    IEnumerator IPlayTrack(){
+    IEnumerator IPlayTrack(int nextTrack){
+        if (!interruptable) {
+            yield return new WaitUntil(() => interruptable);
+        }
 		interruptable = false;
+        trackId = nextTrack;
         if (tracks[trackId].BeforePlayEvent != null){
 			tracks [trackId].BeforePlayEvent.Invoke ();
 		}
-        if (director.playableAsset!=null && trackId > 1 && tracks[trackId-1].TransactionPlayableAsset == director.playableAsset) {
+        if (director.playableAsset != null && trackId > 1 && tracks[trackId - 1].TransactionPlayableAsset == director.playableAsset)
+        {
             director.extrapolationMode = DirectorWrapMode.Hold;
             yield return new WaitUntil(() => director.time >= director.playableAsset.duration);
         }
