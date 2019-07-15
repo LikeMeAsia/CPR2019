@@ -68,10 +68,14 @@ public class SimpleDirectorController : MonoBehaviour {
         }
         if (Input.GetKey(KeyCode.Alpha3))
         {
+            trackId = 2;
+            PlayTrack(trackId);
             Debug.Log("Test manual playing cutscene GoodEnd");
         }
         if (Input.GetKey(KeyCode.Alpha4))
         {
+            trackId = 3;
+            PlayTrack(trackId);
             Debug.Log("Test manual playing cutscene BadEnd");
         }
     }
