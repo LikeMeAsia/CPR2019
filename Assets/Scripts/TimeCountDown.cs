@@ -48,15 +48,14 @@ public class TimeCountDown : MonoBehaviour
             if (curTime <= RedTime)
             {
                 textCountDown.color = Color.red;
-                cooldown.color = Color.red;
             }
         }
-        /*
+        
         CountTimeToFade += 1 * Time.deltaTime;
 
         if (CountTimeToFade > 12)
         {
             CountTimeToFade = 0;
-        }*/
+        }
     }
 }

@@ -124,17 +124,20 @@ public class ScenarioControl : MonoBehaviour
         }
         else if (pointingComplete && !doorKnob.doorOpen)//เดินไปประตู
         {
+            playerScript.showController = false;
             pointingCanvas.GetComponent<Animator>().SetBool("disable", true);
             doorCanvas.SetActive(true);
             MoveObjectAtoB(player, player.transform, pos[0], moveSpeed, 3);
         }
         else if (doorKnob.doorOpen && !cutsceneCheck.cutsceneIsEnd)//เปิดประตู
         {
+            //isMove = false;
             doorCanvas.GetComponent<Animator>().SetBool("disable", true);
             MoveObjectAtoB(player, player.transform, pos[1], moveSpeed, 1);
         }
         else if (cutsceneCheck.cutsceneIsEnd)
         {
+            //isMove = false;
             MoveObjectAtoB(player, player.transform, pos[2], moveSpeed, 1);
         }
         /*else if (/*!manual[0] && manual[1])
