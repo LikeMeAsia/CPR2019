@@ -135,9 +135,10 @@ public class ScenarioControl : MonoBehaviour
             doorCanvas.GetComponent<Animator>().SetBool("disable", true);
             MoveObjectAtoB(player, player.transform, pos[1], moveSpeed, 1);
         }
-        else if (cutsceneCheck.cutsceneIsEnd)
+        else if (cutsceneCheck.cutsceneIsEnd)//เดินไปหาพ่อ
         {
             //isMove = false;
+            cprCanvas.SetActive(true);
             MoveObjectAtoB(player, player.transform, pos[2], moveSpeed, 1);
         }
         /*else if (/*!manual[0] && manual[1])
@@ -202,9 +203,6 @@ public class ScenarioControl : MonoBehaviour
         {
             isMove = false;
         }
-
-
-        Debug.Log("move pass");
     }
 
     public void TeleportObjectAtoB(GameObject _object, Transform from, Transform to, float teleportDelay)
@@ -229,7 +227,6 @@ public class ScenarioControl : MonoBehaviour
             to.position = new Vector3(to.position.x, _object.transform.position.y, to.position.z);
             _object.transform.position = to.transform.position;
         }
-        Debug.Log("teleport pass");
     }
 
     private void CheckPointing()

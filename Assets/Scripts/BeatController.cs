@@ -280,7 +280,7 @@ public class BeatController : MonoBehaviour
                 {
                     missHit++;
                     comboHit = 0;
-                    //curhpDad -= 1;
+                    curhpDad -= 1;
                 }
             }
 
