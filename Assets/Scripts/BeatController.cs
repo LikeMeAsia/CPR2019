@@ -9,6 +9,7 @@ public class BeatController : MonoBehaviour
     public GameObject TimeAndScore;
     public GameObject Ghost;
 
+    public GameObject beatCanvas;
 
     public bool Gamestart;
     public Image beatRing;
@@ -46,7 +47,7 @@ public class BeatController : MonoBehaviour
     public int scorePerHit = 10;
     public int scorePerPerfectHit = 30;
 
-    [Header("utorial Bump")]
+    [Header("Tutorial Bump")]
     public bool tutorialBump;
     public float countDownBump;
     [SerializeField]
@@ -70,7 +71,7 @@ public class BeatController : MonoBehaviour
     int goodHit;
     int missHit;
 
-
+    public bool hpDadGamePlay;
     public Text hpdadText;
     public float curhpDad = 0;
     public float maxHp;
@@ -78,7 +79,7 @@ public class BeatController : MonoBehaviour
     public Image hpBar;
     private float hpBarValue;
 
-
+    public AudioSource songLight;
     public AudioClip[] audioClips = null;
 
     private void Awake()
@@ -110,12 +111,15 @@ public class BeatController : MonoBehaviour
         goodHit = 0;
         missHit = 0;
 
-
+        hpDadGamePlay = false;
         maxHp = 120;
         curhpDad = maxHp / 2;
 
         cutSceneTime = 5;
         countDownStart = 3;
+
+        beatCanvas.SetActive(false);
+        songLight.enabled = false;
     }
 
     void FadeColor()
@@ -166,6 +170,11 @@ public class BeatController : MonoBehaviour
                 circleRing.color = defaultColor;
             }
 
+            if (hpDadGamePlay)
+            {
+                HpDad();
+            }
+
             GhostAppear();
             CountHighCombo();
             TotalScoreBoard();
@@ -177,18 +186,6 @@ public class BeatController : MonoBehaviour
     {
         sceneCountStart.SetActive(true);
         StartCoroutine(ICountDownGamePlay());
-        /*
-        countDownStart -= 1 * Time.deltaTime;
-        CountDownStart = Mathf.RoundToInt(countDownStart);
-        countDownStartText.text = "" + CountDownStart;
-
-        if (countDownStart <= 0.0f)
-        {
-            sceneCountStart.SetActive(false);
-            countDownStart = 0;
-            TimeAndScore.SetActive(true);
-            HpDad();
-        }*/
     }
 
     IEnumerator ICountDownGamePlay() {
@@ -200,8 +197,11 @@ public class BeatController : MonoBehaviour
         sceneCountStart.SetActive(false);
         countDownStart = 0;
         TimeAndScore.SetActive(true);
+        hpDadGamePlay = true;
         HpBarDad.SetActive(true);
-        HpDad();
+        songLight.enabled = true;
+        songLight.Play();
+        // HpDad();
     }
 
     void GhostAppear()
@@ -248,7 +248,7 @@ public class BeatController : MonoBehaviour
                 Debug.Log("Perfect Hit");
                 circle.color = goodColor;
                 hitBump++;
-                AudioPlayer.PlayAudioClip(audioClips[0]);
+                AudioPlayer.PlayAudioClip(audioClips[0], true);
                 if (countDownStart <= 0.0f)
                 {
                     curScore += scorePerPerfectHit;
@@ -262,7 +262,7 @@ public class BeatController : MonoBehaviour
                 Debug.Log("Good Hit");
                 circle.color = goodColor;
                 hitBump++;
-                AudioPlayer.PlayAudioClip(audioClips[0]);
+                AudioPlayer.PlayAudioClip(audioClips[0], true);
                 if (countDownStart <= 0.0f)
                 {
                     curScore += scorePerHit;
@@ -275,12 +275,12 @@ public class BeatController : MonoBehaviour
             {
                 Debug.Log("Miss");
                 circle.color = Color.red;
-                AudioPlayer.PlayAudioClip(audioClips[1]);
+                AudioPlayer.PlayAudioClip(audioClips[1], true);
                 if (countDownStart <= 0.0f)
                 {
                     missHit++;
                     comboHit = 0;
-                    curhpDad -= 1;
+                    //curhpDad -= 1;
                 }
             }
 
@@ -289,9 +289,15 @@ public class BeatController : MonoBehaviour
         if (tutorialBump && hitBump >= countDownBump)
         {
             tutorialBump = false;
+            
             SimpleDirectorController.Instance.PlayTrack(1);
-            StartCountDownGamePlay();
+            //StartCountDownGamePlay();
         }
+    }
+
+    public void EnableBeatTutorial() {
+        tutorialBump = true;
+        beatCanvas.SetActive(true);
     }
 
     void CountHighCombo()
@@ -324,7 +330,7 @@ public class BeatController : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         circle.color = defaultColor;
-        AudioPlayer.PlayAudioClip(audioClips[2]);  
+        AudioPlayer.PlayAudioClip(audioClips[2], true);  
 
     }
 

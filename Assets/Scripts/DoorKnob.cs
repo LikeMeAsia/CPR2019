@@ -18,7 +18,7 @@ public class DoorKnob : MonoBehaviour
     {
         if (!doorOpen && other.CompareTag("hand") && (player.l_ful || player.r_ful))
         {
-            doorAnim.SetBool("open", true);
+            doorAnim.SetTrigger("open");
             doorOpen = true;
             SimpleDirectorController.Instance.PlayTrack(0);
         }

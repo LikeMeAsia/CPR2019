@@ -111,8 +111,8 @@ public class OvrAvatar : MonoBehaviour
     private ONSPAudioSource spatializedSource;
 
     int renderPartCount = 0;
-    bool showLeftController;
-    bool showRightController;
+    public bool showLeftController;
+    public bool showRightController;
     List<float[]> voiceUpdates = new List<float[]>();
 
 #if UNITY_ANDROID && UNITY_5_5_OR_NEWER
@@ -710,6 +710,10 @@ public class OvrAvatar : MonoBehaviour
         if (sdkAvatar != IntPtr.Zero)
         {
             CAPI.ovrAvatar_SetLeftControllerVisibility(sdkAvatar, show);
+            Debug.Log("ShowLeftController: ovrAvatar_SetLeftControllerVisibility");
+        }
+        else {
+            Debug.Log("ShowLeftController: NOT ovrAvatar_SetLeftControllerVisibility");
         }
         showLeftController = show;
     }
@@ -719,6 +723,11 @@ public class OvrAvatar : MonoBehaviour
         if (sdkAvatar != IntPtr.Zero)
         {
             CAPI.ovrAvatar_SetRightControllerVisibility(sdkAvatar, show);
+            Debug.Log("ShowRightController: ovrAvatar_SetLeftControllerVisibility");
+        }
+        else {
+
+            Debug.Log("ShowRightController: NOT ovrAvatar_SetLeftControllerVisibility");
         }
         showRightController = show;
     }

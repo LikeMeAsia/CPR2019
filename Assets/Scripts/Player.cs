@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public class Player_Script_Temp : MonoBehaviour
+public class Player : MonoBehaviour
 {
     public OvrAvatar m_OvrAvatar;
 
@@ -31,12 +31,14 @@ public class Player_Script_Temp : MonoBehaviour
     public GameObject cprHand;
 
     [Header("Left Controller")]
+    public GameObject l_controller_mesh;
     public GameObject l_button01;
     public GameObject l_button02;
     public GameObject l_side_trigger;
     public GameObject l_trigger;
     public GameObject l_stick;
     [Header("Right Controller")]
+    public GameObject r_controller_mesh;
     public GameObject r_button01;
     public GameObject r_button02;
     public GameObject r_side_trigger;
@@ -58,6 +60,7 @@ public class Player_Script_Temp : MonoBehaviour
     public bool r_handIsUnder;
     [Header(" ")]
     public bool showController;
+    private bool curController;
 
     // Check initial all required parameters
     public bool ready = false;
@@ -71,14 +74,27 @@ public class Player_Script_Temp : MonoBehaviour
         yield return waitInst_LHand;
         l_hand = GameObject.Find("hand_left_renderPart_0").GetComponent<Transform>();
 
-
         // Wait instantiate Right Hand
         WaitWhile waitInst_RHand = new WaitWhile(() => { return GameObject.Find("hand_right_renderPart_0") == null; });
         yield return waitInst_RHand;
         r_hand = GameObject.Find("hand_right_renderPart_0").GetComponent<Transform>();
 
-        l_hand.gameObject.layer = LayerMask.NameToLayer("Heart");
+        WaitWhile waitInst_LController = new WaitWhile(() => { return GameObject.Find("controller_left") == null; });
+        yield return waitInst_LHand;
+        l_controller_mesh = GameObject.Find("controller_left");
+
+        WaitWhile waitInst_RController = new WaitWhile(() => { return GameObject.Find("controller_right") == null; });
+        yield return waitInst_LHand;
+        r_controller_mesh = GameObject.Find("controller_right");
+
+        l_hand.gameObject.ApplyRecursivelyOnDescendants(child => child.layer = LayerMask.NameToLayer("OnTop"));
+        r_hand.gameObject.ApplyRecursivelyOnDescendants(child => child.layer = LayerMask.NameToLayer("OnTop"));
+        l_controller_mesh.gameObject.ApplyRecursivelyOnDescendants(child => child.layer = LayerMask.NameToLayer("OnTop"));
+        r_controller_mesh.gameObject.ApplyRecursivelyOnDescendants(child => child.layer = LayerMask.NameToLayer("OnTop"));
+        /*l_hand.gameObject.layer = LayerMask.NameToLayer("Heart");
         r_hand.gameObject.layer = LayerMask.NameToLayer("Heart");
+        l_controller_mesh.layer = LayerMask.NameToLayer("Heart");
+        r_controller_mesh.layer = LayerMask.NameToLayer("Heart");*/
 
         #region Controller Unuse;
         // Setup Touch Controllers
@@ -184,7 +200,10 @@ public class Player_Script_Temp : MonoBehaviour
         r_side_trigger.SetActive(false);
         r_trigger.SetActive(false);
         r_stick.SetActive(false);
-    ready = true;
+
+        curController = m_OvrAvatar.StartWithControllers;
+        showController = curController;
+        ready = true;
     }
 
     void Update()
@@ -280,18 +299,23 @@ public class Player_Script_Temp : MonoBehaviour
          */
         #endregion
         if (!ready) return;
+        if (showController != curController) {
+            m_OvrAvatar.ShowControllers(showController);
+            curController = showController;
+        }
+
         UpdateCapTouchStates();
         CheckUnderController();
         SnapHandTogether();
         #region Debug Outline
         EnableOutline(l_button01, l_button01_outline);
-        EnableOutline(l_button02, l_button01_outline);
+        EnableOutline(l_button02, l_button02_outline);
         EnableOutline(l_stick, l_stick_outline);
         EnableOutline(l_trigger, l_trigger_outline);
         EnableOutline(l_side_trigger, l_side_trigger_outline);
 
         EnableOutline(r_button01, r_button01_outline);
-        EnableOutline(r_button02, r_button01_outline);
+        EnableOutline(r_button02, r_button02_outline);
         EnableOutline(r_stick, r_stick_outline);
         EnableOutline(r_trigger, r_trigger_outline);
         EnableOutline(r_side_trigger, r_side_trigger_outline);
@@ -350,7 +374,7 @@ public class Player_Script_Temp : MonoBehaviour
     {
         centerPoint = (l_hand.position + r_hand.position) / 2;
 
-        if (snapHand.snaping && l_handIsUnder && l_palm && r_ful)
+        if (snapHand.snaping && l_handIsUnder /*&& l_palm*/ && r_ful)
         {
             l_hand.gameObject.SetActive(false);
             r_hand.gameObject.SetActive(false);
@@ -358,7 +382,7 @@ public class Player_Script_Temp : MonoBehaviour
             cprHand.transform.position = centerPoint;
             cprHand.transform.rotation = Quaternion.identity;
         }
-        else if (snapHand.snaping && r_handIsUnder && r_palm && l_ful)
+        else if (snapHand.snaping && r_handIsUnder /*&& r_palm*/ && l_ful)
         {
             l_hand.gameObject.SetActive(false);
             r_hand.gameObject.SetActive(false);
@@ -378,41 +402,5 @@ public class Player_Script_Temp : MonoBehaviour
     {
         button.SetActive(enable);
     }
-
-#if UNITY_EDITOR
-    [CustomPropertyDrawer(typeof(Player))]
-    [ExecuteInEditMode]
-    public class PlayerPropertyDrawer : Editor
-    {
-        private bool trackShowController;
-        private Player player;
-        public void OnEnable()
-        {
-            Player player = (Player)target;
-            trackShowController = player.showController;
-        }
-        public override void OnInspectorGUI()
-        {
-            // Update the serializedProperty - always do this in the beginning of OnInspectorGUI.
-            serializedObject.Update();
-            EditorGUI.BeginChangeCheck();
-            DrawDefaultInspector();
-            if (player == null) {
-                Player player = (Player)target;
-            }
-            else {
-                if (player.showController != trackShowController)
-                {
-                    player.m_OvrAvatar.ShowControllers(player.showController);
-                    player.showController = trackShowController;
-                }
-            }
-            // Apply changes to the serializedProperty - always do this in the end of OnInspectorGUI.
-            if (EditorGUI.EndChangeCheck())
-            {
-                serializedObject.ApplyModifiedProperties();
-            }
-        }
-    }
-#endif
+    
 }

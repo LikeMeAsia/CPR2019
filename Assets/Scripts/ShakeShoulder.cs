@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class ShakeShoulder : MonoBehaviour
 {
-
-    public GameObject CircleBump;
     public BeatController beatController;
     int countCheckShake;
 
@@ -15,7 +13,6 @@ public class ShakeShoulder : MonoBehaviour
     void Start()
     {
         countCheckShake = 0;
-        CircleBump.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -26,8 +23,7 @@ public class ShakeShoulder : MonoBehaviour
             Debug.Log("Shake!" + countCheckShake + "/"+ maxHit) ;
             if (countCheckShake == maxHit)
             {
-                CircleBump.SetActive(true);
-                beatController.tutorialBump = true;
+                beatController.EnableBeatTutorial();
                 gameObject.SetActive(false);
             }
         }
