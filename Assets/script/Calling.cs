@@ -1,106 +1,137 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class Calling : MonoBehaviour
 {
 
     public GameObject aphone;
+    public GameObject phone;
     public GameObject Black_screen;
     public GameObject calling_screen;
     public AudioSource Phone_speaker;
+    public AudioSource Put_Phone_Call_button;
     public GameObject Phone_Activate_Icon;
+    public GameObject Put_calling_button;
+    public GameObject Lay_Phone_warning;
 
     public bool Phone_Calling;
     public bool Phone_Activate;
+    public bool Icon_show;
+
 
     void Start()
     {
-        Phone_Calling = false;
-        Phone_Activate = false;
-        Phone_speaker.Stop();
+        Intilize();
+       
     }
 
    
     void Update()
     {
-        //Call_Check();
-        Phone_Activate_Function();
-        
-        if(Phone_Activate==true)
+
+        if(Phone_Calling==false)
         {
-            Debug.Log(phone_active_check());
-            Check();
-            
+            Lay_Phone_warning.SetActive(false);
         }
-        
-        //Check();
-        //Calling_Function();
+        Phone_Activate_Function();
+        Activate_check();
+        Icon_check();
+        Call_Check();
+        Debug.Log(Phone_Calling);
+
 
     }
 
-    public bool phone_active_check()
+    public void Intilize()
+    {
+        Phone_Calling = false;
+        Phone_Activate = false;
+        Icon_show = true;
+        Put_calling_button.SetActive(false);
+       
+        Phone_speaker.Stop();
+        Put_Phone_Call_button.Stop();
+       
+    }
+
+   /* public bool phone_active_check()
     {
         return Phone_Calling;
-    }
-
-   /* public void Calling_Function()
-    {
-        if (Phone_Calling == true)
-        {
-            Phone_speaker.Play();
-            //Debug.Log("conversation Go");
-            Phone_Calling = false;
-        }
-        else
-            Phone_speaker.Stop();
-            //Debug.Log("conversation Stop");
-    }*/
-
-
-
-    /*public void Call_Check()
-    {
-        if (Input.anyKey)
-        {
-            Phone_Calling = true;
-            Debug.Log("Call_Check is working and Phone call is true");
-        }
     }*/
 
    private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.CompareTag("Hand"))
         {
-            Debug.Log("put button");
             Phone_Calling = true;
         }
 
     }
 
-
-    public void Check()
+    public void Call_Check()// Phone_cl is Phone_Calling
     {
         if(Phone_Calling == true)
         {
+            Put_Phone_Call_button.Play();
             Phone_speaker.Play();
-            Phone_Calling = false;
+            Put_calling_button.SetActive(false);
+           
+            Icon_show = false;
+            Phone_Calling =false;
+        
         }
+       
     }
 
     public void Phone_Activate_Function()
     {
-        if(aphone.transform.position.y>1)
+        if(Input.GetKeyDown(KeyCode.G))
         {
-
-            //Debug.Log("Phone_Activate_Function is Working");
+            phone.transform.Translate(0, 1, 0);
+            aphone.transform.Rotate(90, 0, 0);
             Phone_Activate = true;
+        }
+
+       
+    }
+
+    public void Activate_check()
+    {
+        if(Phone_Activate == true)
+        {
             Black_screen.SetActive(false);
             Phone_Activate_Icon.SetActive(false);
             calling_screen.SetActive(true);
+
+        }
+        
+    }
+
+    public void Icon_check()
+    {
+        if(Phone_Activate == true && Icon_show==true)
+        {
+            Put_calling_button.SetActive(true);
+        }
+        
+        
+    }
+
+    public void Laydown_phone_Function()
+    {
+
+
+
+
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if(other.gameObject.CompareTag("Phone_area"))
+        {
+            Lay_Phone_warning.SetActive(false);
         }
     }
 
-   
 
 }
