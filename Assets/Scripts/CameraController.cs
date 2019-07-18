@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-
-    public Camera[] cameraPlayer;
+    public Camera cameraPlayer;
+    public Transform[] cameraPos;
    
    // public Transform[] views;
-    public GameObject Shoulder;
+   // public GameObject Shoulder;
     
     Transform currenView;
     int x;
@@ -21,10 +21,10 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
-        cameraPlayer[0].enabled = true;
-        cameraPlayer[1].enabled = false;
-        cameraPlayer[2].enabled = false;
         x = 1;
+        cameraPlayer.transform.SetParent(cameraPos[x-1]);
+        cameraPlayer.transform.localPosition = Vector3.zero;
+        cameraPlayer.transform.localRotation = Quaternion.identity;
     }
     void Update()
     {
@@ -34,19 +34,16 @@ public class CameraController : MonoBehaviour
 
          //   currenView = views[0];
             x = 2;
-            cameraPlayer[1].enabled = true;
-            cameraPlayer[0].enabled = false;
-            cameraPlayer[2].enabled = false;
-
-
-
+            cameraPlayer.transform.SetParent(cameraPos[x - 1]);
+            cameraPlayer.transform.localPosition = Vector3.zero;
+            cameraPlayer.transform.localRotation = Quaternion.identity;
         }
         else if ( x == 2 && GamestartCheck.Gamestart)
         {
-            cameraPlayer[0].enabled = false;
-            cameraPlayer[1].enabled = false;
-            cameraPlayer[2].enabled = true;
-            // currenView = views[1];
+            x = 3;
+            cameraPlayer.transform.SetParent(cameraPos[x - 1]);
+            cameraPlayer.transform.localPosition = Vector3.zero;
+            cameraPlayer.transform.localRotation = Quaternion.identity;
         }
 
         
