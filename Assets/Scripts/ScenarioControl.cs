@@ -5,6 +5,14 @@ using UnityEngine.UI;
 
 public class ScenarioControl : MonoBehaviour
 {
+    private static ScenarioControl instance;
+    public static ScenarioControl Instance { get { return instance; } }
+
+    public void Awake()
+    {
+        instance = this;
+    }
+
     #region Variable
     [Header("Game Object")]
     //[SerializeField] private int shotIndex;
@@ -101,10 +109,10 @@ public class ScenarioControl : MonoBehaviour
         //manual[0] = OVRInput.Get(OVRInput.Button.One) && OVRInput.Get(OVRInput.Button.Two);
         //manual[1] = OVRInput.Get(OVRInput.Button.Three) && OVRInput.Get(OVRInput.Button.Four);
 
-       if (phone.GetComponent<Phone>().phoneIsPickedUp)
+       /*if (phone.GetComponent<Phone>().phoneIsPickedUp)
         {
             SnapObjectToHand(phone, phone.GetComponent<Phone>().hand);
-        }
+        }*/
 
         if (!handfulComplete)//กำ
         {
@@ -142,12 +150,12 @@ public class ScenarioControl : MonoBehaviour
         {
             //isMove = false;
             //cprCanvas.SetActive(true);
-            snapHand.lockSnap = false;
+            //snapHand.lockSnap = false;
             MoveObjectAtoB(player, player.transform, pos[2], moveSpeed, 1);
         }
-        /*else if (/*!manual[0] && manual[1])
+       /* else if ()
         {
-            //manual[1] = false;
+            snapHand.lockSnap = false;
             cprCanvas.SetActive(true);
         }*/
 

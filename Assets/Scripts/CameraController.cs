@@ -21,33 +21,25 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
-        x = 1;
-        cameraPlayer.transform.SetParent(cameraPos[x-1]);
-        cameraPlayer.transform.localPosition = Vector3.zero;
-        cameraPlayer.transform.localRotation = Quaternion.identity;
+        x = 0;
     }
     void Update()
     {
 
-        if (x == 1 && cutsceneCheck.cutsceneIsEnd)
+        if (x == 0 && cutsceneCheck.cutsceneIsEnd)
         {
 
          //   currenView = views[0];
-            x = 2;
-            cameraPlayer.transform.SetParent(cameraPos[x - 1]);
-            cameraPlayer.transform.localPosition = Vector3.zero;
-            cameraPlayer.transform.localRotation = Quaternion.identity;
+            x = 1;
         }
-        else if ( x == 2 && GamestartCheck.Gamestart)
+        else if ( x == 1 && GamestartCheck.Gamestart)
         {
-            x = 3;
-            cameraPlayer.transform.SetParent(cameraPos[x - 1]);
-            cameraPlayer.transform.localPosition = Vector3.zero;
-            cameraPlayer.transform.localRotation = Quaternion.identity;
+            x = 2;
         }
 
-        
-     }
+        cameraPlayer.transform.position = cameraPos[x].transform.position;
+        cameraPlayer.transform.rotation = cameraPos[x].transform.rotation;
+    }
 
      /* void LateUpdate()
      {

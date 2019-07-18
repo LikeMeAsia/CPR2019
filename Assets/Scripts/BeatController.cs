@@ -103,7 +103,7 @@ public class BeatController : MonoBehaviour
         beatTimer = 0;
         defaultColor = circle.color;
 
-        scoreText.text = ""+ curScore;
+        //scoreText.text = ""+ curScore;
         hitBump = 0;
         highCombo = 0;
         comboHit = 0;
@@ -311,7 +311,7 @@ public class BeatController : MonoBehaviour
 
     void TotalScoreBoard()
     {
-        scoreText.text = "" + curScore;
+        //scoreText.text = "" + curScore;
         totalScoreText.text = "Score: " + curScore;
         comboText.text = "Combo x " + highCombo;
         perfectHitText.text = "Perfect: " + perfectHit;

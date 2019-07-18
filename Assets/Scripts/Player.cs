@@ -7,12 +7,19 @@ using UnityEditor;
 
 public class Player : MonoBehaviour
 {
+    private static Player instance;
+    public static Player Instance { get { return instance; } }
+
+    public void Awake() {
+        instance = this;
+    }
+
     public OvrAvatar m_OvrAvatar;
 
-    /*[Header(" Player")]
+    [Header(" Player")]
     public float playerHeight;
     public GameObject m_OvrCamera;
-    public bool playerSit;*/
+    public bool playerSit;
 
     [Header("Left hand")]
     public Transform l_hand;
@@ -72,7 +79,6 @@ public class Player : MonoBehaviour
 
     IEnumerator Start()
     {
-        
         ready = false;
         #region FindHand
         // Wait instantiate Left Hand
@@ -214,7 +220,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        /*if (playerHeight <=0)
+        if (playerHeight <=0)
         {
             playerHeight = m_OvrCamera.transform.position.y;
         }
@@ -222,7 +228,7 @@ public class Player : MonoBehaviour
         if (m_OvrCamera.transform.position.y <= playerHeight)
             playerSit = true;
         else
-            playerSit = false;*/
+            playerSit = false;
         #region FindHandAndController
         // Old script that used before changed to setup at Start()
         /* 

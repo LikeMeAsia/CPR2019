@@ -12,7 +12,7 @@ public class Area_check : MonoBehaviour
     void Update()
     {
 
-        Phone_move();
+       
 
     }
 
@@ -24,12 +24,12 @@ public class Area_check : MonoBehaviour
 
         }
     }
-    public void Phone_move()
+   /* public void Phone_move()
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
             Phone.transform.Translate(0.1f, 0, 0);
         }
 
-    }
+    }*/
 }

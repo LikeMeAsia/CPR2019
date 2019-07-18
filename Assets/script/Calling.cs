@@ -83,8 +83,9 @@ public class Calling : MonoBehaviour
         {
             Lay_Phone_warning.SetActive(false);
             warrning_icon = false;
-           
-
+            Player.Instance.snapHand.lockSnap = false;
+            ScenarioControl.Instance.cprCanvas.SetActive(true);
+            other.gameObject.SetActive(false);
         }
 
     }

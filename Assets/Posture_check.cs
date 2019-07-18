@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Posture_check : MonoBehaviour
 {
-    public GameObject Player_Head;
+    public Player player;
     public GameObject Posture_check_Ui;
     public GameObject Lay_phone_area;
     public AudioSource Conversation1_check;
@@ -15,7 +15,7 @@ public class Posture_check : MonoBehaviour
     void Start()
     {
         Lay_phone_area.SetActive(false);
-
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -23,7 +23,7 @@ public class Posture_check : MonoBehaviour
     {
         Posture_Check();
         Ui_Timing_check();
-        Posture_Set();
+        
         Check_Posture();
     }
 
@@ -44,22 +44,11 @@ public class Posture_check : MonoBehaviour
     */
     }
 
-    public void Posture_Set()
-    {
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            Player_Head.transform.Translate(0, 3.5f, 0);
-        }
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            Player_Head.transform.Translate(0, -3.5f, 0);
-        }
-
-    }
+    
 
     public void Check_Posture()
     {
-        if (posture_check == true)
+        if (player.playerSit == true)
         {
             Lay_phone_area.SetActive(true);
         }
