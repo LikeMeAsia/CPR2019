@@ -79,6 +79,7 @@ public class Player : MonoBehaviour
 
     IEnumerator Start()
     {
+        playerHeight = m_OvrCamera.transform.position.y;
         ready = false;
         #region FindHand
         // Wait instantiate Left Hand
@@ -224,14 +225,17 @@ public class Player : MonoBehaviour
         {
             playerHeight = m_OvrCamera.transform.position.y;
         }
-
-        if (m_OvrCamera.transform.position.y <= playerHeight)
+        if (m_OvrCamera.transform.position.y <= playerHeight/2){
             playerSit = true;
-        else
-            playerSit = false;
+        }
+        else  {  
+          playerSit = false;
+        }
+
+
         #region FindHandAndController
         // Old script that used before changed to setup at Start()
-        /* 
+        /*
          if (l_hand == null)
              l_hand = GameObject.Find("hand_left_renderPart_0").GetComponent<Transform>();
          if (r_hand == null)
