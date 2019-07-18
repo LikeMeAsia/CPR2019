@@ -409,11 +409,18 @@ public class Player : MonoBehaviour
         EnableOutline(l_button02, true);
         EnableOutline(l_side_trigger, true);
         EnableOutline(l_trigger, true);
+
+        EnableOutline(r_button01, true);
+        EnableOutline(r_button02, true);
+        EnableOutline(r_side_trigger, true);
+        EnableOutline(r_trigger, true);
     }
 
     public void EnableOutlinePointing()
     {
         EnableOutline(l_side_trigger, true);
+
+        EnableOutline(r_side_trigger, true);
     }
 
     public void EnableOutlineByName(string buttonName, bool enable)
