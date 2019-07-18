@@ -50,7 +50,7 @@ public class ScenarioControl : MonoBehaviour
     void Start()
     {
 
-        shotIndex = 0;
+      //  shotIndex = 0;
         //playerAnim.SetTrigger("fade in");
     }
 
