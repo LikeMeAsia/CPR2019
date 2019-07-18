@@ -49,8 +49,6 @@ public class ScenarioControl : MonoBehaviour
 
     void Start()
     {
-
-        shotIndex = 0;
         //playerAnim.SetTrigger("fade in");
     }
 
