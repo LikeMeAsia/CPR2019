@@ -49,6 +49,8 @@ public class ScenarioControl : MonoBehaviour
 
     void Start()
     {
+
+        //shotIndex = 0;
         //playerAnim.SetTrigger("fade in");
     }
 
@@ -119,7 +121,7 @@ public class ScenarioControl : MonoBehaviour
         else if (handpalmComplete && !pointingComplete)//ชื้
         {
             CheckPointing();
-            playerScript.EnableOutlineHandFul();
+            playerScript.EnableOutlinePointing();
             handpalmCanvas.GetComponent<Animator>().SetBool("disable", true);
             pointingCanvas.SetActive(true);
         }
@@ -139,7 +141,7 @@ public class ScenarioControl : MonoBehaviour
         else if (cutsceneCheck.cutsceneIsEnd)//เดินไปหาพ่อ
         {
             //isMove = false;
-            cprCanvas.SetActive(true);
+            //cprCanvas.SetActive(true);
             snapHand.lockSnap = false;
             MoveObjectAtoB(player, player.transform, pos[2], moveSpeed, 1);
         }

@@ -6,10 +6,9 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
 
-    public Camera cameraPlayer2_1;
-    public Camera cameraPlayer2_2;
-    public Transform[] views;
-    public float transitionSpeed;
+    public Camera[] cameraPlayer;
+   
+   // public Transform[] views;
     public GameObject Shoulder;
     
     Transform currenView;
@@ -22,8 +21,9 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
-        cameraPlayer2_1.enabled = true;
-        cameraPlayer2_2.enabled = false;
+        cameraPlayer[0].enabled = true;
+        cameraPlayer[1].enabled = false;
+        cameraPlayer[2].enabled = false;
         x = 1;
     }
     void Update()
@@ -32,22 +32,27 @@ public class CameraController : MonoBehaviour
         if (cutsceneCheck.cutsceneIsEnd )
         {
 
-            currenView = views[0];
+         //   currenView = views[0];
             x = 2;
-            cameraPlayer2_1.enabled = false;
-            cameraPlayer2_2.enabled = true;
+            cameraPlayer[1].enabled = true;
+            cameraPlayer[0].enabled = false;
+            cameraPlayer[2].enabled = false;
+
 
 
         }
-        else if (Shoulder == false && x == 2)
+        else if ( x == 2 && GamestartCheck.Gamestart)
         {
-            currenView = views[1];
+            cameraPlayer[0].enabled = false;
+            cameraPlayer[1].enabled = false;
+            cameraPlayer[2].enabled = true;
+            // currenView = views[1];
         }
 
         
      }
 
-      void LateUpdate()
+     /* void LateUpdate()
      {
          transform.position = Vector3.Lerp(transform.position, currenView.position, Time.deltaTime * transitionSpeed);
 
@@ -58,7 +63,7 @@ public class CameraController : MonoBehaviour
                 Mathf.LerpAngle(transform.rotation.eulerAngles.z, currenView.transform.rotation.eulerAngles.z, Time.deltaTime * transitionSpeed)
             );
          transform.eulerAngles = currntAngle;
-     }
+     }*/
 
     /* void Start()
      {
