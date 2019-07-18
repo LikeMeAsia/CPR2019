@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Hand Checker
   - hand
+  - Phone_area
+  - Phone
+  - Conversation1
+  - Hand
+  - Boundary
   layers:
   - Default
   - TransparentFX

@@ -236,6 +236,7 @@ Transform:
   - {fileID: 3839000467886232735}
   - {fileID: 3839000467828920456}
   - {fileID: 3550608623868236280}
+  - {fileID: 1002836653272506714}
   m_Father: {fileID: 3839000467284812194}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
@@ -306,9 +307,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3839000467284812194}
+  - component: {fileID: 1885210021}
   m_Layer: 0
   m_Name: Phone_
-  m_TagString: Untagged
+  m_TagString: Phone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -329,6 +331,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1885210021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3839000467284812197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e97fbaa9dc189334381fd1de338d1af1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Clon_phone: {fileID: 3839000467284812197}
+  Boundaly: 0
 --- !u!1 &3839000467330823435
 GameObject:
   m_ObjectHideFlags: 0
@@ -941,8 +957,8 @@ GameObject:
   - component: {fileID: 3839000467828920456}
   - component: {fileID: 3839000467828920459}
   m_Layer: 0
-  m_Name: CPRs Light Tone
-  m_TagString: Untagged
+  m_Name: Conversation1
+  m_TagString: Conversation1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1119,14 +1135,19 @@ MonoBehaviour:
   phone: {fileID: 3839000467284812197}
   Black_screen: {fileID: 3839000467330823435}
   calling_screen: {fileID: 3839000467678568882}
-  Phone_speaker: {fileID: 3839000467828920459}
+  Conversation1: {fileID: 3839000467828920459}
+  Conversation2: {fileID: 3538575730493315141}
   Put_Phone_Call_button: {fileID: 2220033273066131878}
   Phone_Activate_Icon: {fileID: 3839000467644778098}
   Put_calling_button: {fileID: 7149910247317001925}
   Lay_Phone_warning: {fileID: 0}
+  audio_time: 0
+  Call: 0
   Phone_Calling: 0
   Phone_Activate: 0
   Icon_show: 0
+  warrning_icon: 0
+  Conv_2_check: 0
 --- !u!54 &3839000467886232730
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1317,6 +1338,133 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!1 &5129613235893662292
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1002836653272506714}
+  - component: {fileID: 3538575730493315141}
+  m_Layer: 0
+  m_Name: Conversation2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1002836653272506714
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5129613235893662292}
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
+  m_LocalPosition: {x: 5.16, y: -30.875, z: 0}
+  m_LocalScale: {x: 2, y: 12.5, z: 1.1764705}
+  m_Children: []
+  m_Father: {fileID: 3839000467230381399}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &3538575730493315141
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5129613235893662292}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 4019d6fa6e8f0a242ada064f731bf6f1, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &7149910247317001925
 GameObject:
   m_ObjectHideFlags: 0
