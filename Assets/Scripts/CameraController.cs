@@ -29,7 +29,7 @@ public class CameraController : MonoBehaviour
     void Update()
     {
 
-        if (cutsceneCheck.cutsceneIsEnd )
+        if (x == 1 && cutsceneCheck.cutsceneIsEnd)
         {
 
          //   currenView = views[0];

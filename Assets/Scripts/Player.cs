@@ -9,10 +9,10 @@ public class Player : MonoBehaviour
 {
     public OvrAvatar m_OvrAvatar;
 
-    [Header(" Player")]
+    /*[Header(" Player")]
     public float playerHeight;
     public GameObject m_OvrCamera;
-    public bool playerSit;
+    public bool playerSit;*/
 
     [Header("Left hand")]
     public Transform l_hand;
@@ -72,7 +72,7 @@ public class Player : MonoBehaviour
 
     IEnumerator Start()
     {
-        playerHeight = m_OvrCamera.transform.position.y;
+        
         ready = false;
         #region FindHand
         // Wait instantiate Left Hand
@@ -214,10 +214,15 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (m_OvrCamera.transform.position.y <= playerHeight/2)
+        /*if (playerHeight <=0)
+        {
+            playerHeight = m_OvrCamera.transform.position.y;
+        }
+
+        if (m_OvrCamera.transform.position.y <= playerHeight)
             playerSit = true;
         else
-            playerSit = false;
+            playerSit = false;*/
         #region FindHandAndController
         // Old script that used before changed to setup at Start()
         /* 

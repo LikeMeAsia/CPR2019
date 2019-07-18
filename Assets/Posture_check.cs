@@ -29,19 +29,19 @@ public class Posture_check : MonoBehaviour
 
     public void Posture_Check()
     {
-
+        /*
         if (Player_Head.transform.position.y > 3 && Ui_Timing_checker == true)
         {
             Posture_check_Ui.SetActive(true);
             posture_check = false;
         }
-        else if (Player_Head.transform.position.y < 3 && Ui_Timing_checker == true)
+        else if (Player_Head.transform.position.y <3 && Ui_Timing_checker == true)
         {
             Posture_check_Ui.SetActive(false);
             posture_check = true;
         }
 
-
+    */
     }
 
     public void Posture_Set()
