@@ -21,42 +21,52 @@ public class Posture_check : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Posture_Check();
+        //Posture_Check();
         Ui_Timing_check();
-        
-        Check_Posture();
+        Phone_lay_spot();
+       // Check_Posture();
     }
 
-    public void Posture_Check()
+    /*public void Posture_Check()
     {
-        /*
-        if (Player_Head.transform.position.y > 3 && Ui_Timing_checker == true)
+        
+        if (!player.playerSit && Ui_Timing_checker == true)
         {
             Posture_check_Ui.SetActive(true);
             posture_check = false;
         }
-        else if (Player_Head.transform.position.y <3 && Ui_Timing_checker == true)
+        else if (player.playerSit && Ui_Timing_checker == true)
         {
             Posture_check_Ui.SetActive(false);
             posture_check = true;
         }
 
-    */
-    }
+    
+    }/*
 
     
 
-    public void Check_Posture()
+    /*public void Check_Posture()
     {
-        if (player.playerSit == true)
+        if (posture_check == true)
         {
             Lay_phone_area.SetActive(true);
         }
         else
             Lay_phone_area.SetActive(false);
 
-    }
+    }*/
+    public void Phone_lay_spot()
+    {
+        if(Ui_Timing_checker==true)
+        {
+            Lay_phone_area.SetActive(true);
 
+        }
+        else
+            Lay_phone_area.SetActive(false);
+
+    }
     public void Ui_Timing_check()
     {
         if (Conversation1_check.time == Conversation1_check.clip.length)

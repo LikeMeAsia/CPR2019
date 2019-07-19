@@ -14,8 +14,9 @@ public class Calling : MonoBehaviour
     public GameObject Phone_Activate_Icon;
     public GameObject Put_calling_button;
     public GameObject Lay_Phone_warning;
+    public Rigidbody Phone_rigidbody;
 
-
+    public Image placeableArea;
 
     public float audio_time;
     public bool Call;
@@ -24,12 +25,14 @@ public class Calling : MonoBehaviour
     public bool Icon_show;
     public bool warrning_icon;
     public bool Conv_2_check;
-
+    public int Calling_count;
+    public bool placeable;
 
     void Start()
     {
         Intilize();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        Phone_rigidbody = GameObject.FindGameObjectWithTag("Phone").GetComponent<Rigidbody>();
 
     }
     void Update()
@@ -63,42 +66,58 @@ public class Calling : MonoBehaviour
 
     }
 
-    
+
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("hand") )
+        if (other.CompareTag("hand") && (player.l_ful || player.r_ful))
         {
             Phone_Activate = true;
         }
-        if ( other.CompareTag("hand") && (player.l_isPointing || player.r_isPointing))
+        if (other.CompareTag("hand") && (player.l_isPointing || player.r_isPointing))
         {
             Call = true;
             Phone_Calling = true;
             warrning_icon = true;
-            
+
         }
-       
-        if (other.gameObject.CompareTag("Phone_area"))
+        if (other.gameObject.CompareTag("Phone_area") && Phone_rigidbody.isKinematic)
+        {
+            placeable = true;
+            placeableArea.color = Color.red;
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (placeable && other.gameObject.CompareTag("Phone_area") &&  !Phone_rigidbody.isKinematic)
         {
             Lay_Phone_warning.SetActive(false);
             warrning_icon = false;
             Player.Instance.snapHand.lockSnap = false;
             ScenarioControl.Instance.cprCanvas.SetActive(true);
             other.gameObject.SetActive(false);
+            placeableArea.gameObject.SetActive(false);
         }
+    }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Phone_area"))
+        {
+            placeable = false;
+            placeableArea.color = Color.white;
+        }
     }
 
 
-
-    public void Conversation1_check()
+        public void Conversation1_check()
     {
-        if (Phone_Calling == true)
+        if (Phone_Calling == true && Calling_count==0)
         {
             Put_Phone_Call_button.Play();
             Conversation1.PlayDelayed(Put_Phone_Call_button.clip.length);
-
+            Calling_count++;
 
             Put_calling_button.SetActive(false);
 

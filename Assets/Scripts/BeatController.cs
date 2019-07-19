@@ -37,7 +37,7 @@ public class BeatController : MonoBehaviour
     public Text totalScoreText;
     public Text comboText;
     public Text perfectHitText;
-    public Text gooHitText;
+    public Text goodHitText;
     public Text missText;
     public Text winOrLoseText;
 
@@ -56,13 +56,9 @@ public class BeatController : MonoBehaviour
 
     public static float timeCount;
 
-    public float cutSceneTime;
     public float countDownStart;
-    int CutSceneTimer;
     int CountDownStart;
-    public Text cutSceneText;
     public Text countDownStartText;
-    public GameObject cutScene;
     public GameObject sceneCountStart;
 
     int comboHit;
@@ -78,6 +74,14 @@ public class BeatController : MonoBehaviour
 
     public Image hpBar;
     private float hpBarValue;
+
+    public GameObject perfectPopUp;
+    public GameObject goodPopUp;
+    public GameObject missPopUp;
+
+    bool perfect;
+    bool good;
+    bool miss;
 
     public AudioSource songLight;
     public AudioClip[] audioClips = null;
@@ -115,8 +119,11 @@ public class BeatController : MonoBehaviour
         maxHp = 120;
         curhpDad = maxHp / 2;
 
-        cutSceneTime = 5;
         countDownStart = 3;
+
+        perfect = false;
+        good = false;
+        miss = false;
 
         beatCanvas.SetActive(false);
         songLight.enabled = false;
@@ -204,6 +211,36 @@ public class BeatController : MonoBehaviour
         // HpDad();
     }
 
+    public void PopUpHit()
+    {
+        StartCoroutine(IPopUpHit());
+    }
+
+    IEnumerator IPopUpHit()
+    {
+        if (perfect)
+        {
+            perfectPopUp.SetActive(true);
+        }
+        else if (good)
+        {
+            goodPopUp.SetActive(true);
+        }
+        else if (miss)
+        {
+            missPopUp.SetActive(true);
+        }
+        yield return new WaitForSeconds(1);
+        perfectPopUp.SetActive(false);
+        goodPopUp.SetActive(false);
+        missPopUp.SetActive(false);
+        perfect = false;
+        good = false;
+        miss = false;
+
+    }
+
+
     void GhostAppear()
     {
         if (timeCount >= 10)
@@ -248,6 +285,7 @@ public class BeatController : MonoBehaviour
                 Debug.Log("Perfect Hit");
                 circle.color = goodColor;
                 hitBump++;
+                perfect = true;
                 AudioPlayer.PlayAudioClip(audioClips[0], true);
                 if (countDownStart <= 0.0f)
                 {
@@ -262,6 +300,7 @@ public class BeatController : MonoBehaviour
                 Debug.Log("Good Hit");
                 circle.color = goodColor;
                 hitBump++;
+                good = true;
                 AudioPlayer.PlayAudioClip(audioClips[0], true);
                 if (countDownStart <= 0.0f)
                 {
@@ -275,6 +314,7 @@ public class BeatController : MonoBehaviour
             {
                 Debug.Log("Miss");
                 circle.color = Color.red;
+                miss = true;
                 AudioPlayer.PlayAudioClip(audioClips[1], true);
                 if (countDownStart <= 0.0f)
                 {
@@ -284,6 +324,7 @@ public class BeatController : MonoBehaviour
                 }
             }
 
+            PopUpHit();
         }
 
         if (tutorialBump && hitBump >= countDownBump)
@@ -315,7 +356,7 @@ public class BeatController : MonoBehaviour
         totalScoreText.text = "Score: " + curScore;
         comboText.text = "Combo x " + highCombo;
         perfectHitText.text = "Perfect: " + perfectHit;
-        gooHitText.text = "Good: " + goodHit;
+        goodHitText.text = "Good: " + goodHit;
         missText.text = "Miss: " + missHit;
         if (curhpDad >= 60)
         {
