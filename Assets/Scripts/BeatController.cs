@@ -9,6 +9,8 @@ public class BeatController : MonoBehaviour
     public GameObject TimeAndScore;
     public GameObject Ghost;
 
+    public RectTransform soulPosX;
+
     public GameObject beatCanvas;
 
     public bool Gamestart;
@@ -262,7 +264,8 @@ public class BeatController : MonoBehaviour
         
         curhpDad -= 1 * Time.deltaTime;
         hpBarValue = curhpDad / maxHp;
-        //hpdadText.text = "Hp:" + curhpDad + "/" + maxHp;
+        soulPosX.localPosition = new Vector3(hpBarValue, 0.0f, 0.0f);
+        hpdadText.text = "Hp:" + curhpDad + "/" + maxHp;
         hpBar.fillAmount = hpBarValue;
         if (curhpDad <= 0.0f)
         {
@@ -330,7 +333,8 @@ public class BeatController : MonoBehaviour
         if (tutorialBump && hitBump >= countDownBump)
         {
             tutorialBump = false;
-            
+
+            ScenarioControl.Instance.cprCanvas.GetComponent<Animator>().SetBool("disable", true);
             SimpleDirectorController.Instance.PlayTrack(1);
             //StartCountDownGamePlay();
         }
@@ -338,6 +342,7 @@ public class BeatController : MonoBehaviour
 
     public void EnableBeatTutorial() {
         tutorialBump = true;
+       
         beatCanvas.SetActive(true);
     }
 
@@ -352,7 +357,7 @@ public class BeatController : MonoBehaviour
 
     void TotalScoreBoard()
     {
-        //scoreText.text = "" + curScore;
+        scoreText.text = "" + curScore;
         totalScoreText.text = "Score: " + curScore;
         comboText.text = "Combo x " + highCombo;
         perfectHitText.text = "Perfect: " + perfectHit;
@@ -371,7 +376,7 @@ public class BeatController : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         circle.color = defaultColor;
-        AudioPlayer.PlayAudioClip(audioClips[2], true);  
+       // AudioPlayer.PlayAudioClip(audioClips[2], true);  
 
     }
 

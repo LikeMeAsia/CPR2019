@@ -15,7 +15,7 @@ public class TimeCountDown : MonoBehaviour
     public Text textCountDown;
 
     public GameObject CircleBump;
-    public GameObject TotalScore;
+    public GameObject TotalScoreBoard;
     public GameObject HpDad;
 
     public static float CountTimeToFade;
@@ -37,7 +37,7 @@ public class TimeCountDown : MonoBehaviour
                 gameObject.SetActive(false);
                 CircleBump.SetActive(false);
                 HpDad.SetActive(false);
-                TotalScore.SetActive(true);
+                TotalScoreBoard.SetActive(true);
             }
             float calc_time = curTime / StartingTime;
             //  cooldown.fillAmount = calc_time;

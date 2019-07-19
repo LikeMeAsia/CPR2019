@@ -9,7 +9,7 @@ public class Calling : MonoBehaviour
     public GameObject phone;
     public GameObject Black_screen;
     public GameObject calling_screen;
-    public AudioSource Conversation1;
+    public AudioSource Seq1_Conversation1, Seq1_Conversation2, Seq1_Conversation3, Seq1_Conversation4;
     public AudioSource Put_Phone_Call_button;
     public GameObject Phone_Activate_Icon;
     public GameObject Put_calling_button;
@@ -37,17 +37,11 @@ public class Calling : MonoBehaviour
     }
     void Update()
     {
-
-
         //Phone_Activate_Function();
-        
         Activate_check();
         Icon_check();
         Conversation1_check();
         Timescale();
-      
-
-
     }
 
     public void Intilize()
@@ -60,9 +54,9 @@ public class Calling : MonoBehaviour
 
 
         audio_time = 2.0f;
-        Conversation1.Stop();
         
-        Put_Phone_Call_button.Stop();
+        
+        
 
     }
 
@@ -95,9 +89,10 @@ public class Calling : MonoBehaviour
             Lay_Phone_warning.SetActive(false);
             warrning_icon = false;
             Player.Instance.snapHand.lockSnap = false;
-            ScenarioControl.Instance.cprCanvas.SetActive(true);
+           // ScenarioControl.Instance.cprCanvas.SetActive(true);
             other.gameObject.SetActive(false);
             placeableArea.gameObject.SetActive(false);
+            this.enabled = false;
         }
     }
 
@@ -116,7 +111,10 @@ public class Calling : MonoBehaviour
         if (Phone_Calling == true && Calling_count==0)
         {
             Put_Phone_Call_button.Play();
-            Conversation1.PlayDelayed(Put_Phone_Call_button.clip.length);
+            Seq1_Conversation1.PlayDelayed(Put_Phone_Call_button.clip.length);
+            Seq1_Conversation2.PlayDelayed(Put_Phone_Call_button.clip.length+ Seq1_Conversation1.clip.length);
+            Seq1_Conversation3.PlayDelayed(Put_Phone_Call_button.clip.length + Seq1_Conversation1.clip.length + Seq1_Conversation2.clip.length);
+            Seq1_Conversation4.PlayDelayed(Put_Phone_Call_button.clip.length + Seq1_Conversation1.clip.length + Seq1_Conversation2.clip.length + Seq1_Conversation3.clip.length);
             Calling_count++;
 
             Put_calling_button.SetActive(false);
@@ -164,7 +162,7 @@ public class Calling : MonoBehaviour
 
     public void Timescale()
     {
-        if (Conversation1.time == Conversation1.clip.length && warrning_icon == true)
+        if (Seq1_Conversation4.time == Seq1_Conversation4.clip.length && warrning_icon == true)
         {
             Lay_Phone_warning.SetActive(true);
         }
