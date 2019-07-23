@@ -1,32 +1,12 @@
 fileFormatVersion: 2
-guid: f5ccc1d58b98d9441ab1d287c09029c3
+guid: 93b02560a8f71ec4db7afba1871d609e
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable:
   - first:
-      74: 5929912533937350733
-    second: Reaper Animate PointingX
-  externalObjects:
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Reaper_Albedo_V2_2_Dilation
-    second: {fileID: 2800000, guid: d9f6bfe143d5cad42a62025ccbfc5aa4, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Reaper_Normal_Map_2_Dilation
-    second: {fileID: 2800000, guid: 097cded7f341fca4590b383709d8f257, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Weapon_Base_color
-    second: {fileID: 2800000, guid: 5b22dbcf5b13c1c4c8415a8b9e168e3d, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Weapon_Normal_2_dilation
-    second: {fileID: 2800000, guid: 79e540163f91b1e4881a7b568e07637c, type: 3}
+      74: -214177037273134363
+    second: Reaper with weapon 2
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
@@ -55,11 +35,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Reaper Animate PointingX
-      takeName: Reaper Animate Pointing
-      internalID: 5929912533937350733
-      firstFrame: 0
-      lastFrame: 600
+      name: Reaper with weapon 2
+      takeName: Reaper with weapon 2
+      internalID: -214177037273134363
+      firstFrame: 300
+      lastFrame: 775
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

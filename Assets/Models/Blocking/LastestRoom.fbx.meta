@@ -3,7 +3,262 @@ guid: aa4bb6055fb3e8648ae294b964cc3a8b
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Bed_mat
+    second: {fileID: 2100000, guid: 2c20729ba33a157468dffae09186b3e6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Book4_Mat
+    second: {fileID: 2100000, guid: 22255c80462bf0e43b84ebc74717a2f4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Book_Mat
+    second: {fileID: 2100000, guid: f37459827b06aad4c8c3bffca4953dce, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Book_shelf_Book10_Mat
+    second: {fileID: 2100000, guid: e7327226fdc325244a91321ab5643634, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Book_shelf_Book1_Mat
+    second: {fileID: 2100000, guid: 193f1822b2fd6c34fb44efa56eafbbb4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Book_shelf_Book2_Mat
+    second: {fileID: 2100000, guid: d1bccb8781d524d4d9afc3a8a2704de9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Book_shelf_Book3_Mat
+    second: {fileID: 2100000, guid: 69d60802f62f53e44ad8959131c8f943, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Book_shelf_Book5_Mat
+    second: {fileID: 2100000, guid: 83569afb92f89cb4388abded87670cbf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Book_shelf_Book6_Mat
+    second: {fileID: 2100000, guid: 76d7f2cb008104543b421813162bbaf1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Book_shelf_Book7_Mat
+    second: {fileID: 2100000, guid: 53c659f7537a53a428d347544ce0f3c8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Book_shelf_Book8_Mat
+    second: {fileID: 2100000, guid: 1e1a83eb149e11a48b097788314dce89, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Book_shelf_Book9_Mat
+    second: {fileID: 2100000, guid: 8580489847dd6b44ea09e3e78ee10371, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Chair_Mat
+    second: {fileID: 2100000, guid: badf9a5b5b5f12d48b268c3616e6906e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Clock_mat
+    second: {fileID: 2100000, guid: 767de1c16b93d8f418620287cd15d696, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Desk_Mat
+    second: {fileID: 2100000, guid: d1759799c18749c45a3848b3cfd077a3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Father_Rig2_FatherTest_TestLambert
+    second: {fileID: 2100000, guid: ad63c2f5cbd1e524d801ad121cd72643, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Flowerpot_Mat
+    second: {fileID: 2100000, guid: c04f6e43b7b97e94caadb80052d54a28, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Flowerpot_mat
+    second: {fileID: 2100000, guid: 1c896d24bf36c0d49aa869db8983aeae, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pillow_mat1
+    second: {fileID: 2100000, guid: a57e686fa7e57ff4da451b24940d76dd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Room_floor_mat
+    second: {fileID: 2100000, guid: 7033cf483346abe43bd0d158de66c924, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Room_wall_mat
+    second: {fileID: 2100000, guid: 4afd573bc04f7f54e8463929b91aa8f4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Slippers_Slipper_Mat
+    second: {fileID: 2100000, guid: 9ceea16aa17f74e4e9e615820a11d6ed, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: TV_27_6_19_tv_albedo_mat
+    second: {fileID: 2100000, guid: 47138dd3e745cdd4c834d49b235bb969, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: TV_Shelf1_tv_shelf_mat
+    second: {fileID: 2100000, guid: 35098cf599365e1408c56a39f19cc758, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Table_GUN_Table_Mat
+    second: {fileID: 2100000, guid: 826541a1b57997a488c5b6ed296a24d7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: bookshelf_mat
+    second: {fileID: 2100000, guid: 1a3e6f8eecf8e014ea3869526779576f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: carpet_mat
+    second: {fileID: 2100000, guid: 1195ededfe0cb904bbaeb0c4f2ea794f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: door_ghost_Pillar_mat
+    second: {fileID: 2100000, guid: 7adbce1da2be4c445ba6063164367bc1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: door_ghost_chain_locks_mat
+    second: {fileID: 2100000, guid: 7d41078139b9f7d469e675aad22d9bed, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: door_ghost_cloth_fiber_mat
+    second: {fileID: 2100000, guid: cb0d9d994a4640b42abfdc638e641205, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: door_ghost_door_mat
+    second: {fileID: 2100000, guid: 48b91b9d0632a2c428ae057925f4fe28, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: door_ghost_fx_smoke_mat
+    second: {fileID: 2100000, guid: 7c64cc5efddf85f46b4bc159e0577011, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: door_ghost_lantern_mat
+    second: {fileID: 2100000, guid: 171dbf621e8897443963946dc08ed4e6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: door_ghost_latchs_mat
+    second: {fileID: 2100000, guid: c04686c158351f74e881f665ee797864, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: door_ghost_skull_horns_mat
+    second: {fileID: 2100000, guid: c3e82cac4af921543a1ce022b5d338bd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: door_mat1
+    second: {fileID: 2100000, guid: d12cebc334fe00746a020cb229a8786a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: foot_towel_towel_mat
+    second: {fileID: 2100000, guid: e1db373576d6e95479b49946433846f1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: frame_big_mat
+    second: {fileID: 2100000, guid: d1faf2b82bc82a0418a1b1cbbc1847f6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: frame_small_mat
+    second: {fileID: 2100000, guid: e3cf5638d8bd97d4f9c097c7afb6a3f4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert1
+    second: {fileID: 2100000, guid: d89174b5bdbf49c46b95adf96dcefb83, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert15
+    second: {fileID: 2100000, guid: 47f87aa0541b76740a9b616d679f0058, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert2
+    second: {fileID: 2100000, guid: f2a998fb47c8d724d9ab6c8251a1138d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: light_mat
+    second: {fileID: 2100000, guid: 00c256a04b7ce624fb015d2d0b4f7db0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pillow_mat2
+    second: {fileID: 2100000, guid: 028df87242e0863428a1806661bfa3e4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: small_lamp_small_lamp_mat
+    second: {fileID: 2100000, guid: e5fcf7cc1c2eb97438bb85c6068e9a56, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: smartphone_mat
+    second: {fileID: 2100000, guid: 453e9909cc952074e8eefc72ecc73612, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: stcher_mat
+    second: {fileID: 2100000, guid: afd4a2e54b2a2fc4c9d7f614ad182a36, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: view_bedroom_mat
+    second: {fileID: 2100000, guid: b5ca0e6ca8fd04f478b8021b5767570f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: view_recptionroom_mat
+    second: {fileID: 2100000, guid: 1974c60cf7ce0134799dc09670457f46, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: wardrobe_mat
+    second: {fileID: 2100000, guid: a86b172fb9bff394da280ae10c91eed9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: window_mat1
+    second: {fileID: 2100000, guid: cf3fbad1a17fd4543a8ee94c2acedc6f, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
