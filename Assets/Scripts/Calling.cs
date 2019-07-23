@@ -34,7 +34,7 @@ public class Calling : MonoBehaviour
         Intilize();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         Phone_rigidbody = GameObject.FindGameObjectWithTag("Phone").GetComponent<Rigidbody>();
-
+        placeable = false;
     }
     void Update()
     {
@@ -55,10 +55,6 @@ public class Calling : MonoBehaviour
         sanpItem = false;
 
         audio_time = 2.0f;
-        
-        
-        
-
     }
 
 

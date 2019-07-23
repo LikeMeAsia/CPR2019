@@ -15,7 +15,7 @@ public class Posture_check : MonoBehaviour
     void Start()
     {
         Lay_phone_area.SetActive(false);
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        player = Player.Instance;
     }
 
     // Update is called once per frame
