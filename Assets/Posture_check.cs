@@ -72,6 +72,7 @@ public class Posture_check : MonoBehaviour
         if (Conversation1_check.time == Conversation1_check.clip.length)
         {
             Ui_Timing_checker = true;
+            Debug.Log("Call_1_End");
         }
     }
 }

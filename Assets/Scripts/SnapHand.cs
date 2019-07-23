@@ -23,13 +23,4 @@ public class SnapHand : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-        
-    }
 }

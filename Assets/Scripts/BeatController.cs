@@ -222,26 +222,32 @@ public class BeatController : MonoBehaviour
     {
         if (perfect)
         {
+            ClearPopUp();
             perfectPopUp.SetActive(true);
         }
         else if (good)
         {
+            ClearPopUp();
             goodPopUp.SetActive(true);
         }
         else if (miss)
         {
+            ClearPopUp();
             missPopUp.SetActive(true);
         }
         yield return new WaitForSeconds(1);
-        perfectPopUp.SetActive(false);
-        goodPopUp.SetActive(false);
-        missPopUp.SetActive(false);
+        ClearPopUp();
         perfect = false;
         good = false;
         miss = false;
 
     }
-
+    void ClearPopUp()
+    {
+        perfectPopUp.SetActive(false);
+        goodPopUp.SetActive(false);
+        missPopUp.SetActive(false);
+    }
 
     void GhostAppear()
     {
@@ -333,9 +339,9 @@ public class BeatController : MonoBehaviour
         if (tutorialBump && hitBump >= countDownBump)
         {
             tutorialBump = false;
-
             ScenarioControl.Instance.cprCanvas.GetComponent<Animator>().SetBool("disable", true);
             SimpleDirectorController.Instance.PlayTrack(1);
+            Debug.Log("tutorial_End");
             //StartCountDownGamePlay();
         }
     }

@@ -74,6 +74,8 @@ public class Player : MonoBehaviour
     public bool showController;
     private bool curController;
 
+    public Transform l_indexFingerTrans;
+    public Transform r_indexFingerTrans;
     // Check initial all required parameters
     public bool ready = false;
 
@@ -86,6 +88,7 @@ public class Player : MonoBehaviour
         WaitWhile waitInst_LHand = new WaitWhile(() => { return GameObject.Find("hand_left_renderPart_0") == null; });
         yield return waitInst_LHand;
         l_hand = GameObject.Find("hand_left_renderPart_0").GetComponent<Transform>();
+
 
         // Wait instantiate Right Hand
         WaitWhile waitInst_RHand = new WaitWhile(() => { return GameObject.Find("hand_right_renderPart_0") == null; });
@@ -328,6 +331,35 @@ public class Player : MonoBehaviour
             m_OvrAvatar.ShowControllers(showController);
             curController = showController;
         }
+
+        if (l_hand != null && l_indexFingerTrans == null) {
+            l_indexFingerTrans = l_hand.Find("hands:l_hand_world/hands:b_l_hand/hands:b_l_index1/hands:b_l_index2/hands:b_l_index3/hands:b_l_index_ignore");
+            if (l_indexFingerTrans != null)
+            {
+                GameObject fingerTipObj = Instantiate<GameObject>(new GameObject("l_index_tip"), l_indexFingerTrans);
+                SphereCollider indexTipCollider = fingerTipObj.AddComponent<SphereCollider>();
+                indexTipCollider.isTrigger = true;
+                indexTipCollider.radius = 0.01f;
+                indexTipCollider.center = new Vector3(0.01f, 0, 0);
+                fingerTipObj.tag = "FingerTip";
+            }
+        }
+
+        if (r_hand != null && r_indexFingerTrans == null)
+        {
+            r_indexFingerTrans = r_hand.Find("hands:r_hand_world/hands:b_r_hand/hands:b_r_index1/hands:b_r_index2/hands:b_r_index3/hands:b_r_index_ignore");
+            if (r_indexFingerTrans != null)
+            {
+                GameObject fingerTipObj = Instantiate<GameObject>(new GameObject("r_index_tip"), r_indexFingerTrans);
+                SphereCollider indexTipCollider = fingerTipObj.AddComponent<SphereCollider>();
+                indexTipCollider.isTrigger = true;
+                indexTipCollider.radius = 0.01f;
+                indexTipCollider.center = new Vector3(0.01f, 0, 0);
+                fingerTipObj.tag = "FingerTip";
+            }
+        }
+
+
 
         UpdateCapTouchStates();
         CheckUnderController();

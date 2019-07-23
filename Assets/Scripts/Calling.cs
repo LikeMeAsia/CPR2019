@@ -27,6 +27,7 @@ public class Calling : MonoBehaviour
     public bool Conv_2_check;
     public int Calling_count;
     public bool placeable;
+    public bool sanpItem;
 
     void Start()
     {
@@ -51,7 +52,7 @@ public class Calling : MonoBehaviour
         Phone_Activate = false;
         Icon_show = true;
         Put_calling_button.SetActive(false);
-
+        sanpItem = false;
 
         audio_time = 2.0f;
         
@@ -64,15 +65,23 @@ public class Calling : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("hand") && (player.l_ful || player.r_ful))
+        if (other.CompareTag("Hand")  /*&& (player.l_ful || player.r_ful)*/)
         {
             Phone_Activate = true;
         }
-        if (other.CompareTag("hand") && (player.l_isPointing || player.r_isPointing))
+
+        if (other.CompareTag("Hand") && (player.l_ful || player.r_ful))
+        {
+            sanpItem = true;
+        }
+
+
+        if (other.CompareTag("FingerTip")  && (player.l_isPointing || player.r_isPointing))
         {
             Call = true;
             Phone_Calling = true;
             warrning_icon = true;
+            calling_screen.SetActive(true);
 
         }
         if (other.gameObject.CompareTag("Phone_area") && Phone_rigidbody.isKinematic)
@@ -98,6 +107,13 @@ public class Calling : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (other.CompareTag("hand") )
+        {
+            Phone_Activate = false;
+            sanpItem = true;
+        }
+
+
         if (other.gameObject.CompareTag("Phone_area"))
         {
             placeable = false;
@@ -140,12 +156,18 @@ public class Calling : MonoBehaviour
 
     public void Activate_check()
     {
-        if (Phone_Activate == true)
+        if (Phone_Activate == true || sanpItem == true)
         {
             Black_screen.SetActive(false);
             Phone_Activate_Icon.SetActive(false);
             calling_screen.SetActive(true);
 
+        }
+        else if (Phone_Activate == false && Call == false)
+        {
+            Black_screen.SetActive(true);
+            Phone_Activate_Icon.SetActive(true);
+            calling_screen.SetActive(false);
         }
 
     }
