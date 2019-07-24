@@ -1,14 +1,9 @@
 fileFormatVersion: 2
-guid: 9e550d1d1fb4cee4f97daefb40dafe7a
+guid: d0abdd16eff5eee4cb4e08f230c04372
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Flowerpot_mat
-    second: {fileID: 2100000, guid: 1246ce733f4bf614abb08ddec4962094, type: 2}
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
