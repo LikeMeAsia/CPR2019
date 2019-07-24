@@ -696,7 +696,7 @@ PlayableDirector:
   m_GameObject: {fileID: 75233031}
   m_Enabled: 1
   serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: 6f33996d546b96d43bb2ec7dd00828ec, type: 2}
+  m_PlayableAsset: {fileID: 11400000, guid: fc62af6f5b06c824f8ec6f429fb8def6, type: 2}
   m_InitialState: 1
   m_WrapMode: 0
   m_DirectorUpdateMode: 1
@@ -6955,7 +6955,7 @@ PrefabInstance:
     - target: {fileID: -8563499179610729042, guid: 17b16ef8b52c923449b1b777598a94e3,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.86602545
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8563499179610729042, guid: 17b16ef8b52c923449b1b777598a94e3,
         type: 3}
@@ -6965,7 +6965,7 @@ PrefabInstance:
     - target: {fileID: -8563499179610729042, guid: 17b16ef8b52c923449b1b777598a94e3,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.49999994
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8563499179610729042, guid: 17b16ef8b52c923449b1b777598a94e3,
         type: 3}
@@ -7090,12 +7090,12 @@ PrefabInstance:
     - target: {fileID: -2308810255895671354, guid: 17b16ef8b52c923449b1b777598a94e3,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.86602545
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -2308810255895671354, guid: 17b16ef8b52c923449b1b777598a94e3,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.49999994
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -2308810255895671354, guid: 17b16ef8b52c923449b1b777598a94e3,
         type: 3}
