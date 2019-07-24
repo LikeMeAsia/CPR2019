@@ -1,22 +1,12 @@
 fileFormatVersion: 2
-guid: 51a94e5fdf950c6499fa0461b49e2aa1
+guid: d50c4b461a0ce3c4c9f5c9b6042abac2
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable:
   - first:
-      74: 286661502865329636
-    second: FatherSoul_Return
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: FatherSoul20_FatherSoul_Albedo
-    second: {fileID: 2100000, guid: 342373a59c589984faef8c132b0d5d92, type: 2}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: FatheSoul_Albedo
-    second: {fileID: 2800000, guid: 24af234f2a8e3834db04ce8fb2faf7e6, type: 3}
+      74: -7743575489676158876
+    second: Reaper with weapon
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
@@ -45,18 +35,18 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: FatherSoul_Return
-      takeName: FatherSoul_Return
-      internalID: 286661502865329636
-      firstFrame: 1
-      lastFrame: 60
+      name: Reaper with weapon
+      takeName: Reaper with weapon
+      internalID: -7743575489676158876
+      firstFrame: 0
+      lastFrame: 300
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
-      cycleOffset: 0
+      cycleOffset: 157
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -99,7 +89,7 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 1
+    useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0

@@ -23,9 +23,6 @@ public class ScenarioControl : MonoBehaviour
     public GameObject phoneCanvas;
     public GameObject cprCanvas;
 
-    [Header("Player")]
-    public Player playerScript;
-    public GameObject player;
     public float moveSpeed;
 
     [Header("Object")]
@@ -36,9 +33,6 @@ public class ScenarioControl : MonoBehaviour
     public Transform[] pos;
 
     [Header("Checker")]
-    public float pointingTime = 2;
-    public float pointingTimer;
-    public bool pointingComplete;
 
     public float handfulTime = 2;
     public float handfulTimer;
@@ -47,12 +41,25 @@ public class ScenarioControl : MonoBehaviour
     public float handpalmTime = 2;
     public float handpalmTimer;
     public bool handpalmComplete;
+
+    public float pointingTime = 2;
+    public float pointingTimer;
+    public bool pointingComplete;
+
+    public bool moveToDoorComplete;
+    public bool openDoorComplete;
+    public bool cutscene1Complete;
+    public bool cutscene2Complete;
+
     [Header(" ")]
     public SnapHand snapHand;
     public CutsceneEndCheck cutsceneCheck;
     float teleportTimer = 0;
+    float moveDelay = 0;
     public float moveTimer = 0;
     public bool isMove;
+    Vector3 toPos = Vector3.zero;
+    public GameObject checkpt;
     #endregion
 
     void Start()
@@ -106,60 +113,64 @@ public class ScenarioControl : MonoBehaviour
         }
         */
         #endregion
-        //manual[0] = OVRInput.Get(OVRInput.Button.One) && OVRInput.Get(OVRInput.Button.Two);
-        //manual[1] = OVRInput.Get(OVRInput.Button.Three) && OVRInput.Get(OVRInput.Button.Four);
 
-       /*if (phone.GetComponent<Phone>().phoneIsPickedUp)
+        if (isMove)
         {
-            SnapObjectToHand(phone, phone.GetComponent<Phone>().hand);
-        }*/
-
-        if (!handfulComplete)//กำ
+            moveTimer += Time.deltaTime;
+            if (moveTimer >= moveDelay)
+            {
+                Player.Instance.transform.position = Vector3.Lerp(Player.Instance.m_OvrCamera.transform.position, toPos, Mathf.Clamp01(moveSpeed * (moveTimer - moveDelay)));
+            }
+            if (Player.Instance.m_OvrCamera.transform.position == toPos)
+            {
+                moveTimer = 0;
+                isMove = false;
+            }
+        }
+        else if (!handfulComplete)//กำ
         {
             CheckHandFul();
-            playerScript.EnableOutlineHandFul();
+            Player.Instance.EnableOutlineHandFul();
             handfulCanvas.SetActive(true);
         }
-        else if (handfulComplete  && !handpalmComplete)//แบ
+        else if (handfulComplete && !handpalmComplete)//แบ
         {
             CheckHandPalm();
-            handfulCanvas.GetComponent<Animator>().SetBool("disable",true);
+            Player.Instance.EnableOutlineBareHands();
+            handfulCanvas.GetComponent<Animator>().SetBool("disable", true);
             handpalmCanvas.SetActive(true);
         }
         else if (handpalmComplete && !pointingComplete)//ชื้
         {
             CheckPointing();
-            playerScript.EnableOutlinePointing();
+            Player.Instance.EnableOutlinePointing();
             handpalmCanvas.GetComponent<Animator>().SetBool("disable", true);
             pointingCanvas.SetActive(true);
         }
-        else if (pointingComplete && !doorKnob.doorOpen)//เดินไปประตู
+        else if (handfulComplete && handpalmComplete && pointingComplete && !moveToDoorComplete)//เดินไปประตู
         {
-            playerScript.showController = false;
+            moveToDoorComplete = true;
+            Player.Instance.EnableOutlineBareHands();
+            Player.Instance.showController = false;
             pointingCanvas.GetComponent<Animator>().SetBool("disable", true);
             doorCanvas.SetActive(true);
-            MoveObjectAtoB(player, player.transform, pos[0], moveSpeed, 3);
-
+            MovePlayertoArea(pos[0], moveSpeed, 3);
+        } else if (openDoorComplete && !doorKnob.doorOpen) {
+            doorKnob.OpenDoor();
         }
-        else if (doorKnob.doorOpen && !cutsceneCheck.cutsceneIsEnd)//เปิดประตู
+        else if (doorKnob.doorOpen && !cutscene1Complete)//เปิดประตู
         {
+            cutscene1Complete = true;
+            openDoorComplete = true;
             doorCanvas.GetComponent<Animator>().SetBool("disable", true);
-            MoveObjectAtoB(player, player.transform, pos[1], moveSpeed, 1);
+            MovePlayertoArea(pos[1], moveSpeed, 3);
         }
-        else if (cutsceneCheck.cutsceneIsEnd)//เดินไปหาพ่อ
+        else if (cutsceneCheck.cutsceneIsEnd && !cutscene2Complete)//เดินไปหาพ่อ
         {
-            //isMove = false;
-            //cprCanvas.SetActive(true);
-            //snapHand.lockSnap = false;
-            MoveObjectAtoB(player, player.transform, pos[2], moveSpeed, 1);
+            cutscene2Complete = true;
+            MovePlayertoArea(pos[2], moveSpeed, 1);
         }
-       /* else if ()
-        {
-            snapHand.lockSnap = false;
-            cprCanvas.SetActive(true);
-        }*/
 
-        //Cutscene Peter
     }
 
     //peter test zone
@@ -182,39 +193,37 @@ public class ScenarioControl : MonoBehaviour
     //Peter test zone
 
 
-    public void MoveObjectAtoB(GameObject _object, Transform from, Transform to, float moveSpeed, float moveDelay)
+    public void MovePlayertoArea(Transform to, float moveSpeed, float imoveDelay)
     {
-        if (_object == null)
+        moveDelay = imoveDelay;
+        toPos = Vector3.zero;
+        bool configured = OVRManager.boundary.GetConfigured();
+        if (configured)
         {
-            _object = GameObject.FindGameObjectWithTag("Player");
+            Vector3[] boundaryPoints = OVRManager.boundary.GetGeometry(OVRBoundary.BoundaryType.PlayArea);
+            BoxCollider box = to.GetComponentInChildren<BoxCollider>();
+            if (box != null)
+            {
+                /*Vector3 nearestPt = Vector3.zero;
+                Vector3 closestBoundPt = Vector3.zero;
+                float dist = 0;
+                foreach (Vector3 boundaryPoint in boundaryPoints)
+                {
+                    if (box.bounds.SqrDistance(boundaryPoint) > dist)
+                    {
+                        nearestPt = boundaryPoint;
+                        closestBoundPt = box.bounds.ClosestPoint(boundaryPoint);
+                    }
+                }*/
+                toPos = to.position;
+                toPos = new Vector3(toPos.x, Player.Instance.transform.position.y, toPos.z);
+            }
         }
-        if (from == null)
-        {
-            from = _object.transform;
+        else {
+            toPos = new Vector3(to.position.x, Player.Instance.transform.position.y, to.position.z);
         }
-
-        if ((moveTimer < moveDelay) && !isMove)
-        {
-            moveTimer += Time.deltaTime;
-        }
-        else if (moveTimer >= moveDelay)
-        {
-            isMove = true;
-            moveTimer = 0;
-        }
-
-        if (isMove)
-        {
-
-            to.position = new Vector3(to.position.x, _object.transform.position.y, to.position.z);
-            _object.transform.position = Vector3.Lerp(from.position, to.position, moveSpeed);
-
-        }
-
-        if (_object.transform.position == to.position)
-        {
-            isMove = false;
-        }
+        checkpt.transform.position = toPos;
+        isMove = true;
     }
 
     public void TeleportObjectAtoB(GameObject _object, Transform from, Transform to, float teleportDelay)
@@ -243,7 +252,7 @@ public class ScenarioControl : MonoBehaviour
 
     private void CheckPointing()
     {
-        if ((playerScript.l_isPointing && playerScript.r_isPointing) && pointingTimer < pointingTime)
+        if ((Player.Instance.l_isPointing && Player.Instance.r_isPointing) && pointingTimer < pointingTime)
         {
             pointingTimer += Time.deltaTime;
         }
@@ -256,8 +265,8 @@ public class ScenarioControl : MonoBehaviour
 
     private void CheckHandFul()
     {
-        if (playerScript == null) return;
-        if ((playerScript.l_ful && playerScript.l_ful) && handfulTimer < handfulTime)
+        if (Player.Instance == null) return;
+        if ((Player.Instance.l_ful && Player.Instance.l_ful) && handfulTimer < handfulTime)
         {
             handfulTimer += Time.deltaTime;
         }
@@ -270,7 +279,7 @@ public class ScenarioControl : MonoBehaviour
 
     private void CheckHandPalm()
     {
-        if ((playerScript.l_palm && playerScript.r_palm) && handpalmTimer < handpalmTime)
+        if ((Player.Instance.l_palm && Player.Instance.r_palm) && handpalmTimer < handpalmTime)
         {
             handpalmTimer += Time.deltaTime;
         }

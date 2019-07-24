@@ -1,22 +1,12 @@
 fileFormatVersion: 2
-guid: 51a94e5fdf950c6499fa0461b49e2aa1
+guid: 6c16a3405cbb9a94ab70e6bc1608781c
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable:
   - first:
-      74: 286661502865329636
-    second: FatherSoul_Return
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: FatherSoul20_FatherSoul_Albedo
-    second: {fileID: 2100000, guid: 342373a59c589984faef8c132b0d5d92, type: 2}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: FatheSoul_Albedo
-    second: {fileID: 2800000, guid: 24af234f2a8e3834db04ce8fb2faf7e6, type: 3}
+      74: 3470642263810517203
+    second: Pointing
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
@@ -45,11 +35,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: FatherSoul_Return
-      takeName: FatherSoul_Return
-      internalID: 286661502865329636
-      firstFrame: 1
-      lastFrame: 60
+      name: Pointing
+      takeName: Pointing
+      internalID: 3470642263810517203
+      firstFrame: 0
+      lastFrame: 150
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -82,8 +72,8 @@ ModelImporter:
     useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
-    importCameras: 0
-    importLights: 0
+    importCameras: 1
+    importLights: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1

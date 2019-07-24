@@ -138,9 +138,21 @@ namespace cakeslice
 
             if(outlineCamera == null)
             {
-                GameObject cameraGameObject = new GameObject("Outline Camera");
-                cameraGameObject.transform.parent = sourceCamera.transform;
-                outlineCamera = cameraGameObject.AddComponent<Camera>();
+                Transform cameraTransform = sourceCamera.transform.Find("Outline Camera");
+                if (cameraTransform != null)
+                {
+                    outlineCamera = cameraTransform.gameObject.GetComponent<Camera>();
+                    if (outlineCamera == null)
+                    {
+                        outlineCamera = cameraTransform.gameObject.AddComponent<Camera>();
+                    }
+                }
+                else
+                {
+                    GameObject cameraGameObject = new GameObject("Outline Camera");
+                    cameraGameObject.transform.parent = sourceCamera.transform;
+                    outlineCamera = cameraGameObject.AddComponent<Camera>();
+                }
                 outlineCamera.enabled = false;
             }
 

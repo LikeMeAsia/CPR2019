@@ -1,27 +1,28 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 public class Player : MonoBehaviour
 {
     private static Player instance;
     public static Player Instance { get { return instance; } }
-
     public void Awake() {
         instance = this;
+        ready = false;
     }
 
-    public OvrAvatar m_OvrAvatar;
+    private const string L_CTRL_PARENT = "TrackingSpace/LeftHandAnchor";
+    private const string R_CTRL_PARENT = "TrackingSpace/RightHandAnchor";
 
     [Header(" Player")]
+    [ReadOnly]
+    public OvrAvatar m_OvrAvatar;
+    [ReadOnly]
+    public OVRCameraRig m_OvrCamera;
     public float playerHeight;
-    public GameObject m_OvrCamera;
     public bool playerSit;
 
     [Header("Left hand")]
+    [ReadOnly]
     public Transform l_hand;
     [SerializeField] private OVRInput.Controller l_controller;
     public bool l_isPointing = false;
@@ -30,6 +31,7 @@ public class Player : MonoBehaviour
     public bool l_ful = false;
 
     [Header("Right hand")]
+    [ReadOnly]
     public Transform r_hand;
     [SerializeField] private OVRInput.Controller r_controller;
     public bool r_isPointing = false;
@@ -43,30 +45,16 @@ public class Player : MonoBehaviour
     public GameObject cprHand;
 
     [Header("Left Controller")]
+    [ReadOnly]
     public GameObject l_controller_mesh;
-    public GameObject l_button01;
-    public GameObject l_button02;
-    public GameObject l_side_trigger;
-    public GameObject l_trigger;
-    public GameObject l_stick;
+    public GameObject l_OutlineCtrlPrefab;
+    public TouchButtonOutlines leftButtons;
+
     [Header("Right Controller")]
+    [ReadOnly]
     public GameObject r_controller_mesh;
-    public GameObject r_button01;
-    public GameObject r_button02;
-    public GameObject r_side_trigger;
-    public GameObject r_trigger;
-    public GameObject r_stick;
-    [Header("For Debug")]
-    public bool l_button01_outline;
-    public bool l_button02_outline;
-    public bool l_side_trigger_outline;
-    public bool l_trigger_outline;
-    public bool l_stick_outline;
-    public bool r_button01_outline;
-    public bool r_button02_outline;
-    public bool r_side_trigger_outline;
-    public bool r_trigger_outline;
-    public bool r_stick_outline;
+    public GameObject r_OutlineCtrlPrefab;
+    public TouchButtonOutlines rightButtons;
 
     public bool l_handIsUnder;
     public bool r_handIsUnder;
@@ -79,146 +67,70 @@ public class Player : MonoBehaviour
     // Check initial all required parameters
     public bool ready = false;
 
+    [Header("For Debug")]
+    public bool l_button01_outline;
+    public bool l_button02_outline;
+    public bool l_side_trigger_outline;
+    public bool l_trigger_outline;
+    public bool l_stick_outline;
+    public bool r_button01_outline;
+    public bool r_button02_outline;
+    public bool r_side_trigger_outline;
+    public bool r_trigger_outline;
+    public bool r_stick_outline;
+
     IEnumerator Start()
     {
+        m_OvrAvatar = this.GetComponentInChildren<OvrAvatar>();
+        m_OvrCamera = this.GetComponentInChildren<OVRCameraRig>();
+        
+        curController = m_OvrAvatar.StartWithControllers;
+        showController = curController;
         playerHeight = m_OvrCamera.transform.position.y;
-        ready = false;
-        #region FindHand
-        // Wait instantiate Left Hand
-        WaitWhile waitInst_LHand = new WaitWhile(() => { return GameObject.Find("hand_left_renderPart_0") == null; });
-        yield return waitInst_LHand;
-        l_hand = GameObject.Find("hand_left_renderPart_0").GetComponent<Transform>();
+        Transform l_anchor = m_OvrCamera.transform.Find(L_CTRL_PARENT);
+        if (l_anchor != null)
+        {
+            GameObject o_leftButtons = Instantiate(l_OutlineCtrlPrefab, l_anchor);
+            leftButtons = o_leftButtons.GetComponent<TouchButtonOutlines>();
+            leftButtons.transform.localPosition = Vector3.zero;
+            leftButtons.transform.localRotation = Quaternion.identity;
+        }
+        Transform r_anchor = m_OvrCamera.transform.Find(R_CTRL_PARENT);
+        if (r_anchor != null)
+        {
+            GameObject o_rightButtons = Instantiate(r_OutlineCtrlPrefab, r_anchor);
+            rightButtons = o_rightButtons.GetComponent<TouchButtonOutlines>();
+            rightButtons.transform.localPosition = Vector3.zero;
+            rightButtons.transform.localRotation = Quaternion.identity;
+        }
 
+        #region Player's Hands and Controllers
+        // Wait instantiate Left Hand
+        WaitWhile waitInst_LHand = new WaitWhile(() => { return m_OvrAvatar.transform.Find("hand_left/hand_left_renderPart_0") == null; });
+        yield return waitInst_LHand;
+        l_hand = m_OvrAvatar.transform.Find("hand_left/hand_left_renderPart_0");
+        l_hand.tag = "hand";
 
         // Wait instantiate Right Hand
-        WaitWhile waitInst_RHand = new WaitWhile(() => { return GameObject.Find("hand_right_renderPart_0") == null; });
+        WaitWhile waitInst_RHand = new WaitWhile(() => { return m_OvrAvatar.transform.Find("hand_right/hand_right_renderPart_0") == null; });
         yield return waitInst_RHand;
-        r_hand = GameObject.Find("hand_right_renderPart_0").GetComponent<Transform>();
-
+        r_hand = m_OvrAvatar.transform.Find("hand_right/hand_right_renderPart_0");
+        r_hand.tag = "hand";
+        // Wait instantiate Left Controller
         WaitWhile waitInst_LController = new WaitWhile(() => { return GameObject.Find("controller_left") == null; });
         yield return waitInst_LHand;
         l_controller_mesh = GameObject.Find("controller_left");
 
+        // Wait instantiate Right Controller
         WaitWhile waitInst_RController = new WaitWhile(() => { return GameObject.Find("controller_right") == null; });
         yield return waitInst_LHand;
         r_controller_mesh = GameObject.Find("controller_right");
-
+        
         l_hand.gameObject.ApplyRecursivelyOnDescendants(child => child.layer = LayerMask.NameToLayer("OnTop"));
         r_hand.gameObject.ApplyRecursivelyOnDescendants(child => child.layer = LayerMask.NameToLayer("OnTop"));
         l_controller_mesh.gameObject.ApplyRecursivelyOnDescendants(child => child.layer = LayerMask.NameToLayer("OnTop"));
         r_controller_mesh.gameObject.ApplyRecursivelyOnDescendants(child => child.layer = LayerMask.NameToLayer("OnTop"));
-        /*l_hand.gameObject.layer = LayerMask.NameToLayer("Heart");
-        r_hand.gameObject.layer = LayerMask.NameToLayer("Heart");
-        l_controller_mesh.layer = LayerMask.NameToLayer("Heart");
-        r_controller_mesh.layer = LayerMask.NameToLayer("Heart");*/
-
-        #region Controller Unuse;
-        // Setup Touch Controllers
-        // Only work when start with controllers
-        /* if (m_OvrAvatar.StartWithControllers)
-         {
-             // Wait instantiate Left Touch Controller
-             WaitWhile waitInst_LTouchCtrl = new WaitWhile(() => { return GameObject.Find("lctrl:left_touch_controller_world") == null; });
-             yield return waitInst_LTouchCtrl;
-             l_controllerMesh = GameObject.Find("lctrl:left_touch_controller_world");
-             //l_controllerMesh.AddComponent<Outline>();
-             controller.Add(l_controllerMesh);
-
-             // Wait instantiate Right Touch Controller
-             WaitWhile waitInst_RTouchCtrl = new WaitWhile(() => { return GameObject.Find("rctrl:right_touch_controller_world") == null; });
-             yield return waitInst_RTouchCtrl;
-             r_controllerMesh = GameObject.Find("rctrl:right_touch_controller_world");
-             controller.Add(r_controllerMesh);
-
-             // Wait instantiate Left Button 1
-             WaitWhile waitInst_LBtn01 = new WaitWhile(() => { return GameObject.Find("lctrl:b_button01") == null; });
-             yield return waitInst_LBtn01;
-             l_controllerMesh_button01 = GameObject.Find("lctrl:b_button01");
-             //l_controllerMesh_button01.AddComponent<Outline>();
-             controller.Add(l_controllerMesh_button01);
-
-             // Wait instantiate Right Button 1
-             WaitWhile waitInst_RBtn01 = new WaitWhile(() => { return GameObject.Find("rctrl:b_button01") == null; });
-             yield return waitInst_RBtn01;
-             r_controllerMesh_button01 = GameObject.Find("rctrl:b_button01");
-             controller.Add(r_controllerMesh_button01);
-
-             // Wait instantiate Left Button 2
-             WaitWhile waitInst_LBtn02 = new WaitWhile(() => { return GameObject.Find("lctrl:b_button02") == null; });
-             yield return waitInst_LBtn02;
-             l_controllerMesh_button02 = GameObject.Find("lctrl:b_button02");
-             controller.Add(l_controllerMesh_button02);
-
-             // Wait instantiate Right Button 2
-             WaitWhile waitInst_RBtn02 = new WaitWhile(() => { return GameObject.Find("rctrl:b_button02") == null; });
-             yield return waitInst_RBtn02;
-             r_controllerMesh_button02 = GameObject.Find("rctrl:b_button02");
-             controller.Add(r_controllerMesh_button02);
-
-             // Wait instantiate Left Button 3
-             WaitWhile waitInst_LBtn03 = new WaitWhile(() => { return GameObject.Find("lctrl:b_button03") == null; });
-             yield return waitInst_LBtn03;
-             l_controllerMesh_button03 = GameObject.Find("lctrl:b_button03");
-             controller.Add(l_controllerMesh_button03);
-
-             // Wait instantiate Right Button 3
-             WaitWhile waitInst_RBtn03 = new WaitWhile(() => { return GameObject.Find("rctrl:b_button03") == null; });
-             yield return waitInst_RBtn03;
-             r_controllerMesh_button03 = GameObject.Find("rctrl:b_button03");
-             controller.Add(r_controllerMesh_button03);
-
-             // Wait instantiate Left Hold
-             WaitWhile waitInst_LHold = new WaitWhile(() => { return GameObject.Find("lctrl:b_hold") == null; });
-             yield return waitInst_LHold;
-             l_controllerMesh_hold = GameObject.Find("lctrl:b_hold");
-             controller.Add(l_controllerMesh_hold);
-
-             // Wait instantiate Right Hold
-             WaitWhile waitInst_RHold = new WaitWhile(() => { return GameObject.Find("rctrl:b_hold") == null; });
-             yield return waitInst_RHold;
-             r_controllerMesh_hold = GameObject.Find("rctrl:b_hold");
-             controller.Add(r_controllerMesh_hold);
-
-             // Wait instantiate Left Stick
-             WaitWhile waitInst_LStick = new WaitWhile(() => { return GameObject.Find("lctrl:b_stick") == null; });
-             yield return waitInst_LStick;
-             l_controllerMesh_stick = GameObject.Find("lctrl:b_stick");
-             controller.Add(l_controllerMesh_stick);
-
-             // Wait instantiate Right Stick
-             WaitWhile waitInst_RStick = new WaitWhile(() => { return GameObject.Find("rctrl:b_stick") == null; });
-             yield return waitInst_RStick;
-             r_controllerMesh_stick = GameObject.Find("rctrl:b_stick");
-             controller.Add(r_controllerMesh_stick);
-
-             // Wait instantiate Left Trigger
-             WaitWhile waitInst_LTrigger = new WaitWhile(() => { return GameObject.Find("lctrl:b_trigger") == null; });
-             yield return waitInst_LTrigger;
-             l_controllerMesh_trigger = GameObject.Find("lctrl:b_trigger");
-             controller.Add(l_controllerMesh_trigger);
-
-             // Wait instantiate Right Trigger
-             WaitWhile waitInst_RTrigger = new WaitWhile(() => { return GameObject.Find("rctrl:b_trigger") == null; });
-             yield return waitInst_RTrigger;
-             r_controllerMesh_trigger = GameObject.Find("rctrl:b_trigger");
-             controller.Add(r_controllerMesh_trigger);
         #endregion
-    }*/
-        #endregion
-        #endregion
-        l_button01.SetActive(false);
-        l_button02.SetActive(false);
-        l_side_trigger.SetActive(false);
-        l_trigger.SetActive(false);
-        l_stick.SetActive(false);
-        r_button01.SetActive(false);
-        r_button02.SetActive(false);
-        r_side_trigger.SetActive(false);
-        r_trigger.SetActive(false);
-        r_stick.SetActive(false);
-
-        curController = m_OvrAvatar.StartWithControllers;
-        showController = curController;
         ready = true;
     }
 
@@ -235,97 +147,6 @@ public class Player : MonoBehaviour
           playerSit = false;
         }
 
-
-        #region FindHandAndController
-        // Old script that used before changed to setup at Start()
-        /*
-         if (l_hand == null)
-             l_hand = GameObject.Find("hand_left_renderPart_0").GetComponent<Transform>();
-         if (r_hand == null)
-             r_hand = GameObject.Find("hand_right_renderPart_0").GetComponent<Transform>();
-
-         if (l_controllerMesh == null)
-         {
-             l_controllerMesh = GameObject.Find("lctrl:left_touch_controller_world");
-             //l_controllerMesh.AddComponent<Outline>();
-             controller.Add(l_controllerMesh);
-         }
-         if (l_controllerMesh_button01 == null)
-         {
-             l_controllerMesh_button01 = GameObject.Find("lctrl:b_button01");
-             //l_controllerMesh_button01.AddComponent<Outline>();
-             controller.Add(l_controllerMesh_button01);
-         }
-         if (l_controllerMesh_button02 == null)
-         {
-             l_controllerMesh_button02 = GameObject.Find("lctrl:b_button02");
-             controller.Add(l_controllerMesh_button02);
-         }
-         if (l_controllerMesh_button03 == null)
-         {
-             l_controllerMesh_button03 = GameObject.Find("lctrl:b_button03");
-             controller.Add(l_controllerMesh_button03);
-         }
-         if (l_controllerMesh_hold == null)
-         {
-             l_controllerMesh_hold = GameObject.Find("lctrl:b_hold");
-             controller.Add(l_controllerMesh_hold);
-         }
-         if (l_controllerMesh_stick == null)
-         {
-             l_controllerMesh_stick = GameObject.Find("lctrl:b_stick");
-             controller.Add(l_controllerMesh_stick);
-         }
-         if (l_controllerMesh_trigger == null)
-         {
-             l_controllerMesh_trigger = GameObject.Find("lctrl:b_trigger");
-             controller.Add(l_controllerMesh_trigger);
-         }
-
-         if (r_controllerMesh == null)
-         {
-             r_controllerMesh = GameObject.Find("rctrl:right_touch_controller_world");
-             controller.Add(r_controllerMesh);
-
-         }
-         if (r_controllerMesh_button01 == null)
-         {
-             r_controllerMesh_button01 = GameObject.Find("rctrl:b_button01");
-             controller.Add(r_controllerMesh_button01);
-
-         }
-         if (r_controllerMesh_button02 == null)
-         {
-             r_controllerMesh_button02 = GameObject.Find("rctrl:b_button02");
-             controller.Add(r_controllerMesh_button02);
-
-         }
-         if (r_controllerMesh_button03 == null)
-         {
-             r_controllerMesh_button03 = GameObject.Find("rctrl:b_button03");
-             controller.Add(r_controllerMesh_button03);
-
-         }
-         if (r_controllerMesh_hold == null)
-         {
-             r_controllerMesh_hold = GameObject.Find("rctrl:b_hold");
-             controller.Add(r_controllerMesh_hold);
-
-         }
-         if (r_controllerMesh_stick == null)
-         {
-             r_controllerMesh_stick = GameObject.Find("rctrl:b_stick");
-             controller.Add(r_controllerMesh_stick);
-
-         }
-         if (r_controllerMesh_trigger == null)
-         {
-             r_controllerMesh_trigger = GameObject.Find("rctrl:b_trigger");
-             controller.Add(r_controllerMesh_trigger);
-
-         }
-         */
-        #endregion
         if (!ready) return;
         if (showController != curController) {
             m_OvrAvatar.ShowControllers(showController);
@@ -358,25 +179,10 @@ public class Player : MonoBehaviour
                 fingerTipObj.tag = "FingerTip";
             }
         }
-
-
-
+        
         UpdateCapTouchStates();
         CheckUnderController();
-        SnapHandTogether();
-        #region Debug Outline
-        EnableOutline(l_button01, l_button01_outline);
-        EnableOutline(l_button02, l_button02_outline);
-        EnableOutline(l_stick, l_stick_outline);
-        EnableOutline(l_trigger, l_trigger_outline);
-        EnableOutline(l_side_trigger, l_side_trigger_outline);
-
-        EnableOutline(r_button01, r_button01_outline);
-        EnableOutline(r_button02, r_button02_outline);
-        EnableOutline(r_stick, r_stick_outline);
-        EnableOutline(r_trigger, r_trigger_outline);
-        EnableOutline(r_side_trigger, r_side_trigger_outline);
-        #endregion
+       // SnapHandTogether();
     }
 
     private void UpdateCapTouchStates()
@@ -455,73 +261,22 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void EnableOutline(GameObject button, bool enable)
-    {
-        button.SetActive(enable);
-    }
-
     public void EnableOutlineHandFul()
     {
-        EnableOutline(l_button01, true);
-        EnableOutline(l_button02, true);
-        EnableOutline(l_side_trigger, true);
-        EnableOutline(l_trigger, true);
-
-        EnableOutline(r_button01, true);
-        EnableOutline(r_button02, true);
-        EnableOutline(r_side_trigger, true);
-        EnableOutline(r_trigger, true);
+        leftButtons.EnableOutlineHandful();
+        rightButtons.EnableOutlineHandful();
     }
 
     public void EnableOutlinePointing()
     {
-        EnableOutline(l_side_trigger, true);
-
-        EnableOutline(r_side_trigger, true);
+        leftButtons.EnableOutlinePointingHand();
+        rightButtons.EnableOutlinePointingHand();
     }
 
-    public void EnableOutlineByName(string buttonName, bool enable)
+    public void EnableOutlineBareHands()
     {
-        if (buttonName == "l_botton1")
-        {
-            EnableOutline(l_button01, enable);
-        }
-        else if (buttonName == "l_botton2")
-        {
-            EnableOutline(l_button02, enable);
-        }
-        else if (buttonName == "l_trigger")
-        {
-            EnableOutline(l_trigger, enable);
-        }
-        else if (buttonName == "l_sideTrigger")
-        {
-            EnableOutline(l_side_trigger, enable);
-        }
-        else if (buttonName == "l_stick")
-        {
-            EnableOutline(l_stick, enable);
-        }
-
-        if (buttonName == "r_botton1")
-        {
-            EnableOutline(r_button01, enable);
-        }
-        else if (buttonName == "r_botton2")
-        {
-            EnableOutline(r_button02, enable);
-        }
-        else if (buttonName == "r_trigger")
-        {
-            EnableOutline(r_trigger, enable);
-        }
-        else if (buttonName == "r_sideTrigger")
-        {
-            EnableOutline(r_side_trigger, enable);
-        }
-        else if (buttonName == "r_stick")
-        {
-            EnableOutline(r_stick, enable);
-        }
+        leftButtons.EnableOutlineBareHand();
+        rightButtons.EnableOutlineBareHand();
     }
+
 }
