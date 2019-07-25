@@ -348,9 +348,9 @@ public class BeatController : MonoBehaviour
 
     public void EnableBeatTutorial() {
         tutorialBump = true;
-       
         beatCanvas.SetActive(true);
     }
+
 
     void CountHighCombo()
     {

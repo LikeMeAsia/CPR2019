@@ -39,10 +39,6 @@ public class Player : MonoBehaviour
     public bool r_palm = false;
     public bool r_ful = false;
 
-    [Header("CPR Hand")]
-    public SnapHand snapHand;
-    public Vector3 centerPoint;
-    public GameObject cprHand;
 
     [Header("Left Controller")]
     [ReadOnly]
@@ -56,8 +52,10 @@ public class Player : MonoBehaviour
     public GameObject r_OutlineCtrlPrefab;
     public TouchButtonOutlines rightButtons;
 
-    public bool l_handIsUnder;
-    public bool r_handIsUnder;
+    [Header("CPR Hands")]
+    public CPRHand cprHand;
+
+
     [Header(" ")]
     public bool showController;
     private bool curController;
@@ -106,15 +104,15 @@ public class Player : MonoBehaviour
 
         #region Player's Hands and Controllers
         // Wait instantiate Left Hand
-        WaitWhile waitInst_LHand = new WaitWhile(() => { return m_OvrAvatar.transform.Find("hand_left/hand_left_renderPart_0") == null; });
+        WaitWhile waitInst_LHand = new WaitWhile(() => { return m_OvrAvatar.transform.Find("hand_left") == null; });
         yield return waitInst_LHand;
-        l_hand = m_OvrAvatar.transform.Find("hand_left/hand_left_renderPart_0");
+        l_hand = m_OvrAvatar.transform.Find("hand_left");
         l_hand.tag = "hand";
 
         // Wait instantiate Right Hand
-        WaitWhile waitInst_RHand = new WaitWhile(() => { return m_OvrAvatar.transform.Find("hand_right/hand_right_renderPart_0") == null; });
+        WaitWhile waitInst_RHand = new WaitWhile(() => { return m_OvrAvatar.transform.Find("hand_right") == null; });
         yield return waitInst_RHand;
-        r_hand = m_OvrAvatar.transform.Find("hand_right/hand_right_renderPart_0");
+        r_hand = m_OvrAvatar.transform.Find("hand_right");
         r_hand.tag = "hand";
         // Wait instantiate Left Controller
         WaitWhile waitInst_LController = new WaitWhile(() => { return GameObject.Find("controller_left") == null; });
@@ -126,10 +124,10 @@ public class Player : MonoBehaviour
         yield return waitInst_LHand;
         r_controller_mesh = GameObject.Find("controller_right");
         
-        l_hand.gameObject.ApplyRecursivelyOnDescendants(child => child.layer = LayerMask.NameToLayer("OnTop"));
-        r_hand.gameObject.ApplyRecursivelyOnDescendants(child => child.layer = LayerMask.NameToLayer("OnTop"));
-        l_controller_mesh.gameObject.ApplyRecursivelyOnDescendants(child => child.layer = LayerMask.NameToLayer("OnTop"));
-        r_controller_mesh.gameObject.ApplyRecursivelyOnDescendants(child => child.layer = LayerMask.NameToLayer("OnTop"));
+        //l_hand.gameObject.ApplyRecursivelyOnDescendants(child => child.layer = LayerMask.NameToLayer("OnTop"));
+        //r_hand.gameObject.ApplyRecursivelyOnDescendants(child => child.layer = LayerMask.NameToLayer("OnTop"));
+        //l_controller_mesh.gameObject.ApplyRecursivelyOnDescendants(child => child.layer = LayerMask.NameToLayer("OnTop"));
+        //r_controller_mesh.gameObject.ApplyRecursivelyOnDescendants(child => child.layer = LayerMask.NameToLayer("OnTop"));
         #endregion
         ready = true;
     }
@@ -154,7 +152,7 @@ public class Player : MonoBehaviour
         }
 
         if (l_hand != null && l_indexFingerTrans == null) {
-            l_indexFingerTrans = l_hand.Find("hands:l_hand_world/hands:b_l_hand/hands:b_l_index1/hands:b_l_index2/hands:b_l_index3/hands:b_l_index_ignore");
+            l_indexFingerTrans = l_hand.Find("hand_left_renderPart_0/hands:l_hand_world/hands:b_l_hand/hands:b_l_index1/hands:b_l_index2/hands:b_l_index3/hands:b_l_index_ignore");
             if (l_indexFingerTrans != null)
             {
                 GameObject fingerTipObj = Instantiate<GameObject>(new GameObject("l_index_tip"), l_indexFingerTrans);
@@ -168,7 +166,7 @@ public class Player : MonoBehaviour
 
         if (r_hand != null && r_indexFingerTrans == null)
         {
-            r_indexFingerTrans = r_hand.Find("hands:r_hand_world/hands:b_r_hand/hands:b_r_index1/hands:b_r_index2/hands:b_r_index3/hands:b_r_index_ignore");
+            r_indexFingerTrans = r_hand.Find("hand_right_renderPart_0/hands:r_hand_world/hands:b_r_hand/hands:b_r_index1/hands:b_r_index2/hands:b_r_index3/hands:b_r_index_ignore");
             if (r_indexFingerTrans != null)
             {
                 GameObject fingerTipObj = Instantiate<GameObject>(new GameObject("r_index_tip"), r_indexFingerTrans);
@@ -181,8 +179,7 @@ public class Player : MonoBehaviour
         }
         
         UpdateCapTouchStates();
-        CheckUnderController();
-       // SnapHandTogether();
+
     }
 
     private void UpdateCapTouchStates()
@@ -210,55 +207,6 @@ public class Player : MonoBehaviour
         r_ful   = OVRInput.Get(OVRInput.NearTouch.PrimaryIndexTrigger, r_controller) &&
                   OVRInput.Get(OVRInput.NearTouch.PrimaryThumbButtons, r_controller) &&
                   OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, r_controller);
-    }
-
-    private void CheckUnderController()
-    {
-        if (l_hand.position.y < r_hand.position.y)
-        {
-            l_handIsUnder = true;
-        }
-        else
-        {
-            l_handIsUnder = false;
-        }
-
-        if (r_hand.position.y < l_hand.position.y)
-        {
-            r_handIsUnder = true;
-        }
-        else
-        {
-            r_handIsUnder = false;
-        }
-    }
-
-    private void SnapHandTogether()
-    {
-        centerPoint = (l_hand.position + r_hand.position) / 2;
-
-        if (snapHand.snaping && l_handIsUnder /*&& l_palm*/ && r_ful)
-        {
-            l_hand.gameObject.SetActive(false);
-            r_hand.gameObject.SetActive(false);
-            cprHand.SetActive(true);
-            cprHand.transform.position = centerPoint;
-            cprHand.transform.rotation = Quaternion.identity;
-        }
-        else if (snapHand.snaping && r_handIsUnder /*&& r_palm*/ && l_ful)
-        {
-            l_hand.gameObject.SetActive(false);
-            r_hand.gameObject.SetActive(false);
-            cprHand.SetActive(true);
-            cprHand.transform.position = centerPoint;
-            cprHand.transform.rotation = Quaternion.identity;
-        }
-        else
-        {
-            l_hand.gameObject.SetActive(true);
-            r_hand.gameObject.SetActive(true);
-            cprHand.SetActive(false);
-        }
     }
 
     public void EnableOutlineHandFul()

@@ -23,8 +23,8 @@ public class Billboard : MonoBehaviour
     // The function to billboard this object to face the player
     void Update()
     {
-        Vector3 direction = (player.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+       Vector3 direction = (Camera.main.transform.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(direction, transform.up);
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * facePlayerfactor);
     }
 }

@@ -49,11 +49,8 @@ public class ScenarioControl : MonoBehaviour
     public bool moveToDoorComplete;
     public bool openDoorComplete;
     public bool cutscene1Complete;
-    public bool cutscene2Complete;
 
     [Header(" ")]
-    public SnapHand snapHand;
-    public CutsceneEndCheck cutsceneCheck;
     float teleportTimer = 0;
     float moveDelay = 0;
     public float moveTimer = 0;
@@ -64,9 +61,12 @@ public class ScenarioControl : MonoBehaviour
 
     void Start()
     {
-
-        //shotIndex = 0;
-        //playerAnim.SetTrigger("fade in");
+        handfulComplete = false;
+        handpalmComplete = false;
+        pointingComplete = false;
+        moveToDoorComplete = false;
+        openDoorComplete = false;
+        cutscene1Complete = false;
     }
 
     void Update()
@@ -155,22 +155,29 @@ public class ScenarioControl : MonoBehaviour
             pointingCanvas.GetComponent<Animator>().SetBool("disable", true);
             doorCanvas.SetActive(true);
             MovePlayertoArea(pos[0], moveSpeed, 3);
-        } else if (openDoorComplete && !doorKnob.doorOpen) {
+        } else if (!doorKnob.doorOpen && openDoorComplete) {
             doorKnob.OpenDoor();
-        }
-        else if (doorKnob.doorOpen && !cutscene1Complete)//เปิดประตู
-        {
-            cutscene1Complete = true;
             openDoorComplete = true;
+            RunCutScene1();
             doorCanvas.GetComponent<Animator>().SetBool("disable", true);
             MovePlayertoArea(pos[1], moveSpeed, 3);
         }
-        else if (cutsceneCheck.cutsceneIsEnd && !cutscene2Complete)//เดินไปหาพ่อ
+        else if (doorKnob.doorOpen && !openDoorComplete)//เปิดประตู
         {
-            cutscene2Complete = true;
+            openDoorComplete = true;
+            RunCutScene1();
+            doorCanvas.GetComponent<Animator>().SetBool("disable", true);
+            MovePlayertoArea(pos[1], moveSpeed, 3);
+        }
+        else if (openDoorComplete && cutscene1Complete)//เดินไปหาพ่อ
+        {
             MovePlayertoArea(pos[2], moveSpeed, 1);
         }
 
+    }
+
+    public void EndCutScene1() {
+        cutscene1Complete = true;
     }
 
     //peter test zone
@@ -204,17 +211,6 @@ public class ScenarioControl : MonoBehaviour
             BoxCollider box = to.GetComponentInChildren<BoxCollider>();
             if (box != null)
             {
-                /*Vector3 nearestPt = Vector3.zero;
-                Vector3 closestBoundPt = Vector3.zero;
-                float dist = 0;
-                foreach (Vector3 boundaryPoint in boundaryPoints)
-                {
-                    if (box.bounds.SqrDistance(boundaryPoint) > dist)
-                    {
-                        nearestPt = boundaryPoint;
-                        closestBoundPt = box.bounds.ClosestPoint(boundaryPoint);
-                    }
-                }*/
                 toPos = to.position;
                 toPos = new Vector3(toPos.x, Player.Instance.transform.position.y, toPos.z);
             }

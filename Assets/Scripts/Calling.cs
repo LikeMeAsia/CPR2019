@@ -1,19 +1,35 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(AudioSource))]
 public class Calling : MonoBehaviour
 {
+    [System.Serializable]
+    public struct Conversations {
+        public AudioClip[] conversations;
+    }
 
-    public Player player;
-    public GameObject aphone;
+    public BeatController beatController;
+
     public GameObject phone;
     public GameObject Black_screen;
     public GameObject calling_screen;
-    public AudioSource Seq1_Conversation1, Seq1_Conversation2, Seq1_Conversation3, Seq1_Conversation4;
-    public AudioSource Put_Phone_Call_button;
+    [SerializeField]
+    public Conversations firstCall;
+    [SerializeField]
+    public Conversations fatherNotResponse;
+    [SerializeField]
+    public Conversations readyToCpr;
+
+    public AudioClip phoneButtonClick;
+    public AudioClip rUReady;
+    public AudioClip oneTwoSound;
     public GameObject Phone_Activate_Icon;
     public GameObject Put_calling_button;
     public GameObject Lay_Phone_warning;
+    public Text layPhoneText;
     public Rigidbody Phone_rigidbody;
 
     public Image placeableArea;
@@ -28,21 +44,29 @@ public class Calling : MonoBehaviour
     public int Calling_count;
     public bool placeable;
     public bool sanpItem;
+    public bool rUReadyEnd;
+
+    private AudioSource audioSource;
 
     void Start()
     {
+        Lay_Phone_warning.SetActive(false);
+        rUReadyEnd = false;
         Intilize();
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-        Phone_rigidbody = GameObject.FindGameObjectWithTag("Phone").GetComponent<Rigidbody>();
+        Phone_rigidbody = GetComponentInChildren<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
         placeable = false;
+        placeableArea.gameObject.SetActive(false);
     }
     void Update()
     {
-        //Phone_Activate_Function();
         Activate_check();
         Icon_check();
-        Conversation1_check();
-        Timescale();
+        if (CPRHand.Instance.snaping && rUReadyEnd)
+        {
+            rUReadyEnd = false;
+            PlayReadyToCprVoices();
+        }
     }
 
     public void Intilize()
@@ -66,18 +90,18 @@ public class Calling : MonoBehaviour
             Phone_Activate = true;
         }
 
-        if (other.CompareTag("Hand") && (player.l_ful || player.r_ful))
+        if (other.CompareTag("Hand") && (Player.Instance.l_ful || Player.Instance.r_ful))
         {
             sanpItem = true;
         }
 
 
-        if (other.CompareTag("FingerTip")  && (player.l_isPointing || player.r_isPointing))
+        if (other.CompareTag("FingerTip")  && (Player.Instance.l_isPointing || Player.Instance.r_isPointing))
         {
             Call = true;
-            Phone_Calling = true;
-            warrning_icon = true;
-            calling_screen.SetActive(true);
+            if (!Phone_Calling) {
+                StartCall();
+            }
 
         }
         if (other.gameObject.CompareTag("Phone_area") && Phone_rigidbody.isKinematic)
@@ -91,13 +115,11 @@ public class Calling : MonoBehaviour
     {
         if (placeable && other.gameObject.CompareTag("Phone_area") &&  !Phone_rigidbody.isKinematic)
         {
-            Lay_Phone_warning.SetActive(false);
-            warrning_icon = false;
-            Player.Instance.snapHand.lockSnap = false;
-           // ScenarioControl.Instance.cprCanvas.SetActive(true);
-            other.gameObject.SetActive(false);
             placeableArea.gameObject.SetActive(false);
-            this.enabled = false;
+            warrning_icon = false;
+            other.gameObject.SetActive(false);
+            layPhoneText.text = "สะกิดใหล่พ่อ 2 ครั้ง";
+            // this.enabled = false;
         }
     }
 
@@ -118,37 +140,79 @@ public class Calling : MonoBehaviour
     }
 
 
-        public void Conversation1_check()
+    public void StartCall()
     {
-        if (Phone_Calling == true && Calling_count==0)
+        if (!Phone_Calling)
         {
-            Put_Phone_Call_button.Play();
-            Seq1_Conversation1.PlayDelayed(Put_Phone_Call_button.clip.length);
-            Seq1_Conversation2.PlayDelayed(Put_Phone_Call_button.clip.length+ Seq1_Conversation1.clip.length);
-            Seq1_Conversation3.PlayDelayed(Put_Phone_Call_button.clip.length + Seq1_Conversation1.clip.length + Seq1_Conversation2.clip.length);
-            Seq1_Conversation4.PlayDelayed(Put_Phone_Call_button.clip.length + Seq1_Conversation1.clip.length + Seq1_Conversation2.clip.length + Seq1_Conversation3.clip.length);
-            Calling_count++;
-
-            Put_calling_button.SetActive(false);
-
-            Icon_show = false;
-            Phone_Calling = false;
-
+            Phone_Calling = true;
+            calling_screen.SetActive(true);
+            audioSource.PlayOneShot(phoneButtonClick);
+            StartCoroutine(IConversationPlay(firstCall, delegate {
+                Calling_count++;
+                Put_calling_button.SetActive(false);
+                Icon_show = false;
+                Lay_Phone_warning.SetActive(true);
+                placeableArea.gameObject.SetActive(true);
+            }));
         }
-
     }
 
-    /*public void Phone_Activate_Function()
+    public void StartTeachCprCall()
     {
-        if (Input.GetKeyDown(KeyCode.G))
+        if (ShakeShoulder.shakeEnd)
         {
-            phone.transform.Translate(0, 1, 0);
-            aphone.transform.Rotate(90, 0, 0);
-            Phone_Activate = true;
+            StartCoroutine(IConversationPlay(fatherNotResponse, delegate
+            {
+                ScenarioControl.Instance.cprCanvas.SetActive(true);
+                Player.Instance.cprHand.enabledSnap = true;
+                audioSource.PlayOneShot(rUReady);
+                StartCoroutine(IWaitForReady());
+            }));
         }
+    }
+    public void PlayReadyToCprVoices()
+    {
+        StartCoroutine(IConversationPlay(readyToCpr, delegate
+        {
+            StartCoroutine(ILoopCountCPR());
+        }));
+    }
+
+    IEnumerator ILoopCountCPR() {
+        audioSource.Stop();
+        audioSource.clip = oneTwoSound;
+        audioSource.loop = true;
+        audioSource.Play();
+        beatController.EnableBeatTutorial();
+        WaitWhile endTutorial = new WaitWhile(()=> { return beatController.tutorialBump; });
+        yield return endTutorial;
+        audioSource.Stop();
+        audioSource.loop = false;
+        audioSource.clip = null;
+    }
 
 
-    }*/
+    IEnumerator IWaitForReady()
+    {
+        Debug.Log("Call IWaitForReady()");
+        if (rUReadyEnd) yield break;
+        yield return new WaitForSeconds(rUReady.length);
+        rUReadyEnd = true;
+    }
+
+    IEnumerator IConversationPlay(Conversations conversationSet, UnityAction actionAfterPlay) {
+        yield return new WaitForSeconds(phoneButtonClick.length);
+        if (conversationSet.conversations != null) {
+            foreach (AudioClip clip in conversationSet.conversations)
+            {
+                if (clip == null) continue;
+                audioSource.PlayOneShot(clip);
+                yield return new WaitForSeconds(clip.length);
+            }
+        }
+        if(actionAfterPlay!=null)
+            actionAfterPlay.Invoke();
+    }
 
     public void Activate_check()
     {
@@ -180,13 +244,13 @@ public class Calling : MonoBehaviour
 
     public void Timescale()
     {
-        if (Seq1_Conversation4.time == Seq1_Conversation4.clip.length && warrning_icon == true)
+       /* if (Seq1_Conversation4.time == Seq1_Conversation4.clip.length && warrning_icon == true)
         {
             Lay_Phone_warning.SetActive(true);
         }
         else if (warrning_icon == false)
             Lay_Phone_warning.SetActive(false);
-
+        */
 
     }
 

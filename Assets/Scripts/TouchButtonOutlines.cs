@@ -26,6 +26,7 @@ public class TouchButtonOutlines : MonoBehaviour
 
     void Start()
     {
+        gameObject.ApplyRecursivelyOnDescendants(child => child.layer = LayerMask.NameToLayer("OnTop"));
         SkinnedMeshRenderer[] rends = GetComponentsInChildren<SkinnedMeshRenderer>();
         foreach (SkinnedMeshRenderer rend in rends)
         {
