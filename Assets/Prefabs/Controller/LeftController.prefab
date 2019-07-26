@@ -1215,7 +1215,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8673754759252985341}
   - component: {fileID: 2905879096263120323}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: LeftController
   m_TagString: Untagged
   m_Icon: {fileID: 0}

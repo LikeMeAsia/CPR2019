@@ -5,13 +5,14 @@ TagManager:
   serializedVersion: 2
   tags:
   - Hand Checker
-  - hand
   - Phone_area
   - Phone
   - Conversation1
   - Hand
   - Boundary
   - FingerTip
+  - Ground
+  - hand
   layers:
   - Default
   - TransparentFX
@@ -23,9 +24,9 @@ TagManager:
   - 
   - OnTop
   - Outline
-  - 
-  - 
-  - 
+  - Props
+  - Player
+  - Grabable
   - 
   - 
   - 

@@ -9,7 +9,7 @@ public class Phone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("hand") && (other.GetComponentInParent<Player>().l_ful && other.GetComponentInParent<Player>().r_ful))
+        if (other.CompareTag("Hand") && (other.GetComponentInParent<Player>().l_ful && other.GetComponentInParent<Player>().r_ful))
         {
             phoneIsPickedUp = true;
             hand = other.gameObject;

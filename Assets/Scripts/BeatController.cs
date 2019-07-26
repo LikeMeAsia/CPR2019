@@ -27,6 +27,7 @@ public class BeatController : MonoBehaviour
 
     public float startExpand;
     public float endExpand;
+    public float fadeRadius;
     public float hit;
     public float errCorrectionHit;
     float deltaExpend;
@@ -138,8 +139,16 @@ public class BeatController : MonoBehaviour
           beatRing.color = fadeColor;
 
           alphaLevel = startAlpha + (deltaAlpha * Mathf.Clamp01(beatTimer / beatTime));*/
-        alphaLevel = 0;
-        beatRing.color = new Color(beatRing.color.r, beatRing.color.g, beatRing.color.b, alphaLevel);
+        if (beatRadius <= fadeRadius)
+        {
+            alphaLevel = 0;
+            beatRing.color = new Color(beatRing.color.r, beatRing.color.g, beatRing.color.b, alphaLevel);
+        }
+        else
+        {
+            alphaLevel = 100;
+            beatRing.color = new Color(beatRing.color.r, beatRing.color.g, beatRing.color.b, alphaLevel);
+        }
     }
 
     void ExpandRing()
@@ -187,6 +196,7 @@ public class BeatController : MonoBehaviour
             GhostAppear();
             CountHighCombo();
             TotalScoreBoard();
+            FadeColor();
 
         }
     }
@@ -271,7 +281,7 @@ public class BeatController : MonoBehaviour
         curhpDad -= 1 * Time.deltaTime;
         hpBarValue = curhpDad / maxHp;
         soulPosX.localPosition = new Vector3(hpBarValue, 0.0f, 0.0f);
-        hpdadText.text = "Hp:" + curhpDad + "/" + maxHp;
+        hpdadText.text = "Hp:" + Mathf.CeilToInt(curhpDad) + "/" + maxHp;
         hpBar.fillAmount = hpBarValue;
         if (curhpDad <= 0.0f)
         {

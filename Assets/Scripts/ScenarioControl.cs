@@ -49,6 +49,7 @@ public class ScenarioControl : MonoBehaviour
     public bool moveToDoorComplete;
     public bool openDoorComplete;
     public bool cutscene1Complete;
+    public bool toFather;
 
     [Header(" ")]
     float teleportTimer = 0;
@@ -66,7 +67,7 @@ public class ScenarioControl : MonoBehaviour
         pointingComplete = false;
         moveToDoorComplete = false;
         openDoorComplete = false;
-        cutscene1Complete = false;
+        toFather = false;
     }
 
     void Update()
@@ -127,7 +128,7 @@ public class ScenarioControl : MonoBehaviour
                 isMove = false;
             }
         }
-        else if (!handfulComplete)//กำ
+        if (!handfulComplete)//กำ
         {
             CheckHandFul();
             Player.Instance.EnableOutlineHandFul();
@@ -158,19 +159,20 @@ public class ScenarioControl : MonoBehaviour
         } else if (!doorKnob.doorOpen && openDoorComplete) {
             doorKnob.OpenDoor();
             openDoorComplete = true;
-            RunCutScene1();
+            //RunCutScene1();
             doorCanvas.GetComponent<Animator>().SetBool("disable", true);
             MovePlayertoArea(pos[1], moveSpeed, 3);
         }
         else if (doorKnob.doorOpen && !openDoorComplete)//เปิดประตู
         {
             openDoorComplete = true;
-            RunCutScene1();
+            //RunCutScene1();
             doorCanvas.GetComponent<Animator>().SetBool("disable", true);
             MovePlayertoArea(pos[1], moveSpeed, 3);
         }
-        else if (openDoorComplete && cutscene1Complete)//เดินไปหาพ่อ
+        else if (openDoorComplete && cutscene1Complete && !toFather)//เดินไปหาพ่อ
         {
+            toFather = true;
             MovePlayertoArea(pos[2], moveSpeed, 1);
         }
 
@@ -202,6 +204,8 @@ public class ScenarioControl : MonoBehaviour
 
     public void MovePlayertoArea(Transform to, float moveSpeed, float imoveDelay)
     {
+        moveTimer = 0;
+        isMove = false;
         moveDelay = imoveDelay;
         toPos = Vector3.zero;
         bool configured = OVRManager.boundary.GetConfigured();

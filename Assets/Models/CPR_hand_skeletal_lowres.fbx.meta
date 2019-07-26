@@ -1,27 +1,9 @@
 fileFormatVersion: 2
-guid: 68d5ee404f5e8184082af54b423ca59e
+guid: 370e806138216c2468fba2cb9eb5123b
 ModelImporter:
   serializedVersion: 25
-  internalIDToNameTable:
-  - first:
-      74: 1827226128182048838
-    second: Take 001
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: FatherTest_TestLambert
-    second: {fileID: 2100000, guid: a00c9b28d3dea25479a61cef97339e21, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: father_mat
-    second: {fileID: 2100000, guid: 062540dafbb7e10488c539aa8012593f, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: shirt_mat
-    second: {fileID: 2100000, guid: 9c83c0fd24ef70c4f9e37773f60c8e1d, type: 2}
+  internalIDToNameTable: []
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
@@ -48,36 +30,7 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations:
-    - serializedVersion: 16
-      name: Take 001
-      takeName: Take 001
-      internalID: 1827226128182048838
-      firstFrame: -10
-      lastFrame: 120
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
+    clipAnimations: []
     isReadable: 0
   meshes:
     lODScreenPercentages: []
@@ -87,8 +40,8 @@ ModelImporter:
     useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
-    importCameras: 0
-    importLights: 0
+    importCameras: 1
+    importLights: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
@@ -104,7 +57,7 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 0
+    useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0

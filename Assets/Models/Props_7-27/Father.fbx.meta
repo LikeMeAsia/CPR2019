@@ -1,27 +1,12 @@
 fileFormatVersion: 2
-guid: 68d5ee404f5e8184082af54b423ca59e
+guid: f0b9361dc57ecc048b3de449eacbd4b1
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable:
   - first:
       74: 1827226128182048838
     second: Take 001
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: FatherTest_TestLambert
-    second: {fileID: 2100000, guid: a00c9b28d3dea25479a61cef97339e21, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: father_mat
-    second: {fileID: 2100000, guid: 062540dafbb7e10488c539aa8012593f, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: shirt_mat
-    second: {fileID: 2100000, guid: 9c83c0fd24ef70c4f9e37773f60c8e1d, type: 2}
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
@@ -87,8 +72,8 @@ ModelImporter:
     useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
-    importCameras: 0
-    importLights: 0
+    importCameras: 1
+    importLights: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
@@ -104,7 +89,7 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 0
+    useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0

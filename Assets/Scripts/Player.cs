@@ -107,13 +107,13 @@ public class Player : MonoBehaviour
         WaitWhile waitInst_LHand = new WaitWhile(() => { return m_OvrAvatar.transform.Find("hand_left") == null; });
         yield return waitInst_LHand;
         l_hand = m_OvrAvatar.transform.Find("hand_left");
-        l_hand.tag = "hand";
+        l_hand.tag = "Hand";
 
         // Wait instantiate Right Hand
         WaitWhile waitInst_RHand = new WaitWhile(() => { return m_OvrAvatar.transform.Find("hand_right") == null; });
         yield return waitInst_RHand;
         r_hand = m_OvrAvatar.transform.Find("hand_right");
-        r_hand.tag = "hand";
+        r_hand.tag = "Hand";
         // Wait instantiate Left Controller
         WaitWhile waitInst_LController = new WaitWhile(() => { return GameObject.Find("controller_left") == null; });
         yield return waitInst_LHand;

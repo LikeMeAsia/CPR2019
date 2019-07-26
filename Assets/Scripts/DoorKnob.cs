@@ -33,6 +33,7 @@ public class DoorKnob : MonoBehaviour
         if (doorOpen) return;
         doorAnim.SetTrigger("open");
         doorOpen = true;
+        SimpleDirectorController.Instance.PlayTrack(0);
         this.enabled = false;
     }
 }
