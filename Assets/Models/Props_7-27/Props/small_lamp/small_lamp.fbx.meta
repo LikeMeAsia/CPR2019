@@ -3,13 +3,7 @@ guid: 5d9965e3941633e489a550b159db7984
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: small_lamp_small_lamp_mat
-    second: {fileID: -475221662702641331, guid: 16d78b509a95727468ec914c80ba6251,
-      type: 3}
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
@@ -46,8 +40,8 @@ ModelImporter:
     useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
-    importCameras: 0
-    importLights: 0
+    importCameras: 1
+    importLights: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
