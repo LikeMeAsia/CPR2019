@@ -16,6 +16,7 @@ public class ScenarioControl : MonoBehaviour
     #region Variable
     [Header("Game Object")]
     //[SerializeField] private int shotIndex;
+    public Animator handTutorialAnim;
     public GameObject handfulCanvas;
     public GameObject handpalmCanvas;
     public GameObject pointingCanvas;
@@ -68,6 +69,8 @@ public class ScenarioControl : MonoBehaviour
         moveToDoorComplete = false;
         openDoorComplete = false;
         toFather = false;
+        handTutorialAnim.SetInteger("type", 0);
+        handTutorialAnim.SetBool("disable", false);
     }
 
     void Update()
@@ -132,28 +135,32 @@ public class ScenarioControl : MonoBehaviour
         {
             CheckHandFul();
             Player.Instance.EnableOutlineHandFul();
-            handfulCanvas.SetActive(true);
+            //handfulCanvas.SetActive(true);
         }
         else if (handfulComplete && !handpalmComplete)//แบ
         {
+            handTutorialAnim.SetInteger("type", 1);
+            handTutorialAnim.SetBool("disable", false);
             CheckHandPalm();
             Player.Instance.EnableOutlineBareHands();
-            handfulCanvas.GetComponent<Animator>().SetBool("disable", true);
-            handpalmCanvas.SetActive(true);
+            //handfulCanvas.GetComponent<Animator>().SetBool("disable", true);
+            //handpalmCanvas.SetActive(true);
         }
         else if (handpalmComplete && !pointingComplete)//ชื้
         {
+            handTutorialAnim.SetInteger("type", 2);
+            handTutorialAnim.SetBool("disable", false);
             CheckPointing();
             Player.Instance.EnableOutlinePointing();
-            handpalmCanvas.GetComponent<Animator>().SetBool("disable", true);
-            pointingCanvas.SetActive(true);
+           // handpalmCanvas.GetComponent<Animator>().SetBool("disable", true);
+            //pointingCanvas.SetActive(true);
         }
         else if (handfulComplete && handpalmComplete && pointingComplete && !moveToDoorComplete)//เดินไปประตู
         {
             moveToDoorComplete = true;
             Player.Instance.EnableOutlineBareHands();
             Player.Instance.showController = false;
-            pointingCanvas.GetComponent<Animator>().SetBool("disable", true);
+           // pointingCanvas.GetComponent<Animator>().SetBool("disable", true);
             doorCanvas.SetActive(true);
             MovePlayertoArea(pos[0], moveSpeed, 3);
         } else if (!doorKnob.doorOpen && openDoorComplete) {
@@ -250,43 +257,77 @@ public class ScenarioControl : MonoBehaviour
         }
     }
 
-    private void CheckPointing()
-    {
-        if ((Player.Instance.l_isPointing && Player.Instance.r_isPointing) && pointingTimer < pointingTime)
-        {
-            pointingTimer += Time.deltaTime;
-        }
-        else if (pointingTimer >= pointingTime)
-        {
-            pointingTimer = 0;
-            pointingComplete = true;
-        }
-    }
 
     private void CheckHandFul()
     {
         if (Player.Instance == null) return;
-        if ((Player.Instance.l_ful && Player.Instance.l_ful) && handfulTimer < handfulTime)
-        {
-            handfulTimer += Time.deltaTime;
-        }
-        else if (handfulTimer >= handfulTime)
+        if (handfulTimer >= handfulTime)
         {
             handfulTimer = 0;
             handfulComplete = true;
+            handTutorialAnim.SetInteger("type", 1);
+            handTutorialAnim.SetBool("disable", true);
+            handTutorialAnim.SetBool("action", false);
+        }
+        else {
+            if (Player.Instance.l_ful && Player.Instance.l_ful)
+            {
+                handfulTimer += Time.deltaTime;
+                handTutorialAnim.SetBool("action", true);
+            }
+            else {
+                handTutorialAnim.SetBool("action", false);
+            }
         }
     }
 
     private void CheckHandPalm()
     {
-        if ((Player.Instance.l_palm && Player.Instance.r_palm) && handpalmTimer < handpalmTime)
-        {
-            handpalmTimer += Time.deltaTime;
-        }
-        else if (handpalmTimer >= handpalmTime)
+        if (Player.Instance == null) return;
+        if (handpalmTimer >= handpalmTime)
         {
             handpalmTimer = 0;
             handpalmComplete = true;
+            handTutorialAnim.SetInteger("type", 2);
+            handTutorialAnim.SetBool("disable", true);
+            handTutorialAnim.SetBool("action", false);
+        }
+        else
+        {
+            if (Player.Instance.l_palm && Player.Instance.r_palm)
+            {
+                handpalmTimer += Time.deltaTime;
+                handTutorialAnim.SetBool("action", true);
+            }
+            else
+            {
+                handTutorialAnim.SetBool("action", false);
+            }
+        }
+    }
+
+
+    private void CheckPointing()
+    {
+        if (Player.Instance == null) return;
+        if (pointingTimer >= pointingTime)
+        {
+            pointingTimer = 0;
+            pointingComplete = true;
+            handTutorialAnim.SetBool("disable", true);
+            handTutorialAnim.SetBool("action", false);
+        }
+        else
+        {
+            if (Player.Instance.l_isPointing && Player.Instance.r_isPointing)
+            {
+                pointingTimer += Time.deltaTime;
+                handTutorialAnim.SetBool("action", true);
+            }
+            else
+            {
+                handTutorialAnim.SetBool("action", false);
+            }
         }
     }
 

@@ -105,8 +105,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6634192630496332305}
-  - {fileID: 5068580949051459870}
   - {fileID: 5068580949886096334}
+  - {fileID: 5068580949051459870}
   - {fileID: 440744}
   m_Father: {fileID: 5068580948792629377}
   m_RootOrder: 0
@@ -251,8 +251,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b87d1d918a3364aa4fb6527248e0f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HpBarDad: {fileID: 0}
   TimeAndScore: {fileID: 0}
   Ghost: {fileID: 0}
+  reaperLoopAnimPos: {fileID: 0}
+  reaperLoopPos: {fileID: 0}
+  soulPosX: {fileID: 0}
+  reaperAnim: {fileID: 0}
+  beatCanvas: {fileID: 0}
   Gamestart: 1
   beatRing: {fileID: 5068580949886096332}
   circle: {fileID: 456602215974579676}
@@ -263,6 +269,7 @@ MonoBehaviour:
   bpm: 100
   startExpand: 2
   endExpand: 0
+  fadeRadius: 0
   hit: 0
   errCorrectionHit: 1
   startAlpha: 1
@@ -271,13 +278,29 @@ MonoBehaviour:
   totalScoreText: {fileID: 0}
   comboText: {fileID: 0}
   perfectHitText: {fileID: 0}
-  gooHitText: {fileID: 0}
+  goodHitText: {fileID: 0}
   missText: {fileID: 0}
+  winOrLoseText: {fileID: 0}
   alphaLevel: 0
   curScore: 0
   scorePerHit: 10
   scorePerPerfectHit: 30
+  tutorialBump: 0
   countDownBump: 6
+  hitBump: 0
+  countDownStart: 0
+  countDownStartText: {fileID: 0}
+  sceneCountStart: {fileID: 0}
+  hpDadGamePlay: 0
+  hpdadText: {fileID: 0}
+  curhpDad: 0
+  maxHp: 0
+  hpBar: {fileID: 0}
+  perfectPopUp: {fileID: 0}
+  goodPopUp: {fileID: 0}
+  missPopUp: {fileID: 0}
+  songLight: {fileID: 0}
+  audioClips: []
 --- !u!1 &5068580949051459871
 GameObject:
   m_ObjectHideFlags: 0
@@ -308,7 +331,7 @@ RectTransform:
   m_LocalScale: {x: 0.6, y: 0.6, z: 1}
   m_Children: []
   m_Father: {fileID: 3754626988711708941}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -382,7 +405,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3754626988711708941}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

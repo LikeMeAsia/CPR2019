@@ -8,8 +8,11 @@ public class BeatController : MonoBehaviour
     public GameObject HpBarDad;
     public GameObject TimeAndScore;
     public GameObject Ghost;
+    public GameObject reaperLoopAnimPos;
+    public GameObject reaperLoopPos;
 
     public RectTransform soulPosX;
+    public Animator reaperAnim;
 
     public GameObject beatCanvas;
 
@@ -203,8 +206,10 @@ public class BeatController : MonoBehaviour
 
     public void StartCountDownGamePlay()
     {
+        Debug.Log("หดฟกด");
         sceneCountStart.SetActive(true);
         StartCoroutine(ICountDownGamePlay());
+        reaperLoopAnimPos.transform.position = reaperLoopPos.transform.position;
     }
 
     IEnumerator ICountDownGamePlay() {
@@ -314,7 +319,7 @@ public class BeatController : MonoBehaviour
                     curhpDad += 2;
                 }
             }
-            else if (CheckGoodHitBeat())//0-1
+            else if (CheckGoodHitBeat())//>0.5-1
             {
                 Debug.Log("Good Hit");
                 circle.color = goodColor;
@@ -398,11 +403,11 @@ public class BeatController : MonoBehaviour
 
     public bool CheckGoodHitBeat()
     {
-        return beatRadius > hit - errCorrectionHit && beatRadius < hit + errCorrectionHit;
+        return beatRadius > hit - errCorrectionHit && beatRadius < hit + errCorrectionHit && hit > 0;
     }
 
     public bool CheckPerfectHitBeat()
     {
-        return beatRadius > hit - errCorrectionHit / 2 && beatRadius < hit + errCorrectionHit / 2;
+        return beatRadius > hit - errCorrectionHit / 2 && beatRadius < hit + errCorrectionHit / 2 && hit > 0;
     }
 }

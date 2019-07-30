@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2245195088029511424}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lctrl:b_button02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2245195088029511426}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lctrl:b_button01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69,7 +69,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2245195088029511428}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lctrl:b_hold
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,7 +99,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2245195088029511430}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lctrl:b_button03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -129,7 +129,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2245195088029511432}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lctrl:b_stick_IGNORE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,7 +159,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2245195088029511434}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lctrl:b_stick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,7 +191,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2245195088029511436}
   - component: {fileID: 2245195088032726562}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lctrl:controller_body_PLY
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -271,7 +271,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2245195088029511438}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lctrl:b_trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -301,7 +301,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2245195088029511440}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lctrl:left_touch_controller_world
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -337,7 +337,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2245195088029511442}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lctrl:geometry_null
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -378,7 +378,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2245195088029511444}
   - component: {fileID: 2245195088032726566}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lctrl:o_button_PLY
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -460,7 +460,7 @@ GameObject:
   - component: {fileID: 2245195088029511446}
   - component: {fileID: 2245195088032726560}
   - component: {fileID: 7288296557405908229}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lctrl:main_trigger_PLY
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -556,7 +556,7 @@ GameObject:
   - component: {fileID: 2245195088029511448}
   - component: {fileID: 2245195088032726570}
   - component: {fileID: 8492436421488759002}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lctrl:side_trigger_PLY
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -651,7 +651,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2245195088029511450}
   - component: {fileID: 2245195088032726564}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lctrl:ring_PLY
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -733,7 +733,7 @@ GameObject:
   - component: {fileID: 2245195088029511452}
   - component: {fileID: 2245195088032726574}
   - component: {fileID: 8672878065933701933}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lctrl:thumbstick_ball_PLY
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -829,7 +829,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2245195088029511454}
   - component: {fileID: 2245195088032726568}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lctrl:surface_PLY
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -911,7 +911,7 @@ GameObject:
   - component: {fileID: 2245195088029511456}
   - component: {fileID: 2245195088032726578}
   - component: {fileID: 346498240603087327}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lctrl:y_button_PLY
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1007,7 +1007,7 @@ GameObject:
   - component: {fileID: 2245195088029511458}
   - component: {fileID: 2245195088032726572}
   - component: {fileID: 4627812598934153303}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lctrl:x_button_PLY
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1102,7 +1102,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2245195088029511460}
   - component: {fileID: 2245195088032726576}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lctrl:o_button_decal_PLY
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1182,7 +1182,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2245195088029511462}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: left_touch_controller_model_skel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1215,7 +1215,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8673754759252985341}
   - component: {fileID: 2905879096263120323}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LeftController
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 985139959}
   - component: {fileID: 985139960}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Outline Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,8 +85,8 @@ GameObject:
   - component: {fileID: 1376412156}
   - component: {fileID: 1376412158}
   - component: {fileID: 1376412157}
-  - component: {fileID: 1376412159}
-  m_Layer: 0
+  - component: {fileID: 8342214451378897807}
+  m_Layer: 8
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -153,7 +153,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &1376412159
+--- !u!114 &8342214451378897807
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -246,14 +246,5 @@ MonoBehaviour:
   shoulderModel: {fileID: 1376412155}
   layPhoneUI: {fileID: 0}
   beatController: {fileID: 0}
-  Seq_2Conversation1: {fileID: 0}
-  Seq_2Conversation2: {fileID: 0}
-  Seq_3Conversation1: {fileID: 0}
-  Seq_3Conversation2: {fileID: 0}
-  Seq_3Conversation3: {fileID: 0}
-  Seq_3Conversation4: {fileID: 0}
-  Seq_3Conversation5: {fileID: 0}
-  Seq_3Conversation6: {fileID: 0}
-  Calling_End: 0
   calling: {fileID: 0}
   maxHit: 2

@@ -22,6 +22,8 @@ public class Calling : MonoBehaviour
     [SerializeField]
     public Conversations fatherNotResponse;
     [SerializeField]
+    public Conversations teachCpr;
+    [SerializeField]
     public Conversations readyToCpr;
 
     public AudioClip phoneButtonClick;
@@ -179,11 +181,22 @@ public class Calling : MonoBehaviour
             {
                 ScenarioControl.Instance.cprCanvas.SetActive(true);
                 Player.Instance.cprHand.enabledSnap = true;
-                audioSource.PlayOneShot(rUReady);
-                StartCoroutine(IWaitForReady());
+                TeachSanpingHandCprCall();
             }));
         }
     }
+
+    public void TeachSanpingHandCprCall()
+    {
+        if (ShakeShoulder.shakeEnd)
+        {
+            StartCoroutine(IConversationPlay(teachCpr, delegate
+            {
+                rUReadyEnd = true;
+            }));
+        }
+    }
+
     public void PlayReadyToCprVoices()
     {
         StartCoroutine(IConversationPlay(readyToCpr, delegate
@@ -203,15 +216,6 @@ public class Calling : MonoBehaviour
         audioSource.Stop();
         audioSource.loop = false;
         audioSource.clip = null;
-    }
-
-
-    IEnumerator IWaitForReady()
-    {
-        Debug.Log("Call IWaitForReady()");
-        if (rUReadyEnd) yield break;
-        yield return new WaitForSeconds(rUReady.length);
-        rUReadyEnd = true;
     }
 
     IEnumerator IConversationPlay(Conversations conversationSet, UnityAction actionAfterPlay) {
