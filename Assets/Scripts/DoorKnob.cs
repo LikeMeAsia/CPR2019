@@ -1,16 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Playables;
+﻿using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class DoorKnob : MonoBehaviour
 {
     public Animator doorAnim;
+    public AudioClip doorOpenSound;
     public bool doorOpen;
+    private AudioSource audioSource;
 
     private void Start()
     {
         doorOpen = false;
+        audioSource = this.GetComponent<AudioSource>();
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -32,8 +33,8 @@ public class DoorKnob : MonoBehaviour
     public void OpenDoor() {
         if (doorOpen) return;
         doorAnim.SetTrigger("open");
+        audioSource.PlayOneShot(doorOpenSound);
         doorOpen = true;
-        SimpleDirectorController.Instance.PlayTrack(0);
         this.enabled = false;
     }
 }

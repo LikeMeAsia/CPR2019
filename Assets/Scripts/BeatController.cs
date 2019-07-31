@@ -1,8 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Collider))]
 public class BeatController : MonoBehaviour
 {
     public GameObject HpBarDad;
@@ -89,6 +89,8 @@ public class BeatController : MonoBehaviour
     bool good;
     bool miss;
 
+    private Collider collider;
+
     public AudioSource songLight;
     public AudioClip[] audioClips = null;
 
@@ -99,6 +101,7 @@ public class BeatController : MonoBehaviour
 
     void Start()
     {
+        collider = this.GetComponent<Collider>();
         alphaLevel = 1f;
         alphaLevel = startAlpha;
         deltaAlpha = (endAlpha - startAlpha);
@@ -132,6 +135,7 @@ public class BeatController : MonoBehaviour
         miss = false;
 
         beatCanvas.SetActive(false);
+        collider.enabled = false;
         songLight.enabled = false;
     }
 
@@ -364,6 +368,7 @@ public class BeatController : MonoBehaviour
     public void EnableBeatTutorial() {
         tutorialBump = true;
         beatCanvas.SetActive(true);
+        collider.enabled = true;
     }
 
 
@@ -403,11 +408,11 @@ public class BeatController : MonoBehaviour
 
     public bool CheckGoodHitBeat()
     {
-        return beatRadius > hit - errCorrectionHit && beatRadius < hit + errCorrectionHit && hit > 0;
+        return beatRadius > hit - errCorrectionHit && beatRadius < hit + errCorrectionHit && beatRadius > 0;
     }
 
     public bool CheckPerfectHitBeat()
     {
-        return beatRadius > hit - errCorrectionHit / 2 && beatRadius < hit + errCorrectionHit / 2 && hit > 0;
+        return beatRadius > hit - errCorrectionHit / 2 && beatRadius < hit + errCorrectionHit / 2 && beatRadius > 0;
     }
 }

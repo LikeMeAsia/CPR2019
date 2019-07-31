@@ -22,12 +22,20 @@ public class Area_check : MonoBehaviour
         if (timer > 0) {
             timer = timer - Time.deltaTime;
             if (timer < 0) {
-                transform.position = Phone_spawn.transform.position;
-                transform.rotation = Phone_spawn.transform.rotation;
-                rigid.velocity = Vector3.zero;
-                rigid.angularVelocity = Vector3.zero;
+                Respawn();
             }
         }
+    }
+
+    public void Respawn() {
+        transform.position = Phone_spawn.transform.position;
+        transform.rotation = Phone_spawn.transform.rotation;
+        rigid.velocity = Vector3.zero;
+        rigid.angularVelocity = Vector3.zero;
+    }
+
+    public void SetKinematic(bool isKinematic) {
+        rigid.isKinematic = isKinematic;
     }
 
     private void OnCollisionEnter(Collision collision)
