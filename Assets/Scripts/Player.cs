@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
     public bool l_isGivingThumbsUp = false;
     public bool l_palm = false;
     public bool l_ful = false;
+    SphereCollider l_indexTipCollider;
 
     [Header("Right hand")]
     [ReadOnly]
@@ -38,7 +39,7 @@ public class Player : MonoBehaviour
     public bool r_isGivingThumbsUp = false;
     public bool r_palm = false;
     public bool r_ful = false;
-
+    SphereCollider r_indexTipCollider;
 
     [Header("Left Controller")]
     [ReadOnly]
@@ -156,10 +157,10 @@ public class Player : MonoBehaviour
             if (l_indexFingerTrans != null)
             {
                 GameObject fingerTipObj = Instantiate<GameObject>(new GameObject("l_index_tip"), l_indexFingerTrans);
-                SphereCollider indexTipCollider = fingerTipObj.AddComponent<SphereCollider>();
-                indexTipCollider.isTrigger = true;
-                indexTipCollider.radius = 0.01f;
-                indexTipCollider.center = new Vector3(0.01f, 0, 0);
+                l_indexTipCollider = fingerTipObj.AddComponent<SphereCollider>();
+                l_indexTipCollider.isTrigger = true;
+                l_indexTipCollider.radius = 0.01f;
+                l_indexTipCollider.center = new Vector3(0.01f, 0, 0);
                 fingerTipObj.tag = "FingerTip";
             }
         }
@@ -170,10 +171,10 @@ public class Player : MonoBehaviour
             if (r_indexFingerTrans != null)
             {
                 GameObject fingerTipObj = Instantiate<GameObject>(new GameObject("r_index_tip"), r_indexFingerTrans);
-                SphereCollider indexTipCollider = fingerTipObj.AddComponent<SphereCollider>();
-                indexTipCollider.isTrigger = true;
-                indexTipCollider.radius = 0.01f;
-                indexTipCollider.center = new Vector3(0.01f, 0, 0);
+                r_indexTipCollider = fingerTipObj.AddComponent<SphereCollider>();
+                r_indexTipCollider.isTrigger = true;
+                r_indexTipCollider.radius = 0.01f;
+                r_indexTipCollider.center = new Vector3(0.01f, 0, 0);
                 fingerTipObj.tag = "FingerTip";
             }
         }
@@ -186,10 +187,15 @@ public class Player : MonoBehaviour
     {
         l_isPointing        = !OVRInput.Get(OVRInput.NearTouch.PrimaryIndexTrigger, l_controller) &&
                                OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, l_controller);
+        l_indexTipCollider.enabled = l_isPointing;
+
         l_isGivingThumbsUp  = !OVRInput.Get(OVRInput.NearTouch.PrimaryThumbButtons, l_controller) &&
                                OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, l_controller);
+
         r_isPointing        = !OVRInput.Get(OVRInput.NearTouch.PrimaryIndexTrigger, r_controller) &&
                                OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, r_controller);
+        r_indexTipCollider.enabled = r_isPointing;
+
         r_isGivingThumbsUp  = !OVRInput.Get(OVRInput.NearTouch.PrimaryThumbButtons, r_controller) &&
                                OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, r_controller);
 

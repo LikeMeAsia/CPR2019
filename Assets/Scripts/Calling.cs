@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(AudioSource), typeof(OVRGrabbable))]
 public class Calling : MonoBehaviour
 {
     [System.Serializable]
@@ -17,6 +17,7 @@ public class Calling : MonoBehaviour
 
     public GameObject phone;
     public GameObject black_screen;
+    
     [SerializeField]
     public Conversations firstCall;
     [SerializeField]
@@ -46,8 +47,13 @@ public class Calling : MonoBehaviour
     public bool placeable;
     public bool snapItem;
     public bool rUReadyEnd;
+    public bool cutScene1Ended;
+    public bool isOnGround;
+    public bool disableOnGround;
 
+    public Collider[] colliders;
     private AudioSource audioSource;
+    private OVRGrabbable ovrGrabbable;
 
     void Start()
     {
@@ -57,31 +63,40 @@ public class Calling : MonoBehaviour
         Intilize();
         phone_rigidbody = GetComponentInChildren<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
+        ovrGrabbable = GetComponent<OVRGrabbable>();
+        colliders = GetComponentsInChildren<Collider>();
         placeable = false;
         placeableArea.gameObject.SetActive(false);
         fatherShoulder.SetActive(false);
+        cutScene1Ended = false;
+        isOnGround = false;
     }
     void Update()
     {
-        Activate_check();
-        if (Input.GetKeyDown(KeyCode.A))
+        if (cutScene1Ended)
         {
-            Debug.Log("false");
-            phoneAnimIcon.SetBool("showingIcon", false);
+            Activate_check();
+            if (CPRHand.Instance.snaping && rUReadyEnd)
+            {
+                rUReadyEnd = false;
+                PlayReadyToCprVoices();
+            }
         }
-        if (Input.GetKeyDown(KeyCode.S))
+        if (disableOnGround && ovrGrabbable.enabled && isOnGround)
         {
-            Debug.Log("true");
-            phoneAnimIcon.SetBool("showingIcon", true);
+            if (phone_rigidbody.velocity.magnitude < 0.01)
+            {
+                ovrGrabbable.enabled = false;
+                phone_rigidbody.isKinematic = true;
+                foreach (Collider col in colliders)
+                {
+                    col.enabled = false;
+                }
+            }
         }
-        
-        if (CPRHand.Instance.snaping && rUReadyEnd)
-        {
-            rUReadyEnd = false;
-            PlayReadyToCprVoices();
-        }
-   
     }
+
+    
 
     public void Intilize()
     {
@@ -90,6 +105,21 @@ public class Calling : MonoBehaviour
         Icon_show = true;
         snapItem = false;
         audio_time = 2.0f;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isOnGround = true;
+        }
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isOnGround = false;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -104,28 +134,36 @@ public class Calling : MonoBehaviour
             snapItem = true;
         }
 
-
-        if (!isCalling && other.CompareTag("FingerTip")  && (Player.Instance.l_isPointing || Player.Instance.r_isPointing))
-        {
-            phoneAnimIcon.SetBool("showingIcon", false);
-            StartCall();
-        }
-        if (other.gameObject.CompareTag("Phone_area") && phone_rigidbody.isKinematic)
-        {
-            placeable = true;
-            placeableArea.color = Color.red;
+        if(phone_rigidbody.isKinematic && ovrGrabbable != null && ovrGrabbable.grabbedBy != null)
+            {
+            OVRInput.Controller grabControllerType = ((CustomOVRGrabber)ovrGrabbable.grabbedBy).GetControllerType();
+            if (!isCalling && other.CompareTag("FingerTip") && (
+                (Player.Instance.l_isPointing && Player.Instance.r_ful && grabControllerType == OVRInput.Controller.RTouch) 
+                || (Player.Instance.r_isPointing && Player.Instance.l_ful && grabControllerType == OVRInput.Controller.LTouch))
+            ) {
+                phoneAnimIcon.SetBool("showingIcon", false);
+                StartCall();
+            }
         }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (placeable && other.gameObject.CompareTag("Phone_area") &&  !phone_rigidbody.isKinematic)
+        if (other.gameObject.CompareTag("Phone_area") && phone_rigidbody.isKinematic)
+        {
+            placeable = true;
+            placeableArea.color = Color.red;
+        }
+        if (placeable && other.gameObject.CompareTag("Phone_area") && !phone_rigidbody.isKinematic)
         {
             placeableArea.gameObject.SetActive(false);
             fatherShoulder.SetActive(true);
             warrning_icon = false;
             other.gameObject.SetActive(false);
-            layPhoneText.text = "สะกิดไหล่พ่อ 2 ครั้ง";
+            ScenarioControl.Instance.sitCanvas.GetComponent<Animator>().SetBool("disable", true);
+            ScenarioControl.Instance.shoulderCanvas.SetActive(true);
+            layPhoneText.text = "ตบไหล่พ่อ 2 ครั้ง";
+            disableOnGround = true;
         }
     }
 
@@ -146,16 +184,12 @@ public class Calling : MonoBehaviour
 
     public void EndCutScene1()
     {
+        cutScene1Ended = true;
         phoneAnimIcon.SetBool("showingIcon", true);
         phoneAnimIcon.SetInteger("screen", 0);
         Debug.Log("End1");
     }
-    IEnumerator IShowIconAnimDelay()
-    {
-        phoneAnimIcon.SetBool("showingIcon", false);
-        yield return new WaitForSeconds(1.0f);
-        phoneAnimIcon.SetBool("showingIcon", true);
-    }
+  
 
     public void StartCall()
     {
@@ -167,6 +201,7 @@ public class Calling : MonoBehaviour
                 Calling_count++;
                 //Put_calling_button.SetActive(false);
                 Icon_show = false;
+                ScenarioControl.Instance.sitCanvas.SetActive(true);
                 Lay_Phone_warning.SetActive(true);
                 placeableArea.gameObject.SetActive(true);
             }));

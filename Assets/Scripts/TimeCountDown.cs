@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class TimeCountDown : MonoBehaviour
 {
-    public Image cooldown;
-
     public float curTime = 0;
     public float StartingTime = 10;
 
@@ -14,9 +12,10 @@ public class TimeCountDown : MonoBehaviour
 
     public Text textCountDown;
 
-    public GameObject CircleBump;
     public GameObject TotalScoreBoard;
     public GameObject HpDad;
+
+    public BeatController beatController;
 
     public static float CountTimeToFade;
 
@@ -35,7 +34,7 @@ public class TimeCountDown : MonoBehaviour
             {
                 curTime = 0;
                 gameObject.SetActive(false);
-                CircleBump.SetActive(false);
+                beatController.DisableBeat();
                 HpDad.SetActive(false);
                 TotalScoreBoard.SetActive(true);
             }

@@ -34,6 +34,7 @@ public class DoorKnob : MonoBehaviour
         if (doorOpen) return;
         doorAnim.SetTrigger("open");
         audioSource.PlayOneShot(doorOpenSound);
+        SimpleDirectorController.Instance.PlayTrack(0);
         doorOpen = true;
         this.enabled = false;
     }

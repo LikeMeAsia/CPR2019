@@ -134,8 +134,7 @@ public class BeatController : MonoBehaviour
         good = false;
         miss = false;
 
-        beatCanvas.SetActive(false);
-        collider.enabled = false;
+        DisableBeat();
         songLight.enabled = false;
     }
 
@@ -208,9 +207,27 @@ public class BeatController : MonoBehaviour
         }
     }
 
+    public void WarningAdivce()
+    {
+        ScenarioControl.Instance.warningCanvas.SetActive(true);
+        StartCoroutine(IWarningAdivce());
+    }
+
+    IEnumerator IWarningAdivce()
+    {
+        WaitForSeconds waitOneSec = new WaitForSeconds(1);
+        for (int i = 14; i >= 0; i--)
+        {
+            countDownStartText.text = "" + i;
+            yield return waitOneSec;
+        }
+        ScenarioControl.Instance.warningCanvas.GetComponent<Animator>().SetBool("disable", true);
+        StartCountDownGamePlay();
+    }
+
     public void StartCountDownGamePlay()
     {
-        Debug.Log("หดฟกด");
+        Debug.Log("start!!!");
         sceneCountStart.SetActive(true);
         StartCoroutine(ICountDownGamePlay());
         reaperLoopAnimPos.transform.position = reaperLoopPos.transform.position;
@@ -229,6 +246,7 @@ public class BeatController : MonoBehaviour
         HpBarDad.SetActive(true);
         songLight.enabled = true;
         songLight.Play();
+        EnableBeat();
         // HpDad();
     }
 
@@ -358,6 +376,7 @@ public class BeatController : MonoBehaviour
         if (tutorialBump && hitBump >= countDownBump)
         {
             tutorialBump = false;
+            DisableBeat();
             ScenarioControl.Instance.cprCanvas.GetComponent<Animator>().SetBool("disable", true);
             SimpleDirectorController.Instance.PlayTrack(1);
             Debug.Log("tutorial_End");
@@ -367,10 +386,20 @@ public class BeatController : MonoBehaviour
 
     public void EnableBeatTutorial() {
         tutorialBump = true;
+        EnableBeat();
+    }
+
+    public void EnableBeat()
+    {
         beatCanvas.SetActive(true);
         collider.enabled = true;
     }
 
+    public void DisableBeat()
+    {
+        beatCanvas.SetActive(false);
+        collider.enabled = false;
+    }
 
     void CountHighCombo()
     {

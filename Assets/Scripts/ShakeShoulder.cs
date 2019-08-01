@@ -33,6 +33,7 @@ public class ShakeShoulder : MonoBehaviour
                 calling.StartTeachCprCall();
                 shoulderModel.SetActive(false);
                 layPhoneUI.SetActive(false);
+                ScenarioControl.Instance.shoulderCanvas.GetComponent<Animator>().SetBool("disable", true);
             }
         }
 

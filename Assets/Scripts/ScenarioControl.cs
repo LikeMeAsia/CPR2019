@@ -21,6 +21,9 @@ public class ScenarioControl : MonoBehaviour
     public GameObject doorCanvas;
     public GameObject phoneCanvas;
     public GameObject cprCanvas;
+    public GameObject sitCanvas;
+    public GameObject shoulderCanvas;
+    public GameObject warningCanvas;
 
     public Image timerBar;
 
@@ -195,7 +198,6 @@ public class ScenarioControl : MonoBehaviour
             case 5: // move player and play cutscene 1
                 doorCanvas.GetComponent<Animator>().SetBool("disable", true);
                 MovePlayertoArea(pos[1], moveSpeed, 3);
-                SimpleDirectorController.Instance.PlayTrack(0);
                 break;
             case 6: // move to father
                 MovePlayertoArea(pos[2], moveSpeed, 1);
