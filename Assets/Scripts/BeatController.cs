@@ -45,7 +45,9 @@ public class BeatController : MonoBehaviour
     public Text perfectHitText;
     public Text goodHitText;
     public Text missText;
-    public Text winOrLoseText;
+
+    public GameObject boardWin;
+    public GameObject boardLose;
 
 
     public float alphaLevel;
@@ -89,10 +91,19 @@ public class BeatController : MonoBehaviour
     bool good;
     bool miss;
 
+    public float delayTimerBump;
+    public float delayTime;
+
     private Collider collider;
 
     public AudioSource songLight;
     public AudioClip[] audioClips = null;
+
+    public Sprite rankA;
+    public Sprite rankB;
+    public Sprite rankC;
+
+    public Image rankImg;
 
     private void Awake()
     {
@@ -133,6 +144,12 @@ public class BeatController : MonoBehaviour
         perfect = false;
         good = false;
         miss = false;
+
+        delayTimerBump = 0f;
+        delayTime = 0.2f;
+
+        boardWin.SetActive(false);
+        boardLose.SetActive(false);
 
         DisableBeat();
         songLight.enabled = false;
@@ -199,12 +216,18 @@ public class BeatController : MonoBehaviour
                 HpDad();
             }
 
+         
             GhostAppear();
             CountHighCombo();
             TotalScoreBoard();
             FadeColor();
-
+            DelayBeat();
         }
+    }
+
+    public void GamePlayEnd()
+    {
+        hpDadGamePlay = false;
     }
 
     public void WarningAdivce()
@@ -308,8 +331,9 @@ public class BeatController : MonoBehaviour
         curhpDad -= 1 * Time.deltaTime;
         hpBarValue = curhpDad / maxHp;
         soulPosX.localPosition = new Vector3(hpBarValue, 0.0f, 0.0f);
-        hpdadText.text = "Hp:" + Mathf.CeilToInt(curhpDad) + "/" + maxHp;
+        hpdadText.text = "" + Mathf.CeilToInt(curhpDad) + "/" + maxHp;
         hpBar.fillAmount = hpBarValue;
+
         if (curhpDad <= 0.0f)
         {
             curhpDad = 0;
@@ -320,57 +344,68 @@ public class BeatController : MonoBehaviour
         }
     }
 
+   public void DelayBeat()
+    {
+        delayTimerBump += Time.deltaTime;
+    }
+
+
+
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other);
-        if (other.gameObject.CompareTag("Hand Checker"))
+       if (delayTimerBump >= delayTime)
         {
-            Debug.Log("Hit");
-            if (CheckPerfectHitBeat())//0-0.5
+            Debug.Log(other);
+            if (other.gameObject.CompareTag("Hand Checker"))
             {
-                Debug.Log("Perfect Hit");
-                circle.color = goodColor;
-                hitBump++;
-                perfect = true;
-                AudioPlayer.PlayAudioClip(audioClips[0], true);
-                if (countDownStart <= 0.0f)
+                Debug.Log("Hit");
+                if (CheckPerfectHitBeat())//0-0.5
                 {
-                    curScore += scorePerPerfectHit;
-                    perfectHit++;
-                    comboHit++;
-                    curhpDad += 2;
+                    Debug.Log("Perfect Hit");
+                    circle.color = goodColor;
+                    hitBump++;
+                    perfect = true;
+                    AudioPlayer.PlayAudioClip(audioClips[0], true);
+                    if (countDownStart <= 0.0f)
+                    {
+                        curScore += scorePerPerfectHit;
+                        perfectHit++;
+                        comboHit++;
+                        curhpDad += 2;
+                    }
                 }
-            }
-            else if (CheckGoodHitBeat())//>0.5-1
-            {
-                Debug.Log("Good Hit");
-                circle.color = goodColor;
-                hitBump++;
-                good = true;
-                AudioPlayer.PlayAudioClip(audioClips[0], true);
-                if (countDownStart <= 0.0f)
+                else if (CheckGoodHitBeat())//>0.5-1
                 {
-                    curScore += scorePerHit;
-                    goodHit++;
-                    comboHit++;
-                    curhpDad++;
+                    Debug.Log("Good Hit");
+                    circle.color = goodColor;
+                    hitBump++;
+                    good = true;
+                    AudioPlayer.PlayAudioClip(audioClips[0], true);
+                    if (countDownStart <= 0.0f)
+                    {
+                        curScore += scorePerHit;
+                        goodHit++;
+                        comboHit++;
+                        curhpDad++;
+                    }
                 }
-            }
-            else
-            {
-                Debug.Log("Miss");
-                circle.color = Color.red;
-                miss = true;
-                AudioPlayer.PlayAudioClip(audioClips[1], true);
-                if (countDownStart <= 0.0f)
+                else
                 {
-                    missHit++;
-                    comboHit = 0;
-                    curhpDad -= 1;
+                    Debug.Log("Miss");
+                    circle.color = Color.red;
+                    miss = true;
+                    AudioPlayer.PlayAudioClip(audioClips[1], true);
+                    if (countDownStart <= 0.0f)
+                    {
+                        missHit++;
+                        comboHit = 0;
+                        curhpDad -= 1;
+                    }
                 }
-            }
 
-            PopUpHit();
+                PopUpHit();
+                delayTimerBump = 0f;
+            }
         }
 
         if (tutorialBump && hitBump >= countDownBump)
@@ -413,18 +448,45 @@ public class BeatController : MonoBehaviour
     void TotalScoreBoard()
     {
         scoreText.text = "" + curScore;
-        totalScoreText.text = "Score: " + curScore;
+        totalScoreText.text = ": " + curScore;
         comboText.text = "Combo x " + highCombo;
-        perfectHitText.text = "Perfect: " + perfectHit;
-        goodHitText.text = "Good: " + goodHit;
-        missText.text = "Miss: " + missHit;
+        perfectHitText.text = "X " + perfectHit;
+        goodHitText.text = "X " + goodHit;
+        missText.text = "X " + missHit;
+
+        
+
         if (curhpDad >= 60)
         {
-            winOrLoseText.text = "Save lives";
+            if (curhpDad > 80)
+            {
+                rankImg.sprite = rankA;
+            }
+            else
+            {
+                rankImg.sprite = rankB;
+            }
+            boardWin.SetActive(true);
+            boardLose.SetActive(false);
         }
-        else if (curhpDad < 60)
+        
+        else 
         {
-            winOrLoseText.text = "Rescue Fail";
+            rankImg.sprite = rankC;
+            boardLose.SetActive(true);
+            boardWin.SetActive(false);
+        }
+    }
+
+    public void CheckWinLose()
+    {
+        if (curhpDad >= 60)
+        {
+            SimpleDirectorController.Instance.PlayTrack(3);
+        }
+        else
+        {
+            SimpleDirectorController.Instance.PlayTrack(2);
         }
     }
 

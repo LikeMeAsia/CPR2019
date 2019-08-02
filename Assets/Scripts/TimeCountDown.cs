@@ -35,8 +35,9 @@ public class TimeCountDown : MonoBehaviour
                 curTime = 0;
                 gameObject.SetActive(false);
                 beatController.DisableBeat();
+                beatController.GamePlayEnd();
+                beatController.CheckWinLose();
                 HpDad.SetActive(false);
-                TotalScoreBoard.SetActive(true);
             }
             float calc_time = curTime / StartingTime;
             //  cooldown.fillAmount = calc_time;
@@ -56,5 +57,10 @@ public class TimeCountDown : MonoBehaviour
         {
             CountTimeToFade = 0;
         }
+    }
+
+    public void ShowScoreBoard()
+    {
+        TotalScoreBoard.SetActive(true);
     }
 }
