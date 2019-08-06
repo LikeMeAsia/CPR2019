@@ -11,6 +11,10 @@ public class BeatController : MonoBehaviour
     public GameObject reaperLoopAnimPos;
     public GameObject reaperLoopPos;
 
+    public SkinnedMeshRenderer fatherRend;
+    public Material defaultFatherMat;
+    public Material transparentFatherMat;
+
     public RectTransform soulPosX;
     public Animator reaperAnim;
 
@@ -48,7 +52,6 @@ public class BeatController : MonoBehaviour
 
     public GameObject boardWin;
     public GameObject boardLose;
-
 
     public float alphaLevel;
     public int curScore;
@@ -94,7 +97,7 @@ public class BeatController : MonoBehaviour
     public float delayTimerBump;
     public float delayTime;
 
-    private Collider collider;
+    private Collider beatCollider;
 
     public AudioSource songLight;
     public AudioClip[] audioClips = null;
@@ -112,7 +115,7 @@ public class BeatController : MonoBehaviour
 
     void Start()
     {
-        collider = this.GetComponent<Collider>();
+        beatCollider = this.GetComponent<Collider>();
         alphaLevel = 1f;
         alphaLevel = startAlpha;
         deltaAlpha = (endAlpha - startAlpha);
@@ -153,6 +156,8 @@ public class BeatController : MonoBehaviour
 
         DisableBeat();
         songLight.enabled = false;
+
+        fatherRend.materials[1] = defaultFatherMat;
     }
 
     void FadeColor()
@@ -182,7 +187,6 @@ public class BeatController : MonoBehaviour
 
     void Update()
     {
-
         if (OVRInput.Get(OVRInput.Button.One))
         {
             Gamestart = true;
@@ -427,13 +431,15 @@ public class BeatController : MonoBehaviour
     public void EnableBeat()
     {
         beatCanvas.SetActive(true);
-        collider.enabled = true;
+        beatCollider.enabled = true;
+        fatherRend.materials[1] = transparentFatherMat;
     }
 
     public void DisableBeat()
     {
         beatCanvas.SetActive(false);
-        collider.enabled = false;
+        beatCollider.enabled = false;
+        fatherRend.materials[1] = defaultFatherMat;
     }
 
     void CountHighCombo()

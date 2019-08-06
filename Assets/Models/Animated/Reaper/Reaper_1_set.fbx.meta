@@ -9,7 +9,22 @@ ModelImporter:
   - first:
       74: 5662154204305432433
     second: Reaper_opendoor
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Weapon_Colered_Marble_mat
+    second: {fileID: 2100000, guid: ee7be28da1922e841a8359bb07ff3322, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Weapon_Colered_Reaper_s_Weapon_mmat
+    second: {fileID: 2100000, guid: eb38675c51b3c304d818eef21b3d8d5d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert1
+    second: {fileID: 2100000, guid: f4fc5f3e23b813347b4e3d0415cf869f, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

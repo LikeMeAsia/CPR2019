@@ -15,7 +15,12 @@ ModelImporter:
   - first:
       74: -9141115750576872899
     second: FatherSoul_Lost
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: FatherSoul20_FatherSoul_Albedo
+    second: {fileID: 2100000, guid: 342373a59c589984faef8c132b0d5d92, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

@@ -55,17 +55,22 @@ public class Calling : MonoBehaviour
     private AudioSource audioSource;
     private OVRGrabbable ovrGrabbable;
 
-    void Start()
+    private void Awake()
+    {
+        phone_rigidbody = GetComponentInChildren<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
+        ovrGrabbable = GetComponent<OVRGrabbable>();
+        colliders = GetComponentsInChildren<Collider>();
+    }
+
+    private void Start()
     {
         phoneAnimIcon.SetBool("showingIcon", false);
         Lay_Phone_warning.SetActive(false);
         rUReadyEnd = false;
         Intilize();
-        phone_rigidbody = GetComponentInChildren<Rigidbody>();
-        audioSource = GetComponent<AudioSource>();
-        ovrGrabbable = GetComponent<OVRGrabbable>();
-        colliders = GetComponentsInChildren<Collider>();
         placeable = false;
+        phone_rigidbody.isKinematic = true;
         placeableArea.gameObject.SetActive(false);
         fatherShoulder.SetActive(false);
         cutScene1Ended = false;
