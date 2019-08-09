@@ -1,17 +1,20 @@
 fileFormatVersion: 2
-guid: 68d5ee404f5e8184082af54b423ca59e
+guid: b53f010573ef3b04785a72b47e573ae8
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable:
   - first:
-      74: 1827226128182048838
-    second: Take 001
+      74: -7590215129447183566
+    second: Heart_Atk
+  - first:
+      74: 578617378706524286
+    second: Laydown
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: FatherTest_TestLambert
-    second: {fileID: 2100000, guid: a00c9b28d3dea25479a61cef97339e21, type: 2}
+      name: Smartphone_Smartphone_Mat
+    second: {fileID: 2100000, guid: ef08aa8efb96e28449de8d8aed4cb04d, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -20,7 +23,7 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: shirt_mat
+      name: father_shirt_mat
     second: {fileID: 2100000, guid: 9c83c0fd24ef70c4f9e37773f60c8e1d, type: 2}
   materials:
     importMaterials: 1
@@ -50,11 +53,40 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Take 001
-      takeName: Take 001
-      internalID: 1827226128182048838
-      firstFrame: -10
-      lastFrame: 120
+      name: Heart_Atk
+      takeName: Heart_Atk
+      internalID: -7590215129447183566
+      firstFrame: 1
+      lastFrame: 360
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Laydown
+      takeName: Laydown
+      internalID: 578617378706524286
+      firstFrame: 359
+      lastFrame: 360
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

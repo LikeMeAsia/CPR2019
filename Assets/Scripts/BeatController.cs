@@ -108,8 +108,12 @@ public class BeatController : MonoBehaviour
 
     public Image rankImg;
 
+    private static BeatController instance;
+    public static BeatController Instance { get { return instance; } }
+
     private void Awake()
     {
+        instance = this;
         tutorialBump = false;
     }
 
@@ -156,8 +160,6 @@ public class BeatController : MonoBehaviour
 
         DisableBeat();
         songLight.enabled = false;
-
-        fatherRend.materials[1] = defaultFatherMat;
     }
 
     void FadeColor()
@@ -236,7 +238,7 @@ public class BeatController : MonoBehaviour
 
     public void WarningAdivce()
     {
-        ScenarioControl.Instance.warningCanvas.SetActive(true);
+        //ScenarioControl.Instance.warningCanvas.SetActive(true);
         StartCoroutine(IWarningAdivce());
     }
 
@@ -248,7 +250,7 @@ public class BeatController : MonoBehaviour
             countDownStartText.text = "" + i;
             yield return waitOneSec;
         }
-        ScenarioControl.Instance.warningCanvas.GetComponent<Animator>().SetBool("disable", true);
+        //ScenarioControl.Instance.warningCanvas.GetComponent<Animator>().SetBool("disable", true);
         StartCountDownGamePlay();
     }
 
@@ -416,7 +418,7 @@ public class BeatController : MonoBehaviour
         {
             tutorialBump = false;
             DisableBeat();
-            ScenarioControl.Instance.cprCanvas.GetComponent<Animator>().SetBool("disable", true);
+            //ScenarioControl.Instance.cprCanvas.GetComponent<Animator>().SetBool("disable", true);
             SimpleDirectorController.Instance.PlayTrack(1);
             Debug.Log("tutorial_End");
             //StartCountDownGamePlay();
@@ -432,14 +434,12 @@ public class BeatController : MonoBehaviour
     {
         beatCanvas.SetActive(true);
         beatCollider.enabled = true;
-        fatherRend.materials[1] = transparentFatherMat;
     }
 
     public void DisableBeat()
     {
         beatCanvas.SetActive(false);
         beatCollider.enabled = false;
-        fatherRend.materials[1] = defaultFatherMat;
     }
 
     void CountHighCombo()
