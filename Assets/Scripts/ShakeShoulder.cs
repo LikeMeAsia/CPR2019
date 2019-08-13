@@ -1,40 +1,58 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using cakeslice;
 using UnityEngine;
 
 public class ShakeShoulder : MonoBehaviour
 {
-    public GameObject shoulderModel;
-    public GameObject layPhoneUI;
-    public BeatController beatController;
-    int countCheckShake;
-    public static bool shakeEnd;
-    public Calling calling;
-
+    public GameObject shakingUI;
     public int maxHit;
 
-    // Start is called before the first frame update
+    private int countShake;
+    private Collider[] shoulderColliders;
+    private Outline[] outlines;
+    [SerializeField][ReadOnly]
+    private bool shaking;
+    public bool Shaking { get { return shaking; } }
+
     void Start()
     {
-        countCheckShake = 0;
-        shakeEnd = false;
+        shoulderColliders = GetComponentsInChildren<Collider>();
+        outlines = GetComponentsInChildren<Outline>();
+        countShake = 0;
+        shaking = false;
+        SetActiveShoulderIput(false);
     }
-   
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Hand"))
         {
-            countCheckShake++;
-            Debug.Log("Shake!" + countCheckShake + "/"+ maxHit) ;
-            if (countCheckShake == maxHit)
+            countShake++;
+            Debug.Log("Shake!" + countShake + "/"+ maxHit) ;
+            if (countShake >= maxHit)
             {
-                shakeEnd = true;
-                calling.StartTeachCprCall();
-                shoulderModel.SetActive(false);
-                layPhoneUI.SetActive(false);
+                shaking = true;
+                shakingUI.SetActive(false);
+                SetActiveShoulderIput(false);
             }
         }
+    }
+    
+    public void EnableInputRecieve()
+    {
+        countShake = 0;
+        shaking = false;
+        SetActiveShoulderIput(true);
+    }
 
+    private void SetActiveShoulderIput(bool value) {
+        shakingUI.SetActive(value);
+        foreach (Collider col in shoulderColliders)
+        {
+            col.enabled = value;
+        }
+        foreach (Outline outline in outlines)
+        {
+            outline.enabled = value;
+        }
     }
 }

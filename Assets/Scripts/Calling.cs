@@ -213,7 +213,7 @@ public class Calling : MonoBehaviour
 
     public void StartTeachCprCall()
     {
-        if (ShakeShoulder.shakeEnd)
+        /*if (ShakeShoulder.shaking)
         {
             StartCoroutine(IConversationPlay(fatherNotResponse, delegate
             {
@@ -221,18 +221,18 @@ public class Calling : MonoBehaviour
                 Player.Instance.cprHand.enabledSnap = true;
                 TeachSanpingHandCprCall();
             }));
-        }
+        }*/
     }
 
     public void TeachSanpingHandCprCall()
     {
-        if (ShakeShoulder.shakeEnd)
+        /*if (ShakeShoulder.shaking)
         {
             StartCoroutine(IConversationPlay(teachCpr, delegate
             {
                 rUReadyEnd = true;
             }));
-        }
+        }*/
     }
 
     public void PlayReadyToCprVoices()

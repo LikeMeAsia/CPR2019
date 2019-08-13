@@ -66,7 +66,7 @@ public class CPRHand : MonoBehaviour
         else {
             handsState = HandsState.None;
         }
-        snaping = enabledSnap && handsNear && r_handDown && l_handDown && handsState != HandsState.None;
+        snaping = enabledSnap && handsNear && handsState != HandsState.None; // && r_handDown && l_handDown
     }
     private void SnapHandTogether()
     {

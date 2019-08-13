@@ -93,12 +93,12 @@ TextureImporter:
       name: ShakeShoulder_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1024
-        height: 1024
+        x: 43
+        y: 26
+        width: 900
+        height: 900
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -114,12 +114,12 @@ TextureImporter:
       name: ShakeShoulder_1
       rect:
         serializedVersion: 2
-        x: 1024
-        y: 0
-        width: 1024
-        height: 1024
+        x: 1075
+        y: 28
+        width: 900
+        height: 898
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
