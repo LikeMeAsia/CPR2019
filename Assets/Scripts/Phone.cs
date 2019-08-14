@@ -50,7 +50,8 @@ public class Phone : MonoBehaviour
         activeScreen = false;
         isGrabbed = false;
         disableOnGround = false;
-        Deactivate();
+        blackScreen.SetActive(false);
+        phoneAnimIcon.SetBool("showingIcon", false);
     }
 
     private void Update()

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Collider))]
@@ -111,12 +112,28 @@ public class BeatController : MonoBehaviour
     private static BeatController instance;
     public static BeatController Instance { get { return instance; } }
 
+    public UnityEvent perfectEvent;
+    public UnityEvent goodEvent;
+    public UnityEvent badEvent;
+
     private void Awake()
     {
         instance = this;
         tutorialBump = false;
+        if (perfectEvent == null) {
+            perfectEvent = new UnityEvent();
+        }
+        if (goodEvent == null)
+        {
+            goodEvent = new UnityEvent();
+        }
+        if (badEvent == null)
+        {
+            badEvent = new UnityEvent();
+        }
     }
-
+    //TODO
+    //1.hit scoring
     void Start()
     {
         beatCollider = this.GetComponent<Collider>();
@@ -158,8 +175,9 @@ public class BeatController : MonoBehaviour
         boardWin.SetActive(false);
         boardLose.SetActive(false);
 
-        DisableBeat();
-        songLight.enabled = false;
+
+        //DisableBeat();
+        //songLight.enabled = false;
     }
 
     void FadeColor()
@@ -181,11 +199,27 @@ public class BeatController : MonoBehaviour
         }
     }
 
-    void ExpandRing()
+    public float expandOffset = 0.25f;
+    void ExpandRing(float playbackPercent)
     {
-        beatRadius = startExpand + (deltaExpend * Mathf.Clamp01(beatTimer / beatTime));
-        beatRing.rectTransform.localScale = new Vector3(beatRadius, beatRadius, beatRadius);
+        float temp = (1 - playbackPercent) - expandOffset;
+        float percent = Mathf.Clamp(temp,0.0f,1.0f);
+
+
+        float beatRingRadius = circleRing.rectTransform.localScale.x + 1.0f * percent;
+        beatRing.rectTransform.localScale = new Vector3(beatRingRadius, beatRingRadius, 1);
+
+        beatRing.color = new Color (beatRing.color.r, beatRing.color.g, beatRing.color.b, 1 - percent);
+
+        //old expand
+        //beatRadius = startExpand + (deltaExpend * Mathf.Clamp01(beatTimer / beatTime));
+        //beatRing.rectTransform.localScale = new Vector3(beatRadius, beatRadius, beatRadius);
+
+
     }
+
+    public float offset = 0.1f;
+    public float playbackPercent = 0.0f;
 
     void Update()
     {
@@ -194,41 +228,85 @@ public class BeatController : MonoBehaviour
             Gamestart = true;
         }
 
+        if (Input.GetMouseButton(0)) RegisterHit(HIT.perfect);
+        if (Input.GetMouseButton(1)) RegisterHit(HIT.bad);
+
+
+
+
+        //new timer
         if (Gamestart == true)
         {
-
-            beatTimer += Time.deltaTime;
-            /* beatRadius = startExpand + (deltaExpend * Mathf.Clamp01(beatTimer / beatTime));
-            beatRing.rectTransform.localScale = new Vector3(beatRadius, beatRadius, beatRadius);*/
-            ExpandRing();
-
-            if (beatTimer > beatTime)
+            if (true) //doggo
             {
-                beatTimer = 0;
-                circle.color = defaultColor;
-            }
-            if (beatRadius < hit + errCorrectionHit)//0-1
-            {
-                circleRing.color = goodColor;
-
-            }
-            else
-            {
-                circleRing.color = defaultColor;
+                float tempbpm = 0.6f;
+                playbackPercent = ((songLight.time + offset) % tempbpm) / tempbpm;
+                //Debug.Log("Timer aud : " + playbackPercent);
+                ExpandRing(playbackPercent);
+                Pulse();
             }
 
-            if (hpDadGamePlay)
-            {
-                HpDad();
-            }
-
-         
-            GhostAppear();
+            //GhostAppear(); old
             CountHighCombo();
             TotalScoreBoard();
-            FadeColor();
+            //FadeColor(); old
             DelayBeat();
+
+
+            if (canVibrateOnce) Vibrate();
+            ChangeColorCountdown();
+
         }
+
+
+
+
+
+
+
+        //old timer
+        //if (Gamestart == true)
+        //{
+
+        //    beatTimer += Time.deltaTime;
+        //    /* beatRadius = startExpand + (deltaExpend * Mathf.Clamp01(beatTimer / beatTime));
+        //    beatRing.rectTransform.localScale = new Vector3(beatRadius, beatRadius, beatRadius);*/
+        //    ExpandRing();
+
+        //    if (beatTimer > beatTime)
+        //    {
+        //        beatTimer = 0;
+        //        circle.color = defaultColor;
+        //    }
+        //    if (beatRadius < hit + errCorrectionHit)//0-1
+        //    {
+        //        circleRing.color = goodColor;
+
+        //    }
+        //    else
+        //    {
+        //        circleRing.color = defaultColor;
+        //    }
+
+        //    if (hpDadGamePlay)
+        //    {
+        //        HpDad();
+        //    }
+
+         
+        //    GhostAppear();
+        //    CountHighCombo();
+        //    TotalScoreBoard();
+        //    FadeColor();
+        //    DelayBeat();
+        //}
+
+        //if(canVibrateOnce)Vibrate();
+    }
+
+    private void Pulse()
+    {
+        
     }
 
     public void GamePlayEnd()
@@ -356,73 +434,162 @@ public class BeatController : MonoBehaviour
     }
 
 
+    //TODO Touch Controller Vibrate
+    private bool canVibrateOnce = false;
+    private float vibrateTime = 0.1f;
+    private float vibrateTimer = 0.0f;
+
+    private void Vibrate()
+    {
+        if (vibrateTimer <= vibrateTime)
+        {
+            OVRInput.SetControllerVibration(1, 1, OVRInput.Controller.RTouch);
+            OVRInput.SetControllerVibration(1, 1, OVRInput.Controller.LTouch);
+            vibrateTimer += Time.deltaTime;
+        }
+        else
+        {
+            OVRInput.SetControllerVibration(0, 0, OVRInput.Controller.RTouch);
+            OVRInput.SetControllerVibration(0, 0, OVRInput.Controller.LTouch);
+            vibrateTimer = 0.0f;
+            canVibrateOnce = false;
+        }
+    }
+
+    private float changeColorTime = 0.3f;
+    private float changeColorTimer = 0.0f;
+    private void ChangeColorCountdown()
+    {
+        if (changeColorTimer > 0)
+        {
+            changeColorTimer -= Time.deltaTime;
+        }
+        else
+        {
+            ChangeColor(defaultColor);
+        }
+    }
+
+    private void ChangeColor(Color color, bool isTriggerTimer = false)
+    {
+        circle.color = color;
+        if (isTriggerTimer) changeColorTimer = changeColorTime;
+    }
+
+    enum HIT { perfect, good, bad }
+    private void RegisterHit(HIT hit)
+    {
+        switch (hit)
+        {
+            case HIT.perfect:
+                ChangeColor(goodColor, true);
+                perfectEvent.Invoke();
+                break;
+            case HIT.good:
+                ChangeColor(goodColor, true);
+                goodEvent.Invoke();
+                break;
+            case HIT.bad:
+                ChangeColor(badColor, true);
+                badEvent.Invoke();
+                break;
+            default:
+                Debug.Log("THIS SHOULDN'T HAPPEN");
+                break;
+        }
+    }
+
+    public bool inverseColor = false;
 
     private void OnTriggerEnter(Collider other)
     {
-       if (delayTimerBump >= delayTime)
+        if (other.gameObject.CompareTag("Hand Checker"))
         {
-            Debug.Log(other);
-            if (other.gameObject.CompareTag("Hand Checker"))
+            AudioPlayer.PlayAudioClip(audioClips[0], true);
+            canVibrateOnce = true;
+            Debug.Log(other.name);
+
+            //debug purpose
+            if (playbackPercent > 0.8f)
             {
-                Debug.Log("Hit");
-                if (CheckPerfectHitBeat())//0-0.5
-                {
-                    Debug.Log("Perfect Hit");
-                    circle.color = goodColor;
-                    hitBump++;
-                    perfect = true;
-                    AudioPlayer.PlayAudioClip(audioClips[0], true);
-                    if (countDownStart <= 0.0f)
-                    {
-                        curScore += scorePerPerfectHit;
-                        perfectHit++;
-                        comboHit++;
-                        curhpDad += 2;
-                    }
-                }
-                else if (CheckGoodHitBeat())//>0.5-1
-                {
-                    Debug.Log("Good Hit");
-                    circle.color = goodColor;
-                    hitBump++;
-                    good = true;
-                    AudioPlayer.PlayAudioClip(audioClips[0], true);
-                    if (countDownStart <= 0.0f)
-                    {
-                        curScore += scorePerHit;
-                        goodHit++;
-                        comboHit++;
-                        curhpDad++;
-                    }
-                }
-                else
-                {
-                    Debug.Log("Miss");
-                    circle.color = Color.red;
-                    miss = true;
-                    AudioPlayer.PlayAudioClip(audioClips[1], true);
-                    if (countDownStart <= 0.0f)
-                    {
-                        missHit++;
-                        comboHit = 0;
-                        curhpDad -= 1;
-                    }
-                }
-
-                PopUpHit();
-                delayTimerBump = 0f;
+                RegisterHit(HIT.perfect);
             }
+            else if (playbackPercent < 0.8f && playbackPercent > 0.6f)
+            {
+                RegisterHit(HIT.good);
+            }
+            else
+            {
+                RegisterHit(HIT.bad);
+            }
+
         }
 
-        if (tutorialBump && hitBump >= countDownBump)
-        {
-            tutorialBump = false;
-            DisableBeat();
-            //ScenarioControl.Instance.cprCanvas.GetComponent<Animator>().SetBool("disable", true);
-            SimpleDirectorController.Instance.PlayTrack(1);
-            Debug.Log("tutorial_End");
-            //StartCountDownGamePlay();
-        }
+        //old register hit event
+        //if (delayTimerBump >= delayTime)
+        //{
+        //    Debug.Log(other);
+        //    if (other.gameObject.CompareTag("Hand Checker"))
+        //    {
+        //        Debug.Log("Hit");
+        //        if (CheckPerfectHitBeat())//0-0.5
+        //        {
+        //            Debug.Log("Perfect Hit");
+        //            circle.color = goodColor;
+        //            hitBump++;
+        //            perfect = true;
+        //            AudioPlayer.PlayAudioClip(audioClips[0], true);
+        //            if (countDownStart <= 0.0f)
+        //            {
+        //                curScore += scorePerPerfectHit;
+        //                perfectHit++;
+        //                comboHit++;
+        //                curhpDad += 2;
+        //            }
+        //        }
+        //        else if (CheckGoodHitBeat())//>0.5-1
+        //        {
+        //            Debug.Log("Good Hit");
+        //            circle.color = goodColor;
+        //            hitBump++;
+        //            good = true;
+        //            AudioPlayer.PlayAudioClip(audioClips[0], true);
+        //            if (countDownStart <= 0.0f)
+        //            {
+        //                curScore += scorePerHit;
+        //                goodHit++;
+        //                comboHit++;
+        //                curhpDad++;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Debug.Log("Miss");
+        //            circle.color = Color.red;
+        //            miss = true;
+        //            AudioPlayer.PlayAudioClip(audioClips[1], true);
+        //            if (countDownStart <= 0.0f)
+        //            {
+        //                missHit++;
+        //                comboHit = 0;
+        //                curhpDad -= 1;
+        //            }
+        //        }
+
+        //        PopUpHit();
+        //        delayTimerBump = 0f;
+        //    }
+        //}
+
+        //if (tutorialBump && hitBump >= countDownBump)
+        //{
+        //    tutorialBump = false;
+        //    DisableBeat();
+        //    //ScenarioControl.Instance.cprCanvas.GetComponent<Animator>().SetBool("disable", true);
+        //    SimpleDirectorController.Instance.PlayTrack(1);
+        //    Debug.Log("tutorial_End");
+        //    //StartCountDownGamePlay();
+        //}
     }
 
     public void EnableBeatTutorial() {

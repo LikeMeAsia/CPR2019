@@ -221,6 +221,12 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 3172873846323064089, guid: 8f60a731a8ede8a4c9696bc99f53e62b,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 102a801e6ca95234984795a9458ccd31,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f60a731a8ede8a4c9696bc99f53e62b, type: 3}
 --- !u!1 &2080714365 stripped
@@ -236,11 +242,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6748230302829483352}
     m_Modifications:
-    - target: {fileID: 6251781272686450267, guid: e6388ec7f2e683440970f69da77a6c38,
-        type: 3}
-      propertyPath: m_Name
-      value: shoulder
-      objectReference: {fileID: 0}
     - target: {fileID: 6251781272686450257, guid: e6388ec7f2e683440970f69da77a6c38,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -295,6 +296,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6251781272686450267, guid: e6388ec7f2e683440970f69da77a6c38,
+        type: 3}
+      propertyPath: m_Name
+      value: shoulder
       objectReference: {fileID: 0}
     - target: {fileID: 6251781272686450266, guid: e6388ec7f2e683440970f69da77a6c38,
         type: 3}
