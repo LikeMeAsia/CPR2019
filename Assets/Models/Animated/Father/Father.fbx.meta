@@ -53,10 +53,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Heart_Atk
-      takeName: Heart_Atk
+      name: Laydown (1)
+      takeName: Laydown
       internalID: -7590215129447183566
-      firstFrame: 1
+      firstFrame: 359
       lastFrame: 360
       wrapMode: 0
       orientationOffsetY: 0
@@ -64,7 +64,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
