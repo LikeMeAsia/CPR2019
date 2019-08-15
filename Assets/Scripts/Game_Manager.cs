@@ -17,6 +17,8 @@ public class Game_Manager : MonoBehaviour
     public float curhpDad = 0;
     public float maxHp = 120;
 
+    public float hpreduction = 1.0f;
+
     void Start()
     {
         Player.Instance.showController = false;
@@ -37,12 +39,7 @@ public class Game_Manager : MonoBehaviour
 
     void HpDad()
     {
-        //curhpDad -= 1 * Time.deltaTime;
-        hpBarValue = curhpDad / maxHp;
-        soulPosX.localPosition = new Vector3(hpBarValue, 0.0f, 0.0f);
-        hpdadText.text = "" + Mathf.CeilToInt(curhpDad) + "/" + maxHp;
-        hpBar.fillAmount = hpBarValue;
-
+        Heal(-hpreduction * Time.deltaTime);
         if (curhpDad <= 0.0f)
         {
             curhpDad = 0;
@@ -51,5 +48,11 @@ public class Game_Manager : MonoBehaviour
         {
             curhpDad = 120;
         }
+        hpBarValue = curhpDad / maxHp;
+        soulPosX.localPosition = new Vector3(hpBarValue, 0.0f, 0.0f);
+        hpdadText.text = "" + Mathf.CeilToInt(curhpDad) + "/" + maxHp;
+        hpBar.fillAmount = hpBarValue;
+
+        
     }
 }

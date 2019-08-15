@@ -116,6 +116,8 @@ public class BeatController : MonoBehaviour
     public UnityEvent goodEvent;
     public UnityEvent badEvent;
 
+    public Text debugger;
+
     private void Awake()
     {
         instance = this;
@@ -214,12 +216,11 @@ public class BeatController : MonoBehaviour
         //old expand
         //beatRadius = startExpand + (deltaExpend * Mathf.Clamp01(beatTimer / beatTime));
         //beatRing.rectTransform.localScale = new Vector3(beatRadius, beatRadius, beatRadius);
-
-
     }
 
     public float offset = 0.1f;
     public float playbackPercent = 0.0f;
+    float tempbpm = 0.6f;
 
     void Update()
     {
@@ -230,7 +231,7 @@ public class BeatController : MonoBehaviour
 
         if (Input.GetMouseButton(0)) RegisterHit(HIT.perfect);
         if (Input.GetMouseButton(1)) RegisterHit(HIT.bad);
-
+        debugger.text = Mathf.Round(playbackPercent*10) .ToString();
 
 
 
@@ -239,9 +240,8 @@ public class BeatController : MonoBehaviour
         {
             if (true) //doggo
             {
-                float tempbpm = 0.6f;
+                
                 playbackPercent = ((songLight.time + offset) % tempbpm) / tempbpm;
-                //Debug.Log("Timer aud : " + playbackPercent);
                 ExpandRing(playbackPercent);
                 Pulse();
             }
@@ -303,10 +303,34 @@ public class BeatController : MonoBehaviour
 
         //if(canVibrateOnce)Vibrate();
     }
+    private float pulseDirector = 0.0f;
+    public bool bPulse = true;
+    private float pulseCounter = 0.0f;
+    //private float offset = 0.20f;
+
+    private float previousPulse = 0.0f;
 
     private void Pulse()
     {
+        if (pulseDirector+expandOffset <= songLight.time)
+        {
+            CheckHit();
+            Debug.Log("Pulse=" + bPulse + "  on " + pulseDirector+expandOffset + ":" + songLight.time);
+            pulseDirector += tempbpm;
+        }
         
+    }
+
+    private void CheckHit()
+    {
+        if (bPulse)
+        {
+            RegisterHit(HIT.bad);
+        }
+        else
+        {
+            bPulse = true;
+        }
     }
 
     public void GamePlayEnd()
@@ -364,26 +388,29 @@ public class BeatController : MonoBehaviour
 
     IEnumerator IPopUpHit()
     {
-        if (perfect)
-        {
-            ClearPopUp();
-            perfectPopUp.SetActive(true);
-        }
-        else if (good)
-        {
-            ClearPopUp();
-            goodPopUp.SetActive(true);
-        }
-        else if (miss)
-        {
-            ClearPopUp();
-            missPopUp.SetActive(true);
-        }
-        yield return new WaitForSeconds(1);
+        //if (perfect)
+        //{
+        //    ClearPopUp();
+        //    perfectPopUp.SetActive(true);
+        //}
+        //else if (good)
+        //{
+        //    ClearPopUp();
+        //    goodPopUp.SetActive(true);
+        //}
+        //else if (miss)
+        //{
+        //    ClearPopUp();
+        //    missPopUp.SetActive(true);
+        Debug.Log("wait");
+        //}
+        yield return new WaitForSeconds(0.5f);
+        Debug.Log("clear");
+
         ClearPopUp();
-        perfect = false;
-        good = false;
-        miss = false;
+        //perfect = false;
+        //good = false;
+        //miss = false;
 
     }
     void ClearPopUp()
@@ -484,14 +511,20 @@ public class BeatController : MonoBehaviour
             case HIT.perfect:
                 ChangeColor(goodColor, true);
                 perfectEvent.Invoke();
+                perfectPopUp.SetActive(true);
+                IPopUpHit();
                 break;
             case HIT.good:
                 ChangeColor(goodColor, true);
                 goodEvent.Invoke();
+                goodPopUp.SetActive(true);
+                IPopUpHit();
                 break;
             case HIT.bad:
                 ChangeColor(badColor, true);
                 badEvent.Invoke();
+                missPopUp.SetActive(true);
+                IPopUpHit();
                 break;
             default:
                 Debug.Log("THIS SHOULDN'T HAPPEN");
@@ -505,24 +538,36 @@ public class BeatController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Hand Checker"))
         {
-            AudioPlayer.PlayAudioClip(audioClips[0], true);
-            canVibrateOnce = true;
-            Debug.Log(other.name);
+            if (bPulse)
+            {
+                canVibrateOnce = true;
+                if (playbackPercent > 0.8f)
+                {
+                    RegisterHit(HIT.perfect);
+                    AudioPlayer.PlayAudioClip(audioClips[0], true);
 
-            //debug purpose
-            if (playbackPercent > 0.8f)
-            {
-                RegisterHit(HIT.perfect);
-            }
-            else if (playbackPercent < 0.8f && playbackPercent > 0.6f)
-            {
-                RegisterHit(HIT.good);
+                }
+                else if (playbackPercent <= 0.8f && playbackPercent >= 0.4f)
+                {
+                    RegisterHit(HIT.good);
+                    AudioPlayer.PlayAudioClip(audioClips[1], true);
+
+                }
+                else
+                {
+                    RegisterHit(HIT.bad);
+                    AudioPlayer.PlayAudioClip(audioClips[1], true);
+
+                }
+                bPulse = false;
             }
             else
             {
                 RegisterHit(HIT.bad);
+                AudioPlayer.PlayAudioClip(audioClips[1], true);
             }
 
+            //Debug.Log("Hit at : " + playbackPercent);
         }
 
         //old register hit event

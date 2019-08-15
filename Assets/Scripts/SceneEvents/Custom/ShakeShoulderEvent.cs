@@ -7,6 +7,7 @@ public class ShakeShoulderEvent : SceneEvent
     public string assetName;
     private ShakeShoulder shoulder;
 
+
     public override void InitEvent()
     {
         base.InitEvent();
