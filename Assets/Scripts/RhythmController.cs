@@ -31,7 +31,7 @@ public class RhythmController : MonoBehaviour
     private bool canVibrateOnce = false;
 
     private float playbackPercent = 0.0f;
-    private bool Gamestart = false;
+    [HideInInspector] public bool Gamestart = false;
     private Collider beatCollider;
 
     #region EventSystem
@@ -41,9 +41,15 @@ public class RhythmController : MonoBehaviour
     public UnityEvent badEvent;
     #endregion
 
-    public int comboCount=10;
-    public int failCount = 10;
-
+    //TODO Reimplement Scoring System
+    //suggest using percent based instead of pure score based(?)
+    #region ScoringSystem
+    [HideInInspector] public uint maxCombo     = 0;
+    [HideInInspector] public uint combo        = 0;
+    [HideInInspector] public uint perfectHit   = 0;
+    [HideInInspector] public uint goodHit      = 0;
+    [HideInInspector] public uint missHit      = 0;
+    #endregion
 
     enum HIT { perfect, good, bad }
 
@@ -61,6 +67,8 @@ public class RhythmController : MonoBehaviour
 
         beatCollider = this.GetComponent<Collider>();
         defaultColor = circle.color;
+
+        resetScore();
     }
 
     void Update()
@@ -104,17 +112,12 @@ public class RhythmController : MonoBehaviour
                     RegisterHit(HIT.bad);
                     AudioPlayer.PlayAudioClip(indicatorSound[1], true);
                 }
-
-                //if (bPulse)
-                //{
-                //    bPulse = false;
-                //}
-                //else
-                //{
-                //    RegisterHit(HIT.bad);
-                //    AudioPlayer.PlayAudioClip(indicatorSound[1], true);
-                //}
-                
+                bPulse = false;
+            }
+            else
+            {
+                    RegisterHit(HIT.bad);
+                    AudioPlayer.PlayAudioClip(indicatorSound[1], true);
             }
         }
     }
@@ -141,6 +144,7 @@ public class RhythmController : MonoBehaviour
         {
             CheckHit();
             pulseDirector += tempo;
+            if (pulseDirector >= mainAudioSource.clip.length) pulseDirector = 0.0f;
         }
     }
 
@@ -148,7 +152,7 @@ public class RhythmController : MonoBehaviour
     {
         if (bPulse)
         {
-            //RegisterHit(HIT.bad);
+            RegisterHit(HIT.bad);
         }
         else
         {
@@ -180,19 +184,38 @@ public class RhythmController : MonoBehaviour
         {
             case HIT.perfect:
                 ChangeColor(goodColor, true);
+                perfectHit++;
+                Combo(true);
                 perfectEvent.Invoke();
                 break;
             case HIT.good:
                 ChangeColor(goodColor, true);
+                goodHit++;
+                Combo(true);
                 goodEvent.Invoke();
                 break;
             case HIT.bad:
                 ChangeColor(badColor, true);
+                missHit++;
+                Combo(false);
                 badEvent.Invoke();
                 break;
             default:
                 Debug.Log("THIS SHOULDN'T HAPPEN");
                 break;
+        }
+    }
+
+    private void Combo(bool good)
+    {
+        if (good)
+        {
+            combo++;
+            if (combo > maxCombo) maxCombo = combo;
+        }
+        else
+        {
+            combo = 0;
         }
     }
 
@@ -213,5 +236,14 @@ public class RhythmController : MonoBehaviour
     {
         circle.color = color;
         if (isTriggerTimer) changeColorTimer = changeColorTime;
+    }
+
+    public void resetScore()
+    {
+        maxCombo = 0;
+        combo = 0;
+        perfectHit = 0;
+        goodHit = 0;
+        missHit = 0;
     }
 }

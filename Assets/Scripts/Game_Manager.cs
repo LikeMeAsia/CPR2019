@@ -5,29 +5,28 @@ using UnityEngine.UI;
 
 public class Game_Manager : MonoBehaviour
 {
-
+    [Header("General Settings")]
     public bool Musicstart;
     public AudioSource BeatMusic;
-    public BeatController beatcontroller;
+    public RhythmController rhythmController;
 
+    [Header("HP Bar Settings")]
     public Image hpBar;
     public Text hpdadText;
     public RectTransform soulPosX;
     private float hpBarValue;
-    public float curhpDad = 0;
     public float maxHp = 120;
-
+    public float curhpDad = 0;
     public float hpreduction = 1.0f;
 
     void Start()
     {
         Player.Instance.showController = false;
         Player.Instance.cprHand.enabledSnap = true;
-        beatcontroller.Gamestart = true;
-        BeatMusic.Play();
+        rhythmController.Gamestart = true;
+        BeatMusic.Play(); 
     }
 
-    // Update is called once per frame
     void Update()
     {
         HpDad();

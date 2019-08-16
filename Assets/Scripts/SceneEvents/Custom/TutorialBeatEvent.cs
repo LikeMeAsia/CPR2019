@@ -31,9 +31,10 @@ public class TutorialBeatEvent : SceneEvent
 
     public override void UpdateEvent()
     {
-        if (rhythmController.comboCount >= count)
+        if (rhythmController.combo >= count)
         {
             passEventCondition = true;
+            rhythmController.resetScore();
         }
 
     }
