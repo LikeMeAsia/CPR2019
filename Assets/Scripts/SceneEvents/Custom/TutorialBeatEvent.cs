@@ -5,24 +5,26 @@
 
 public class TutorialBeatEvent : SceneEvent
 {
-    private RhythmController rhythmController;
+    private Game_Manager gameManager;
     public string assetName="Beat";
     public uint count = 10;
+    private bool skip;
 
     public override void InitEvent()
     {
         base.InitEvent();
-        bool found = SceneAssetManager.GetAssetComponent<RhythmController>(assetName, out rhythmController);
+        bool found = SceneAssetManager.GetAssetComponent<Game_Manager>(assetName, out gameManager);
         Debug.Log("Found ShakeShoulder[" + assetName + "]: " + found);
     }
     public override void Skip()
     {
-      
+        skip = true;
     }
 
     public override void StartEvent()
     {
         InitEvent();
+        gameManager.StartGame();
     }
 
     public override void StopEvent()
@@ -31,10 +33,17 @@ public class TutorialBeatEvent : SceneEvent
 
     public override void UpdateEvent()
     {
-        if (rhythmController.combo >= count)
+        if (gameManager.rhythmController != null)
+        {
+            if (gameManager.rhythmController.combo >= count || skip)
+            {
+                passEventCondition = true;
+                gameManager.rhythmController.resetScore();
+            }
+        }
+        else
         {
             passEventCondition = true;
-            rhythmController.resetScore();
         }
 
     }

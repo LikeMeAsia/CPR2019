@@ -21,10 +21,7 @@ public class Game_Manager : MonoBehaviour
 
     void Start()
     {
-        //Player.Instance.showController = false;
-        //Player.Instance.cprHand.enabledSnap = true;
-       // rhythmController.Gamestart = true;
-     //   BeatMusic.Play(); 
+        
     }
 
     void Update()
@@ -34,6 +31,16 @@ public class Game_Manager : MonoBehaviour
 
     public void Heal(float healed) {
         curhpDad = curhpDad + healed;
+    }
+
+
+    public void StartGame()
+    {
+         Player.Instance.showController = false;
+         Player.Instance.cprHand.enabledSnap = true;
+         rhythmController.Gamestart = true;
+         BeatMusic.Play(); 
+
     }
 
     void HpDad()
