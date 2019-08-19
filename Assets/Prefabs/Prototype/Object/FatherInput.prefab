@@ -111,11 +111,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1873189856672754113}
     m_Modifications:
-    - target: {fileID: 3172873844909095294, guid: 8f60a731a8ede8a4c9696bc99f53e62b,
-        type: 3}
-      propertyPath: m_Name
-      value: ShakingShoulderCanvas
-      objectReference: {fileID: 0}
     - target: {fileID: 3172873844909095293, guid: 8f60a731a8ede8a4c9696bc99f53e62b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -221,12 +216,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 3172873846323064089, guid: 8f60a731a8ede8a4c9696bc99f53e62b,
+    - target: {fileID: 3172873844909095294, guid: 8f60a731a8ede8a4c9696bc99f53e62b,
         type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 102a801e6ca95234984795a9458ccd31,
-        type: 3}
+      propertyPath: m_Name
+      value: ShakingShoulderCanvas
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f60a731a8ede8a4c9696bc99f53e62b, type: 3}
 --- !u!1 &2080714365 stripped
