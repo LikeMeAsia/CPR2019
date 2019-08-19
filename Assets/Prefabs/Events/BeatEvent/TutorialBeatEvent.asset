@@ -15,3 +15,6 @@ MonoBehaviour:
   delayNextEvent: 0
   assetName: Beat
   count: 10
+  countingAfterMeSoundClip: {fileID: 8300000, guid: 0f1f278e396ebd54e96fc58965ed4b4e,
+    type: 3}
+  countingSoundClip: {fileID: 8300000, guid: bf6cbcc87e32378489fb531c98692c51, type: 3}

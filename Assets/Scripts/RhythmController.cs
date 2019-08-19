@@ -34,6 +34,14 @@ public class RhythmController : MonoBehaviour
     [HideInInspector] public bool Gamestart = false;
     private Collider beatCollider;
 
+    [Header ("Combo Popup")]
+    public GameObject perfectPopup;
+    public GameObject goodPopup;
+    public GameObject missPopup;
+    public float timeleft;
+
+    public int tutorialCombo;
+
     #region EventSystem
     [Header("Scoring Event System")]
     public UnityEvent perfectEvent;
@@ -73,7 +81,7 @@ public class RhythmController : MonoBehaviour
 
     void Update()
     {
-        if (OVRInput.Get(OVRInput.Button.One)) Gamestart = true;
+        //if (OVRInput.Get(OVRInput.Button.One)) Gamestart = true;
 
         //if (Input.GetMouseButton(0)) RegisterHit(HIT.perfect);
         //if (Input.GetMouseButton(1)) RegisterHit(HIT.bad);
@@ -94,25 +102,31 @@ public class RhythmController : MonoBehaviour
         {
             Debug.Log("hit : " + mainAudioSource.time);
 
-            if (bPulse)
+            if (hitOnBar)
             {
                 canVibrateOnce = true;
                 if (playbackPercent > 0.8f)
                 {
                     RegisterHit(HIT.perfect);
                     AudioPlayer.PlayAudioClip(indicatorSound[0], true);
+                    perfectPopup.SetActive(true);
+                    ClearComboPopup(); //clear popup couroutine 0.5sec
                 }
                 else if (playbackPercent < 0.8f && playbackPercent > 0.4f)
                 {
                     RegisterHit(HIT.good);
                     AudioPlayer.PlayAudioClip(indicatorSound[0], true);
+                    goodPopup.SetActive(true);
+                    ClearComboPopup(); //clear popup couroutine 0.5sec
                 }
                 else
                 {
                     RegisterHit(HIT.bad);
                     AudioPlayer.PlayAudioClip(indicatorSound[1], true);
+                    missPopup.SetActive(true);
+                    ClearComboPopup(); //clear popup couroutine 0.5sec
                 }
-                bPulse = false;
+                hitOnBar = false;
             }
             else
             {
@@ -122,6 +136,19 @@ public class RhythmController : MonoBehaviour
         }
     }
 
+    private void ClearComboPopup()
+    {
+        Debug.Log("Enter clearpopup");
+        timeleft -= Time.deltaTime;
+        if (timeleft<=0)
+        {
+            Debug.Log("inside");
+            goodPopup.SetActive(false);
+            missPopup.SetActive(false);
+            perfectPopup.SetActive(false);
+            timeleft = 3;
+        }
+    }
 
     void RingTransform(float playbackPercent) //formally ExpandRing
     {
@@ -136,27 +163,28 @@ public class RhythmController : MonoBehaviour
 
     }
 
+    //startposition
     private float pulseDirector = 0.0f;
-    private bool bPulse = true;
+    private bool hitOnBar = true;
     private void Pulse()
     {
         if (pulseDirector + offset <= mainAudioSource.time)
         {
             CheckHit();
             pulseDirector += tempo;
-            if (pulseDirector >= mainAudioSource.clip.length) pulseDirector = 0.0f;
+            if (pulseDirector >= mainAudioSource.clip.length) pulseDirector = 0.055f;
         }
     }
 
     private void CheckHit()
     {
-        if (bPulse)
+        if (hitOnBar)
         {
             RegisterHit(HIT.bad);
         }
         else
         {
-            bPulse = true;
+            hitOnBar = true;
         }
     }
 
@@ -211,6 +239,7 @@ public class RhythmController : MonoBehaviour
         if (good)
         {
             combo++;
+            tutorialCombo++;
             if (combo > maxCombo) maxCombo = combo;
         }
         else
