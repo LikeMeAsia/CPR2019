@@ -50,7 +50,7 @@ public class VRPointerTracker : MonoBehaviour
                 }
             } else {
                 canvas.enabled = true;
-                Quaternion rot = Quaternion.LookRotation(target.transform.position - Camera.main.transform.position, Camera.main.transform.forward);
+                Quaternion rot = Quaternion.LookRotation(Camera.main.transform.position - target.transform.position, Camera.main.transform.forward);
                 pointerCtr.rotation = rot;
                 rot = pointerCtr.localRotation;
                 rot.x = 0;

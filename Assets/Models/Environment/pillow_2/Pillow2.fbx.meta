@@ -1,9 +1,14 @@
 fileFormatVersion: 2
-guid: b0d290062f371cd4fb114a6ed2c5e26f
+guid: ace6b837b42a826488ff5a0768561aef
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pillow_mat1
+    second: {fileID: 2100000, guid: 06d547b742a59b1429b859d8f6a09c4d, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -34,14 +39,14 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 0.1
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
-    importCameras: 1
-    importLights: 1
+    importCameras: 0
+    importLights: 0
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
@@ -57,7 +62,7 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 1
+    useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -80,7 +85,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 1
+    globalScale: 0.1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

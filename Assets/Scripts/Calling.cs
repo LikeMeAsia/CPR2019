@@ -11,8 +11,6 @@ public class Calling : MonoBehaviour
         public AudioClip[] conversations;
     }
 
-    public BeatController beatController;
-
     public GameObject fatherShoulder;
 
     public GameObject phone;
@@ -55,17 +53,22 @@ public class Calling : MonoBehaviour
     private AudioSource audioSource;
     private OVRGrabbable ovrGrabbable;
 
-    void Start()
+    private void Awake()
     {
-        phoneAnimIcon.SetBool("showingIcon", false);
-        Lay_Phone_warning.SetActive(false);
-        rUReadyEnd = false;
-        Intilize();
         phone_rigidbody = GetComponentInChildren<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
         ovrGrabbable = GetComponent<OVRGrabbable>();
         colliders = GetComponentsInChildren<Collider>();
+    }
+
+    private void Start()
+    {
+        //phoneAnimIcon.SetBool("showingIcon", false);
+        Lay_Phone_warning.SetActive(false);
+        rUReadyEnd = false;
+        Intilize();
         placeable = false;
+        phone_rigidbody.isKinematic = true;
         placeableArea.gameObject.SetActive(false);
         fatherShoulder.SetActive(false);
         cutScene1Ended = false;
@@ -160,8 +163,8 @@ public class Calling : MonoBehaviour
             fatherShoulder.SetActive(true);
             warrning_icon = false;
             other.gameObject.SetActive(false);
-            ScenarioControl.Instance.sitCanvas.GetComponent<Animator>().SetBool("disable", true);
-            ScenarioControl.Instance.shoulderCanvas.SetActive(true);
+            //ScenarioControl.Instance.sitCanvas.GetComponent<Animator>().SetBool("disable", true);
+            //ScenarioControl.Instance.shoulderCanvas.SetActive(true);
             layPhoneText.text = "ตบไหล่พ่อ 2 ครั้ง";
             disableOnGround = true;
         }
@@ -201,7 +204,7 @@ public class Calling : MonoBehaviour
                 Calling_count++;
                 //Put_calling_button.SetActive(false);
                 Icon_show = false;
-                ScenarioControl.Instance.sitCanvas.SetActive(true);
+                //ScenarioControl.Instance.sitCanvas.SetActive(true);
                 Lay_Phone_warning.SetActive(true);
                 placeableArea.gameObject.SetActive(true);
             }));
@@ -210,26 +213,26 @@ public class Calling : MonoBehaviour
 
     public void StartTeachCprCall()
     {
-        if (ShakeShoulder.shakeEnd)
+        /*if (ShakeShoulder.shaking)
         {
             StartCoroutine(IConversationPlay(fatherNotResponse, delegate
             {
-                ScenarioControl.Instance.cprCanvas.SetActive(true);
+                //ScenarioControl.Instance.cprCanvas.SetActive(true);
                 Player.Instance.cprHand.enabledSnap = true;
                 TeachSanpingHandCprCall();
             }));
-        }
+        }*/
     }
 
     public void TeachSanpingHandCprCall()
     {
-        if (ShakeShoulder.shakeEnd)
+        /*if (ShakeShoulder.shaking)
         {
             StartCoroutine(IConversationPlay(teachCpr, delegate
             {
                 rUReadyEnd = true;
             }));
-        }
+        }*/
     }
 
     public void PlayReadyToCprVoices()
@@ -245,8 +248,8 @@ public class Calling : MonoBehaviour
         audioSource.clip = oneTwoSound;
         audioSource.loop = true;
         audioSource.Play();
-        beatController.EnableBeatTutorial();
-        WaitWhile endTutorial = new WaitWhile(()=> { return beatController.tutorialBump; });
+        BeatController.Instance.EnableBeatTutorial();
+        WaitWhile endTutorial = new WaitWhile(()=> { return BeatController.Instance.tutorialBump; });
         yield return endTutorial;
         audioSource.Stop();
         audioSource.loop = false;

@@ -1,9 +1,14 @@
 fileFormatVersion: 2
-guid: ddf11d48df391d845982c0a09608b9c2
+guid: 5667a53f2a5280447b1336f3ffd98c2a
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Door_Mat1
+    second: {fileID: 2100000, guid: 3729d807772bfb244bd4b5cdafec0672, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -40,8 +45,8 @@ ModelImporter:
     useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
-    importCameras: 1
-    importLights: 1
+    importCameras: 0
+    importLights: 0
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
@@ -57,7 +62,7 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 1
+    useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0

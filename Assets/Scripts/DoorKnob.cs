@@ -1,17 +1,24 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(AudioSource), typeof(Collider))]
 public class DoorKnob : MonoBehaviour
 {
     public Animator doorAnim;
+    public Animator doorUIAnim;
     public AudioClip doorOpenSound;
-    public bool doorOpen;
+    public float doorOpenDelay;
+    [SerializeField][ReadOnly]
+    private bool doorOpen;
+    public bool DoorOpen { get { return doorOpen; } }
     private AudioSource audioSource;
+    private Collider handleCollider;
 
     private void Start()
     {
         doorOpen = false;
         audioSource = this.GetComponent<AudioSource>();
+        handleCollider = this.GetComponent<Collider>();
+        doorUIAnim.gameObject.SetActive(false);
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -23,19 +30,28 @@ public class DoorKnob : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-        Debug.Log("Door Knob Triggered:"+ other.name+"[" + other.tag+"]");
         if (!doorOpen && other.CompareTag("Hand") && (Player.Instance.l_ful || Player.Instance.r_ful))
         {
             OpenDoor();
         }
     }
 
+    public void ShowUI() {
+        doorUIAnim.gameObject.SetActive(true);
+        doorUIAnim.SetBool("disable", false);
+    }
+    public void HideUI()
+    {
+        doorUIAnim.SetBool("disable", true);
+    }
+
     public void OpenDoor() {
         if (doorOpen) return;
         doorAnim.SetTrigger("open");
+        doorUIAnim.SetBool("disable", true);
         audioSource.PlayOneShot(doorOpenSound);
-        SimpleDirectorController.Instance.PlayTrack(0);
+        //SimpleDirectorController.Instance.PlayTrack(0);
         doorOpen = true;
-        this.enabled = false;
+        handleCollider.enabled = false;
     }
 }

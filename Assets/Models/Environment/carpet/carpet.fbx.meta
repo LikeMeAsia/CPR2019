@@ -1,9 +1,14 @@
 fileFormatVersion: 2
-guid: 081eb434b8fe0db4c881c92fd0d00c38
+guid: f322001e9506eee4faf3156c4cebe7d3
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: carpet_albedo_mat
+    second: {fileID: 2100000, guid: 6208556c2bfb26c4291f55ff9cf67a3d, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -40,8 +45,8 @@ ModelImporter:
     useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
-    importCameras: 1
-    importLights: 1
+    importCameras: 0
+    importLights: 0
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
@@ -57,7 +62,7 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 1
+    useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0

@@ -1,9 +1,14 @@
 fileFormatVersion: 2
-guid: 2193158cccb996b46ae21ba5155c9cbf
+guid: 392e0d78c3d7fbe448ab3a1eef26fb3c
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: sofa_mat
+    second: {fileID: 2100000, guid: 3328b43962bf3d148b9ae2fb546f8907, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -40,8 +45,8 @@ ModelImporter:
     useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
-    importCameras: 1
-    importLights: 1
+    importCameras: 0
+    importLights: 0
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
@@ -57,7 +62,7 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 1
+    useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
