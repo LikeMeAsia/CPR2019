@@ -28,6 +28,7 @@ public class PlayerDoCPRHandEvent : SceneEvent
         else if(uiAsset.gameObject != null)
         {
             uiAsset.gameObject.SetActive(true);
+            Player.Instance.cprHand.enabledSnap = true;
         }
     }
 

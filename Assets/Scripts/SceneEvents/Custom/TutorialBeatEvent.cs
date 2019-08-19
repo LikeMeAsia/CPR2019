@@ -9,6 +9,8 @@ public class TutorialBeatEvent : SceneEvent
     public string assetName="Beat";
     public uint count = 10;
     private bool skip;
+    public AudioClip countingAfterMeSoundClip;
+    public AudioClip countingSoundClip;
 
     public override void InitEvent()
     {
@@ -25,6 +27,7 @@ public class TutorialBeatEvent : SceneEvent
     {
         InitEvent();
         gameManager.StartGame();
+        //close ui and collider frpm game manager
     }
 
     public override void StopEvent()
@@ -35,7 +38,7 @@ public class TutorialBeatEvent : SceneEvent
     {
         if (gameManager.rhythmController != null)
         {
-            if (gameManager.rhythmController.combo >= count || skip)
+            if (gameManager.rhythmController.tutorialCombo >= count || skip)
             {
                 passEventCondition = true;
                 gameManager.rhythmController.resetScore();

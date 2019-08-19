@@ -40,6 +40,8 @@ public class RhythmController : MonoBehaviour
     public GameObject missPopup;
     public float timeleft;
 
+    public int tutorialCombo;
+
     #region EventSystem
     [Header("Scoring Event System")]
     public UnityEvent perfectEvent;
@@ -237,6 +239,7 @@ public class RhythmController : MonoBehaviour
         if (good)
         {
             combo++;
+            tutorialCombo++;
             if (combo > maxCombo) maxCombo = combo;
         }
         else
