@@ -21,10 +21,10 @@ public class Game_Manager : MonoBehaviour
 
     void Start()
     {
-        Player.Instance.showController = false;
-        Player.Instance.cprHand.enabledSnap = true;
-        rhythmController.Gamestart = true;
-        BeatMusic.Play(); 
+        //Player.Instance.showController = false;
+        //Player.Instance.cprHand.enabledSnap = true;
+       // rhythmController.Gamestart = true;
+     //   BeatMusic.Play(); 
     }
 
     void Update()
