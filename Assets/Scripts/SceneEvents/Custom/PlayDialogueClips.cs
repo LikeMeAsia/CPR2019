@@ -48,7 +48,7 @@ public class PlayDialogueClips : SceneEvent
         audioSource.clip = null;
         
     }
-    public override void Skip()
+    public override bool Skip()
     {
         if (audioSource != null)
         {
@@ -57,6 +57,7 @@ public class PlayDialogueClips : SceneEvent
         }
         clipIter = audioClips.Length;
         clipTime = 0;
+        return true;
     }
 
     private float PlayClip() {

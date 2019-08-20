@@ -361,7 +361,7 @@ Camera:
   field of view: 90
   orthographic: 0
   orthographic size: 5
-  m_Depth: 1
+  m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 0
@@ -3161,7 +3161,8 @@ MonoBehaviour:
   - {fileID: 3736853862382562974}
   - {fileID: 3736820670959860326}
   m_controller: 2
-  m_parentTransform: {fileID: 0}
+  m_parentTransform: {fileID: 3412831714205675901}
+  m_grabbedObj: {fileID: 0}
 --- !u!1 &3410952519490429113
 GameObject:
   m_ObjectHideFlags: 0
@@ -3453,7 +3454,8 @@ MonoBehaviour:
   - {fileID: 3366251932434206171}
   - {fileID: 3364522078835186921}
   m_controller: 1
-  m_parentTransform: {fileID: 0}
+  m_parentTransform: {fileID: 3412831714205675901}
+  m_grabbedObj: {fileID: 0}
 --- !u!1 &3411359857990401967
 GameObject:
   m_ObjectHideFlags: 0
@@ -3644,7 +3646,7 @@ MonoBehaviour:
   _headPoseRelativeOffsetRotation: {x: 0, y: 0, z: 0}
   _headPoseRelativeOffsetTranslation: {x: 0, y: 0, z: 0}
   profilerTcpPort: 32419
-  expandMixedRealityCapturePropertySheet: 0
+  expandMixedRealityCapturePropertySheet: 1
   enableMixedReality: 0
   compositionMethod: 0
   extraHiddenLayers:
@@ -5842,8 +5844,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b28d888561983d745a19c026872c68d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OvrAvatar: {fileID: 0}
-  m_OvrCamera: {fileID: 0}
+  m_OvrAvatar: {fileID: 3370272426567249273}
+  m_OvrCamera: {fileID: 3370173668845949935}
   playerHeight: 0
   playerSit: 0
   l_hand: {fileID: 0}
@@ -5871,6 +5873,8 @@ MonoBehaviour:
   l_indexFingerTrans: {fileID: 0}
   r_indexFingerTrans: {fileID: 0}
   ready: 0
+  moveSpeed: 0.5
+  moveDelay: 0
   l_button01_outline: 0
   l_button02_outline: 0
   l_side_trigger_outline: 0

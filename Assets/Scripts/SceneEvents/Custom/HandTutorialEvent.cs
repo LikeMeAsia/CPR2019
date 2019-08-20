@@ -66,9 +66,10 @@ public class HandTutorialEvent : SceneEvent
         return skip ? 0 : base.GetDelayNextEvent();
     }
 
-    public override void Skip()
+    public override bool Skip()
     {
         skip = true;
+        return skip;
     }
 
     private bool CheckHandGestureInput()

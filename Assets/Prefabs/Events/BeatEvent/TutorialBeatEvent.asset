@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: TutorialBeatEvent
   m_EditorClassIdentifier: 
   delayNextEvent: 0
-  assetName: Beat
+  assetName: GameManager
   count: 10
   clip: {fileID: 8300000, guid: d293d77dc7846804ab72dca291c8bb2e, type: 3}

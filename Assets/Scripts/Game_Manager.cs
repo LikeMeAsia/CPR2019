@@ -7,6 +7,7 @@ public class Game_Manager : MonoBehaviour
 {
     [Header("General Settings")]
     public bool Musicstart;
+    public bool hpReduction;
     public RhythmController rhythmController;
 
     [Header("HP Bar Settings")]
@@ -17,17 +18,19 @@ public class Game_Manager : MonoBehaviour
     public float maxHp = 120;
     public float curhpDad = 0;
     public float hpreduction = 1.0f;
-
-    public GameObject canvasForCPRButton;
+    
 
     void Start()
     {
-        canvasForCPRButton.SetActive(false);
-        canvasForCPRButton.GetComponent<Collider>().enabled = false;       
+        hpReduction = false;
+        DisableUI();
     }
 
     void Update()
     {
+        if (!rhythmController.GameStart) {
+            return;
+        }
         HpDad();
     }
 
@@ -42,13 +45,21 @@ public class Game_Manager : MonoBehaviour
 
     public void StartGame()
     {
-         Player.Instance.showController = false;
-         Player.Instance.cprHand.enabledSnap = true;
-         rhythmController.StartRhythm();
+        Player.Instance.showController = false;
+        Player.Instance.cprHand.enabledSnap = true;
+        rhythmController.ResetScore();
+        rhythmController.StartRhythm();
+    }
+
+    public void StopGame()
+    {
+        Player.Instance.cprHand.enabledSnap = false;
+        rhythmController.StopRhythm();
     }
 
     void HpDad()
     {
+        if (!hpReduction) return;
         Heal(-hpreduction * Time.deltaTime);
         if (curhpDad <= 0.0f)
         {
@@ -66,13 +77,11 @@ public class Game_Manager : MonoBehaviour
 
     public void EnableUI()
     {
-        canvasForCPRButton.SetActive(true);
-        canvasForCPRButton.GetComponent<Collider>().enabled = true;
+        rhythmController.SetEnabled(true);
     }
 
     public void DisableUI()
     {
-        canvasForCPRButton.SetActive(false);
-        canvasForCPRButton.GetComponent<Collider>().enabled = false;
+        rhythmController.SetEnabled(false);
     }
 }

@@ -48,8 +48,8 @@ public class PlayerDoCPRHandEvent : SceneEvent
         }
     }
 
-    public override void Skip()
+    public override bool Skip()
     {
-
+        return false;
     }
 }

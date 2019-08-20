@@ -4,9 +4,9 @@
 [CreateAssetMenu(fileName = "BeatEvent", menuName = "SceneEvent/BeatEvent")]
 public class BeatEvent : SceneEvent
 {
-    public override void Skip()
+    public override bool Skip()
     {
-
+        return false;
     }
 
     public override void StartEvent()

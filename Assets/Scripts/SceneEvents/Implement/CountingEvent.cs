@@ -18,8 +18,9 @@ public class CountingEvent : SceneEvent
         Debug.Log("Found Asset[" + assetName + "]: " + found);
     }
 
-    public override void Skip()
+    public override bool Skip()
     {
+        return false;
     }
 
     public override void StartEvent()

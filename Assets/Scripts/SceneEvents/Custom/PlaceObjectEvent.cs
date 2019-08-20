@@ -38,8 +38,8 @@ public class PlaceObjectEvent : SceneEvent
     {
 
     }
-    public override void Skip()
+    public override bool Skip()
     {
-
+        return false;
     }
 }

@@ -39,6 +39,10 @@ public class ScenarioControl : MonoBehaviour
 
     void Update()
     {
+        if (OVRInput.GetUp(OVRInput.RawButton.Start)) {
+            skip = true;
+        }
+
         if (delayProc > 0)
         {
             delayProc -= Time.deltaTime;

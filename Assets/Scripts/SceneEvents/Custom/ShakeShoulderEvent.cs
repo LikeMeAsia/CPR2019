@@ -41,9 +41,9 @@ public class ShakeShoulderEvent : SceneEvent
 
     }
 
-    public override void Skip()
+    public override bool Skip()
     {
-
+        return false;
     }
 
 }
