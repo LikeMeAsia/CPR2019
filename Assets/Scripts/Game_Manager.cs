@@ -7,7 +7,6 @@ public class Game_Manager : MonoBehaviour
 {
     [Header("General Settings")]
     public bool Musicstart;
-    public AudioSource BeatMusic;
     public RhythmController rhythmController;
 
     [Header("HP Bar Settings")]
@@ -19,9 +18,12 @@ public class Game_Manager : MonoBehaviour
     public float curhpDad = 0;
     public float hpreduction = 1.0f;
 
+    public GameObject canvasForCPRButton;
+
     void Start()
     {
-        
+        canvasForCPRButton.SetActive(false);
+        canvasForCPRButton.GetComponent<Collider>().enabled = false;       
     }
 
     void Update()
@@ -33,14 +35,16 @@ public class Game_Manager : MonoBehaviour
         curhpDad = curhpDad + healed;
     }
 
+    public void Setup(AudioClip clip)
+    {
+        rhythmController.Setup(clip);
+    }
 
     public void StartGame()
     {
          Player.Instance.showController = false;
          Player.Instance.cprHand.enabledSnap = true;
-         rhythmController.Gamestart = true;
-         BeatMusic.Play(); 
-
+         rhythmController.StartRhythm();
     }
 
     void HpDad()
@@ -58,7 +62,17 @@ public class Game_Manager : MonoBehaviour
         soulPosX.localPosition = new Vector3(hpBarValue, 0.0f, 0.0f);
         hpdadText.text = "" + Mathf.CeilToInt(curhpDad) + "/" + maxHp;
         hpBar.fillAmount = hpBarValue;
+    }
 
-        
+    public void EnableUI()
+    {
+        canvasForCPRButton.SetActive(true);
+        canvasForCPRButton.GetComponent<Collider>().enabled = true;
+    }
+
+    public void DisableUI()
+    {
+        canvasForCPRButton.SetActive(false);
+        canvasForCPRButton.GetComponent<Collider>().enabled = false;
     }
 }

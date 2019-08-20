@@ -9,14 +9,15 @@ public class TutorialBeatEvent : SceneEvent
     public string assetName="Beat";
     public uint count = 10;
     private bool skip;
-    public AudioClip countingAfterMeSoundClip;
-    public AudioClip countingSoundClip;
+    public AudioClip clip;
 
-    public override void InitEvent()
+    public override void InitEvent() 
     {
         base.InitEvent();
+        skip = false;
         bool found = SceneAssetManager.GetAssetComponent<Game_Manager>(assetName, out gameManager);
-        Debug.Log("Found ShakeShoulder[" + assetName + "]: " + found);
+        Debug.Log("Found Game_Manager[" + assetName + "]: " + found);
+        gameManager.DisableUI(); //disable UI and collider from game manager
     }
     public override void Skip()
     {
@@ -26,12 +27,20 @@ public class TutorialBeatEvent : SceneEvent
     public override void StartEvent()
     {
         InitEvent();
-        gameManager.StartGame();
-        //close ui and collider frpm game manager
+
+        if (clip == null) {
+            passEventCondition = true;
+        }
+        else{
+            gameManager.Setup(clip);
+            gameManager.StartGame();
+            gameManager.EnableUI(); //enable UI and collider from game manager
+        }
     }
 
     public override void StopEvent()
     {
+        gameManager.rhythmController.ResetScore();
     }
 
     public override void UpdateEvent()
@@ -41,12 +50,23 @@ public class TutorialBeatEvent : SceneEvent
             if (gameManager.rhythmController.tutorialCombo >= count || skip)
             {
                 passEventCondition = true;
-                gameManager.rhythmController.resetScore();
+                gameManager.DisableUI();
             }
+
+            Debug.Log(gameManager.rhythmController.tutorialCombo);
+
+            if (gameManager.rhythmController.countToThree>=3)
+            {
+                passEventCondition = true;
+                gameManager.DisableUI();
+
+            }
+
         }
         else
         {
             passEventCondition = true;
+            gameManager.DisableUI();
         }
 
     }

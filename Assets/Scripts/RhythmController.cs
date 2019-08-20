@@ -4,10 +4,11 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(AudioSource), typeof(Collider))]
 public class RhythmController : MonoBehaviour
 {
     [Header("Music Settings")]
-    public AudioSource mainAudioSource;
+    private AudioSource mainAudioSource;
     public float tempo = 0.6f;
     public float offset = 0.25f;
     public float playbackOffset = 0.45f;
@@ -31,7 +32,7 @@ public class RhythmController : MonoBehaviour
     private bool canVibrateOnce = false;
 
     private float playbackPercent = 0.0f;
-    [HideInInspector] public bool Gamestart = false;
+    [HideInInspector] private bool gamestart = false;
     private Collider beatCollider;
 
     [Header ("Combo Popup")]
@@ -41,6 +42,8 @@ public class RhythmController : MonoBehaviour
     public float timeleft;
 
     public int tutorialCombo;
+    public int countToThree;
+
 
     #region EventSystem
     [Header("Scoring Event System")]
@@ -71,12 +74,12 @@ public class RhythmController : MonoBehaviour
     void Start()
     {
         //gamestart need some fix. This is just a dummy assigning;
-        Gamestart = true;
-
+        mainAudioSource = this.GetComponent<AudioSource>();
         beatCollider = this.GetComponent<Collider>();
+        gamestart = true;
         defaultColor = circle.color;
 
-        resetScore();
+        ResetScore();
     }
 
     void Update()
@@ -86,7 +89,7 @@ public class RhythmController : MonoBehaviour
         //if (Input.GetMouseButton(0)) RegisterHit(HIT.perfect);
         //if (Input.GetMouseButton(1)) RegisterHit(HIT.bad);
 
-        if (Gamestart == true)
+        if (gamestart == true)
         {
             playbackPercent = ((mainAudioSource.time + playbackOffset) % tempo) / tempo;
             RingTransform(playbackPercent);
@@ -94,6 +97,12 @@ public class RhythmController : MonoBehaviour
             if (enableVibration) { if (canVibrateOnce) Vibrate(); }
             ChangeColorCountdown();
         }
+
+        if (mainAudioSource.time >= mainAudioSource.clip.length)
+        {
+            SetAudioSourceTime(0f);
+        }
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -134,6 +143,15 @@ public class RhythmController : MonoBehaviour
                     AudioPlayer.PlayAudioClip(indicatorSound[1], true);
             }
         }
+    }
+
+    public void Setup(AudioClip clip) {
+        mainAudioSource.clip = clip;
+    }
+
+    public void StartRhythm() {
+        gamestart = true;
+        mainAudioSource.Play();
     }
 
     private void ClearComboPopup()
@@ -267,7 +285,7 @@ public class RhythmController : MonoBehaviour
         if (isTriggerTimer) changeColorTimer = changeColorTime;
     }
 
-    public void resetScore()
+    public void ResetScore()
     {
         maxCombo = 0;
         combo = 0;
@@ -275,4 +293,12 @@ public class RhythmController : MonoBehaviour
         goodHit = 0;
         missHit = 0;
     }
+
+    public void SetAudioSourceTime(float time)
+    {
+        mainAudioSource.time = time;
+        countToThree++;
+    }
+
+
 }
