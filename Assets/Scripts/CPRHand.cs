@@ -38,6 +38,7 @@ public class CPRHand : MonoBehaviour
     void Start()
     {
         cprHandCollider = GetComponent<Collider>();
+        DisabledSnapping();
     }
 
     void Update()
@@ -96,11 +97,15 @@ public class CPRHand : MonoBehaviour
         {
             Player.Instance.r_hand.gameObject.SetActive(true);
             Player.Instance.l_hand.gameObject.SetActive(true);
-            r_cprHandUnderObj.SetActive(false);
-            l_cprHandUnderObj.SetActive(false);
-            cprHandCollider.enabled = false;
+            DisabledSnapping();
         }
 
+    }
+
+    private void DisabledSnapping() {
+        r_cprHandUnderObj.SetActive(false);
+        l_cprHandUnderObj.SetActive(false);
+        cprHandCollider.enabled = false;
     }
 
     private bool IsBetween(float num, float min, float max)

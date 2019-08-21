@@ -18,7 +18,6 @@ public class GamePlayEvent : SceneEvent
         bool found = SceneAssetManager.GetAssetComponent<Game_Manager>(assetName, out gameManager);
         Debug.Log("Found Game_Manager[" + assetName + "]: " + found);
         gameManager.DisableUI(); //disable UI and collider from game manager
-        gameManager.StartGamePlayAndUI();
         gameManager.hpReduction = false;
     }
     public override bool Skip()
@@ -38,9 +37,10 @@ public class GamePlayEvent : SceneEvent
         else
         {
             gameManager.Setup(clip); //insert GamePlay song
-            gameManager.StartGamePlayAndUI();
             gameManager.EnableUI(); //enable Beat UI and Beat collider from game manager
             gameManager.curhpDad = 50f;
+            gameManager.StartGamePlayAndUI();
+            gameManager.hpReduction = true;
         }
     }
 
@@ -53,9 +53,6 @@ public class GamePlayEvent : SceneEvent
     {
         if (gameManager.rhythmController != null)
         {
-            gameManager.rhythmController.StartRhythm();
-
-
             if (gameManager.rhythmController.GameStart)
             {
                 if (gameManager.rhythmController.songHasStopped)

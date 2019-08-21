@@ -59,7 +59,8 @@ public class SequenceEvents : SceneEvent
         }
         if (skip && !callNextProc)
         {
-            skip = sceneEvents[eventIter].Skip();
+            sceneEvents[eventIter].Skip();
+            skip = false;
         }
     }
 
