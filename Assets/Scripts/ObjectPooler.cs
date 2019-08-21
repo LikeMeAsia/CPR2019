@@ -27,10 +27,10 @@ public class ObjectPooler : MonoBehaviour
     public bool shouldExpand = true;
     public List<Pool> pools;
     public Dictionary<string, Pool> poolDictionary;
-
     // Start is called before the first frame update
     void Start()
     {
+
         poolDictionary = new Dictionary<string, Pool>();
         foreach (Pool pool in pools)
         {
