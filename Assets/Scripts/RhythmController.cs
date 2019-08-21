@@ -39,6 +39,7 @@ public class RhythmController : MonoBehaviour
     public bool GameStart { get { return gamestart; } }
 
     private Collider beatCollider;
+    public bool songHasStopped = false;
 
     #region EventSystem
     [Header("Scoring Event System")]
@@ -281,5 +282,14 @@ public class RhythmController : MonoBehaviour
     public void SetEnabled(bool value) {
         beatCollider.enabled = value;
         beatCanvas.gameObject.SetActive(value);
+    }
+
+    public void SongIsPlaying()
+    {
+        if (!mainAudioSource.isPlaying)
+        {
+            songHasStopped = true;
+
+        }
     }
 }

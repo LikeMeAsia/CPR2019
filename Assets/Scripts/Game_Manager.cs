@@ -13,6 +13,8 @@ public class Game_Manager : MonoBehaviour
     [Header("HP Bar Settings")]
     public Image hpBar;
     public Text hpdadText;
+    public Canvas uiGamePlayCanvas;
+    public Canvas totalScoreBoard;
     public RectTransform soulPosX;
     private float hpBarValue;
     public float maxHp = 120;
@@ -55,10 +57,28 @@ public class Game_Manager : MonoBehaviour
         rhythmController.StartRhythm();
     }
 
+    public void StartGamePlayAndUI()
+    {
+        Player.Instance.showController = false;
+        Player.Instance.cprHand.enabledSnap = true;
+        rhythmController.ResetScore();
+        rhythmController.StartRhythm();
+        uiGamePlayCanvas.gameObject.SetActive(true);
+        totalScoreBoard.gameObject.SetActive(false);
+    }
+
     public void StopGame()
     {
         Player.Instance.cprHand.enabledSnap = false;
         rhythmController.StopRhythm();
+    }
+
+    public void StopGamePlayAndUI()
+    {
+        Player.Instance.cprHand.enabledSnap = false;
+        rhythmController.StopRhythm();
+        uiGamePlayCanvas.gameObject.SetActive(false);
+        totalScoreBoard.gameObject.SetActive(true);
     }
 
     void HpDad()

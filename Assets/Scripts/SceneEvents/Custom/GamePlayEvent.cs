@@ -1,29 +1,24 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-[CreateAssetMenu(fileName = "TutorialBeatEvent", menuName = "SceneEvent/TutorialBeatEvent")]
+[CreateAssetMenu(fileName = "GamePlayEvent", menuName = "SceneEvent/GamePlayEvent")]
 
-public class TutorialBeatEvent : SceneEvent
+public class GamePlayEvent : SceneEvent
 {
     private Game_Manager gameManager;
-    public string assetName= "GameManager";
-    public uint count = 10;
-    public uint loop = 3;
+    public string assetName = "GameManager";
     public AudioClip clip;
 
-    private uint totalCount;
-    private uint countLoop;
     private bool skip;
 
-    public override void InitEvent() 
+    public override void InitEvent()
     {
         base.InitEvent();
         skip = false;
-        countLoop = 0;
-        totalCount = 0;
         bool found = SceneAssetManager.GetAssetComponent<Game_Manager>(assetName, out gameManager);
         Debug.Log("Found Game_Manager[" + assetName + "]: " + found);
         gameManager.DisableUI(); //disable UI and collider from game manager
+        gameManager.StartGamePlayAndUI();
         gameManager.hpReduction = false;
     }
     public override bool Skip()
@@ -36,47 +31,39 @@ public class TutorialBeatEvent : SceneEvent
     {
         InitEvent();
 
-        if (clip == null) {
+        if (clip == null)
+        {
             passEventCondition = true;
         }
-        else{
-            gameManager.Setup(clip);
-            gameManager.StartGame();
+        else
+        {
+            gameManager.Setup(clip); //insert GamePlay song
+            gameManager.StartGamePlayAndUI();
             gameManager.EnableUI(); //enable Beat UI and Beat collider from game manager
+            gameManager.curhpDad = 50f;
         }
     }
 
     public override void StopEvent()
     {
-        gameManager.StopGame();
+        gameManager.StopGamePlayAndUI();
     }
 
     public override void UpdateEvent()
     {
         if (gameManager.rhythmController != null)
         {
-            totalCount = gameManager.rhythmController.goodHit + gameManager.rhythmController.perfectHit;
-            if (totalCount >= count || skip)
+            gameManager.rhythmController.StartRhythm();
+
+
+            if (gameManager.rhythmController.GameStart)
             {
-                passEventCondition = true;
-                gameManager.DisableUI();
-            }
-
-            Debug.Log("Total Count: " + totalCount);
-
-            if (!gameManager.rhythmController.GameStart) {
-                countLoop = countLoop + 1;
-                if (countLoop < loop)
+                if (gameManager.rhythmController.songHasStopped)
                 {
-                    Debug.Log("Count Loop " + countLoop);
-                    gameManager.rhythmController.StartRhythm();
-                }
-                else {
                     passEventCondition = true;
                     gameManager.DisableUI();
                 }
             }
-
         }
         else
         {
