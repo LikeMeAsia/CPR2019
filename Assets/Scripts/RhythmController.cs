@@ -40,12 +40,6 @@ public class RhythmController : MonoBehaviour
 
     private Collider beatCollider;
 
-    [Header ("Combo Popup")]
-    public GameObject perfectPopup;
-    public GameObject goodPopup;
-    public GameObject missPopup;
-    public float timeleft;
-
     #region EventSystem
     [Header("Scoring Event System")]
     public UnityEvent perfectEvent;
@@ -81,6 +75,7 @@ public class RhythmController : MonoBehaviour
         pulseDirector = 0;
         defaultColor = circle.color;
         ResetScore();
+        
     }
 
     void Update()
@@ -119,22 +114,19 @@ public class RhythmController : MonoBehaviour
                 {
                     RegisterHit(HIT.perfect);
                     AudioPlayer.PlayAudioClip(indicatorSound[0], true);
-                    perfectPopup.SetActive(true);
-                    ClearComboPopup(); //clear popup couroutine 0.5sec
+                    
                 }
                 else if (playbackPercent < 0.8f && playbackPercent > 0.4f)
                 {
                     RegisterHit(HIT.good);
                     AudioPlayer.PlayAudioClip(indicatorSound[0], true);
-                    goodPopup.SetActive(true);
-                    ClearComboPopup(); //clear popup couroutine 0.5sec
+                   
                 }
                 else
                 {
                     RegisterHit(HIT.bad);
                     AudioPlayer.PlayAudioClip(indicatorSound[1], true);
-                    missPopup.SetActive(true);
-                    ClearComboPopup(); //clear popup couroutine 0.5sec
+                  
                 }
                 hitOnBar = false;
             }
@@ -163,20 +155,6 @@ public class RhythmController : MonoBehaviour
         gamestart = false;
         mainAudioSource.Stop();
         SetEnabled(false);
-    }
-
-    private void ClearComboPopup()
-    {
-        Debug.Log("Enter clearpopup");
-        timeleft -= Time.deltaTime;
-        if (timeleft<=0)
-        {
-            Debug.Log("inside");
-            goodPopup.SetActive(false);
-            missPopup.SetActive(false);
-            perfectPopup.SetActive(false);
-            timeleft = 3;
-        }
     }
 
     void RingTransform(float playbackPercent) //formally ExpandRing

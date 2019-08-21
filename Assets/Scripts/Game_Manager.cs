@@ -18,17 +18,21 @@ public class Game_Manager : MonoBehaviour
     public float maxHp = 120;
     public float curhpDad = 0;
     public float hpreduction = 1.0f;
-    
+
+    [Header("Combo Popup")]
+    public Canvas popupHitCanvas;
 
     void Start()
     {
         hpReduction = false;
         DisableUI();
+        
     }
 
     void Update()
     {
-        if (!rhythmController.GameStart) {
+        if (!rhythmController.GameStart)
+        {
             return;
         }
         HpDad();
@@ -84,4 +88,22 @@ public class Game_Manager : MonoBehaviour
     {
         rhythmController.SetEnabled(false);
     }
+
+    public void BadHit()
+    {
+        ObjectPooler.Instance.SpawnFromPool("MissHit", popupHitCanvas.transform.position, popupHitCanvas.transform.rotation);
+    }
+
+    public void PerfectHit()
+    {
+        ObjectPooler.Instance.SpawnFromPool("PerfectHit", popupHitCanvas.transform.position, popupHitCanvas.transform.rotation);
+
+    }
+
+    public void GoodHit()
+    {
+        ObjectPooler.Instance.SpawnFromPool("GoodHit", popupHitCanvas.transform.position, popupHitCanvas.transform.rotation);
+
+    }
+
 }
