@@ -98,9 +98,8 @@ public class Player : MonoBehaviour
 
         m_OvrAvatar = this.GetComponentInChildren<OvrAvatar>();
         m_OvrCamera = this.GetComponentInChildren<OVRCameraRig>();
-        
-        curController = m_OvrAvatar.StartWithControllers;
-        showController = curController;
+        m_OvrAvatar.ShowControllers(showController);
+        curController = showController;
         playerHeight = m_OvrCamera.transform.position.y;
         Transform l_anchor = m_OvrCamera.transform.Find(L_CTRL_PARENT);
         if (l_anchor != null)

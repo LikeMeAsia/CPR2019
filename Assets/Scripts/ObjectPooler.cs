@@ -27,6 +27,7 @@ public class ObjectPooler : MonoBehaviour
     public bool shouldExpand = true;
     public List<Pool> pools;
     public Dictionary<string, Pool> poolDictionary;
+    public Canvas popupHitCanvas;
     // Start is called before the first frame update
     void Start()
     {
@@ -50,7 +51,7 @@ public class ObjectPooler : MonoBehaviour
 
     public GameObject CreateObject(Pool pool)
     {
-        GameObject obj = Instantiate(pool.popupHitPrefab);
+        GameObject obj = Instantiate(pool.popupHitPrefab, popupHitCanvas.gameObject.transform);
         PooledObject pooledObject = obj.AddComponent<PooledObject>(); //ADD COMPONENT TO AN INSTANCE INSTEAD NOT THE PREFAB
         pooledObject.label = pool.poolTag;
         return obj;

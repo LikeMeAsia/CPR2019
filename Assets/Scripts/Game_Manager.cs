@@ -83,8 +83,7 @@ public class Game_Manager : MonoBehaviour
 
     void HpDad()
     {
-        if (!hpReduction) return;
-        Heal(-hpreduction * Time.deltaTime);
+        if (hpReduction) Heal(-hpreduction * Time.deltaTime);
         if (curhpDad <= 0.0f)
         {
             curhpDad = 0;

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: ff117dedf0ac5ca499ffe71a71f1a148
-timeCreated: 1450389765
+guid: fe7ed02a4d2df5143a972d37d7af94b4
+timeCreated: 1555100492
 licenseType: Pro
 PluginImporter:
   serializedVersion: 2
@@ -11,17 +11,17 @@ PluginImporter:
   platformData:
     data:
       first:
+        '': data
+      second:
+        enabled: 0
+        settings: {}
+    data:
+      first:
         Android: Android
       second:
         enabled: 1
         settings:
-          CPU: ARMv7
-    data:
-      first:
-        Any: 
-      second:
-        enabled: 0
-        settings: {}
+          CPU: ARM64
     data:
       first:
         Editor: Editor
