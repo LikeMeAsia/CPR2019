@@ -17,7 +17,7 @@ public class Game_Manager : MonoBehaviour
     public Canvas totalScoreBoard;
     public RectTransform soulPosX;
     private float hpBarValue;
-    public float maxHp = 120;
+    public float maxHp = 100;
     public float curhpDad = 0;
     public float hpreduction = 1.0f;
 
@@ -78,7 +78,7 @@ public class Game_Manager : MonoBehaviour
         Player.Instance.cprHand.enabledSnap = false;
         rhythmController.StopRhythm();
         uiGamePlayCanvas.gameObject.SetActive(false);
-        totalScoreBoard.gameObject.SetActive(true);
+       // totalScoreBoard.gameObject.SetActive(true);
     }
 
     void HpDad()
@@ -101,29 +101,50 @@ public class Game_Manager : MonoBehaviour
 
     public void EnableUI()
     {
-        rhythmController.SetEnabled(true);
+        rhythmController.SetBeatEnabled(true);
     }
 
     public void DisableUI()
     {
-        rhythmController.SetEnabled(false);
+        rhythmController.SetBeatEnabled(false);
     }
 
     public void BadHit()
     {
-        ObjectPooler.Instance.SpawnFromPool("MissHit", popupHitCanvas.transform.position, popupHitCanvas.transform.rotation);
+        GameObject missHit = ObjectPooler.Instance.SpawnFromPool("MissHit", popupHitCanvas.transform.position, popupHitCanvas.transform.rotation);
+        if (missHit.transform.parent != null) {
+            Transform parent = missHit.transform.parent;
+            missHit.transform.SetParent(null);
+            missHit.transform.SetParent(parent);
+            missHit.transform.localPosition = Vector3.zero;
+            missHit.transform.localEulerAngles = Vector3.zero;
+        }
     }
 
     public void PerfectHit()
     {
-        ObjectPooler.Instance.SpawnFromPool("PerfectHit", popupHitCanvas.transform.position, popupHitCanvas.transform.rotation);
-
+        GameObject perfectHit = ObjectPooler.Instance.SpawnFromPool("PerfectHit", popupHitCanvas.transform.position, popupHitCanvas.transform.rotation);
+        if (perfectHit.transform.parent != null)
+        {
+            Transform parent = perfectHit.transform.parent;
+            perfectHit.transform.SetParent(null);
+            perfectHit.transform.SetParent(parent);
+            perfectHit.transform.localPosition = Vector3.zero;
+            perfectHit.transform.localEulerAngles = Vector3.zero;
+        }
     }
 
     public void GoodHit()
     {
-        ObjectPooler.Instance.SpawnFromPool("GoodHit", popupHitCanvas.transform.position, popupHitCanvas.transform.rotation);
-
+        GameObject goodHit = ObjectPooler.Instance.SpawnFromPool("GoodHit", popupHitCanvas.transform.position, popupHitCanvas.transform.rotation);
+        if (goodHit.transform.parent != null)
+        {
+            Transform parent = goodHit.transform.parent;
+            goodHit.transform.SetParent(null);
+            goodHit.transform.SetParent(parent);
+            goodHit.transform.localPosition = Vector3.zero;
+            goodHit.transform.localEulerAngles = Vector3.zero;
+        }
     }
 
 }

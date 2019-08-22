@@ -9,7 +9,8 @@ public class ObjectPooler : MonoBehaviour
     {
         //THESE ARE THINGS TO STORE IN THE POOL
         public string poolTag;
-        public GameObject popupHitPrefab;
+        public GameObject prefab;
+        public Transform parent;
         public int size;
         public Queue<GameObject> queue = new Queue<GameObject>(); // create queue of objects
     }
@@ -27,7 +28,6 @@ public class ObjectPooler : MonoBehaviour
     public bool shouldExpand = true;
     public List<Pool> pools;
     public Dictionary<string, Pool> poolDictionary;
-    public Canvas popupHitCanvas;
     // Start is called before the first frame update
     void Start()
     {
@@ -51,21 +51,28 @@ public class ObjectPooler : MonoBehaviour
 
     public GameObject CreateObject(Pool pool)
     {
-        GameObject obj = Instantiate(pool.popupHitPrefab, popupHitCanvas.gameObject.transform);
+        GameObject obj;
+        if (pool.parent == null) {
+            obj = Instantiate(pool.prefab);
+        }
+        else {
+            obj = Instantiate(pool.prefab, pool.parent);
+        }
         PooledObject pooledObject = obj.AddComponent<PooledObject>(); //ADD COMPONENT TO AN INSTANCE INSTEAD NOT THE PREFAB
         pooledObject.label = pool.poolTag;
         return obj;
     }
 
 
-    public void SpawnFromPool(string poolTag, Vector3 position, Quaternion rotation)
+    public GameObject SpawnFromPool(string poolTag, Vector3 position, Quaternion rotation)
     {
+        GameObject spawnObject = null;
         if (!poolDictionary.ContainsKey(poolTag))
         {
             Debug.LogWarning("Pool with tag" + poolTag + "doesn't exist");
+            return spawnObject;
         }
-
-
+        
         if (shouldExpand)
         {
             if (poolDictionary[poolTag].queue.Count <= 0)
@@ -78,6 +85,7 @@ public class ObjectPooler : MonoBehaviour
                 goingToCreateObject.SetActive(true);
                 goingToCreateObject.transform.position = position;
                 goingToCreateObject.transform.rotation = rotation;
+                spawnObject = goingToCreateObject;
                 //poolDictionary[poolTag].queue.Enqueue(goingToCreateObject); //DONT NEED THIS COS IT HAS BEEN ENQUEUE IN ADD COMPONENT POOLEDOBJECT ALREADY
                 //THIS WILL ONLY CREATE AND SEND ON REQUEST, IT WILL BE USED AT THAT MOMENT AND WILL ENQUEUE ONCE IT HAS BEEN DESTROYED BY ASTEROID (SETACTIVE=FALSE)
 
@@ -89,6 +97,7 @@ public class ObjectPooler : MonoBehaviour
                 objectToSpawn.SetActive(true);
                 objectToSpawn.transform.position = position;
                 objectToSpawn.transform.rotation = rotation;
+                spawnObject = objectToSpawn;
                 //  poolDictionary[tag].Enqueue(objectToSpawn); enqueue when inactive
             }
 
@@ -103,11 +112,12 @@ public class ObjectPooler : MonoBehaviour
                 objectToSpawn.SetActive(true);
                 objectToSpawn.transform.position = position;
                 objectToSpawn.transform.rotation = rotation;
+                spawnObject = objectToSpawn;
                 // poolDictionary[poolTag].queue.Enqueue(objectToSpawn);
             }
         }
 
-        //return objectToSpawn;
+        return spawnObject;
     }
 
     /* public bool IteratePoolsWithTag(string tag, out Pool retPool)
