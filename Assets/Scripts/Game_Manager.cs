@@ -93,9 +93,10 @@ public class Game_Manager : MonoBehaviour
             curhpDad = 120;
         }
         hpBarValue = curhpDad / maxHp;
-        soulPosX.localPosition = new Vector3(hpBarValue, 0.0f, 0.0f);
+        
         hpdadText.text = "" + Mathf.CeilToInt(curhpDad) + "/" + maxHp;
         hpBar.fillAmount = hpBarValue;
+        soulPosX.localPosition = new Vector3(hpBarValue, 0.0f, 0.0f);
     }
 
     public void EnableUI()
