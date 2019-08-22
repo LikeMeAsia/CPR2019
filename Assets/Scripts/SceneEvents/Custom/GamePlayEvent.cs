@@ -8,12 +8,15 @@ public class GamePlayEvent : SceneEvent
     private Game_Manager gameManager;
     public string assetName = "GameManager";
     public AudioClip clip;
-
+    public int goodEndingTrack;
+    public int badEndingTrack;
+    private bool waitCutscene;
     private bool skip;
 
     public override void InitEvent()
     {
         base.InitEvent();
+        waitCutscene = false;
         skip = false;
         bool found = SceneAssetManager.GetAssetComponent<Game_Manager>(assetName, out gameManager);
         Debug.Log("Found Game_Manager[" + assetName + "]: " + found);
@@ -22,7 +25,13 @@ public class GamePlayEvent : SceneEvent
     }
     public override bool Skip()
     {
-        skip = true;
+        if (waitCutscene) {
+            SimpleDirectorController.Instance.SkipToEndTrack();
+            skip = true;
+        }
+        else {
+            skip = false;
+        }
         return skip;
     }
 
@@ -46,26 +55,35 @@ public class GamePlayEvent : SceneEvent
 
     public override void StopEvent()
     {
+        gameManager.DisableUI();
         gameManager.StopGamePlayAndUI();
+        waitCutscene = false;
     }
 
     public override void UpdateEvent()
     {
-        if (gameManager.rhythmController != null)
+        if (waitCutscene) {
+            passEventCondition = SimpleDirectorController.Instance.Interruptable;
+        }
+        else if (gameManager.rhythmController != null)
         {
-            if (gameManager.rhythmController.GameStart)
+            if (!gameManager.rhythmController.GameStart)
             {
-                if (gameManager.rhythmController.songHasStopped)
-                {
-                    passEventCondition = true;
-                    gameManager.DisableUI();
+                gameManager.DisableUI();
+                gameManager.StopGamePlayAndUI();
+                if (gameManager.curhpDad > 50) {
+                    SimpleDirectorController.Instance.PlayTrack(goodEndingTrack);
                 }
+                else {
+                    SimpleDirectorController.Instance.PlayTrack(badEndingTrack);
+                }
+                waitCutscene = true;
             }
         }
         else
         {
-            passEventCondition = true;
             gameManager.DisableUI();
+            passEventCondition = true;
         }
 
     }

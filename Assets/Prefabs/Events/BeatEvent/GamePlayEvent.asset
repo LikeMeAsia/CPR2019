@@ -15,3 +15,5 @@ MonoBehaviour:
   delayNextEvent: 0
   assetName: GameManager
   clip: {fileID: 8300000, guid: 979ef179c79816e43a7ae0c38e52fe38, type: 3}
+  goodEndingTrack: 3
+  badEndingTrack: 2

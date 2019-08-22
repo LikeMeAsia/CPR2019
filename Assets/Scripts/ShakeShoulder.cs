@@ -13,6 +13,11 @@ public class ShakeShoulder : MonoBehaviour
     private bool shaking;
     public bool Shaking { get { return shaking; } }
 
+    private bool enableVibration;
+    public float vibrateTime = 0.1f;
+    private float vibrateTimer = 0.0f;
+    private bool canVibrateOnce = false;
+
     void Start()
     {
         shoulderColliders = GetComponentsInChildren<Collider>();
@@ -22,10 +27,16 @@ public class ShakeShoulder : MonoBehaviour
         SetActiveShoulderIput(false);
     }
 
+    private void Update()
+    {
+        if (enableVibration) { if (canVibrateOnce) Vibrate(); }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Hand"))
+        if (enableVibration && !canVibrateOnce && other.gameObject.CompareTag("Hand"))
         {
+            canVibrateOnce = true;
             countShake++;
             Debug.Log("Shake!" + countShake + "/"+ maxHit) ;
             if (countShake >= maxHit)
@@ -46,6 +57,7 @@ public class ShakeShoulder : MonoBehaviour
 
     private void SetActiveShoulderIput(bool value) {
         shakingUI.SetActive(value);
+        enableVibration = value;
         foreach (Collider col in shoulderColliders)
         {
             col.enabled = value;
@@ -53,6 +65,24 @@ public class ShakeShoulder : MonoBehaviour
         foreach (Outline outline in outlines)
         {
             outline.enabled = value;
+        }
+    }
+
+
+    private void Vibrate()
+    {
+        if (vibrateTimer <= vibrateTime)
+        {
+            OVRInput.SetControllerVibration(1, 1, OVRInput.Controller.RTouch);
+            OVRInput.SetControllerVibration(1, 1, OVRInput.Controller.LTouch);
+            vibrateTimer += Time.deltaTime;
+        }
+        else
+        {
+            OVRInput.SetControllerVibration(0, 0, OVRInput.Controller.RTouch);
+            OVRInput.SetControllerVibration(0, 0, OVRInput.Controller.LTouch);
+            vibrateTimer = 0.0f;
+            canVibrateOnce = false;
         }
     }
 }

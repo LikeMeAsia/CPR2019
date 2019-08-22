@@ -93,7 +93,7 @@ public class RhythmController : MonoBehaviour
             Pulse();
             if (enableVibration) { if (canVibrateOnce) Vibrate(); }
             ChangeColorCountdown();
-            if (mainAudioSource.time >= mainAudioSource.clip.length)
+            if (!mainAudioSource.isPlaying)
             {
                 Debug.Log("Song stop");
                 //gamestart = false;
@@ -149,13 +149,13 @@ public class RhythmController : MonoBehaviour
         pulseDirector = 0;
         mainAudioSource.time = 0;
         mainAudioSource.Play();
-        SetEnabled(true);
+        SetBeatEnabled(true);
     }
 
     public void StopRhythm() {
         gamestart = false;
         mainAudioSource.Stop();
-        SetEnabled(false);
+        SetBeatEnabled(false);
     }
 
     void RingTransform(float playbackPercent) //formally ExpandRing
@@ -279,7 +279,7 @@ public class RhythmController : MonoBehaviour
         missHit = 0;
     }
 
-    public void SetEnabled(bool value) {
+    public void SetBeatEnabled(bool value) {
         beatCollider.enabled = value;
         beatCanvas.gameObject.SetActive(value);
     }
