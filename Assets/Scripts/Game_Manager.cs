@@ -24,11 +24,14 @@ public class Game_Manager : MonoBehaviour
     [Header("Combo Popup")]
     public Canvas popupHitCanvas;
 
+    [Header("Dad's Material")]
+    public Renderer fatherBodyMaterial;
+
     void Start()
     {
         hpReduction = false;
         DisableUI();
-        
+        fatherBodyMaterial = GetComponent<Renderer>();
     }
 
     void Update()
@@ -150,6 +153,12 @@ public class Game_Manager : MonoBehaviour
     public void EnableScoreBoard()
     {
         totalScoreBoard.gameObject.SetActive(true);
+    }
+
+    public void ChangeMaterialRenderingMode()
+    {
+        fatherBodyMaterial.material.SetFloat("_Mode", 2);//change to fade mode?
+        //fatherBodyMaterial.materials
     }
 
 }

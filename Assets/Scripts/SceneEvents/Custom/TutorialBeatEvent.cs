@@ -6,8 +6,9 @@
 public class TutorialBeatEvent : SceneEvent
 {
     private Game_Manager gameManager;
-    public string assetName= "GameManager";
-    private Material fatherBodyMaterial;
+    public string assetName1= "GameManager";
+    public string assetName2 = "FatherBodyMaterial";
+    private Renderer fatherBodyMaterial;
     public uint count = 10;
     public uint loop = 3;
     public AudioClip clip;
@@ -22,10 +23,10 @@ public class TutorialBeatEvent : SceneEvent
         skip = false;
         countLoop = 0;
         totalCount = 0;
-        bool found = SceneAssetManager.GetAssetComponent<Game_Manager>(assetName, out gameManager);
-        Debug.Log("Found Game_Manager[" + assetName + "]: " + found);
-        found = SceneAssetManager.GetAssetComponent<Material>(assetName, out fatherBodyMaterial);
-        Debug.Log("Found Material[" + assetName + "]: " + found);
+        bool found = SceneAssetManager.GetAssetComponent<Game_Manager>(assetName1, out gameManager);
+        Debug.Log("Found Game_Manager[" + assetName1 + "]: " + found);
+        found = SceneAssetManager.GetAssetComponent<Renderer>(assetName2, out fatherBodyMaterial);
+        Debug.Log("Found Material[" + assetName2 + "]: " + found);
 
         gameManager.DisableUI(); //disable UI and collider from game manager
         gameManager.hpReduction = false;
@@ -39,7 +40,6 @@ public class TutorialBeatEvent : SceneEvent
     public override void StartEvent()
     {
         InitEvent();
-
         if (clip == null) {
             passEventCondition = true;
         }
@@ -47,14 +47,15 @@ public class TutorialBeatEvent : SceneEvent
             gameManager.Setup(clip);
             gameManager.StartGame();
             gameManager.EnableUI(); //enable Beat UI and Beat collider from game manager
-            fatherBodyMaterial.SetFloat("_Mode", 2);//change to fade mode?
+            //fatherBodyMaterial.SetFloat("_Mode", 2);//change to fade mode?
+            gameManager.ChangeMaterialRenderingMode();
         }
     }
 
     public override void StopEvent()
     {
         gameManager.StopGame();
-        fatherBodyMaterial.SetFloat("_Mode", 0);
+        //fatherBodyMaterial.SetFloat("_Mode", 0);
     }
 
     public override void UpdateEvent()

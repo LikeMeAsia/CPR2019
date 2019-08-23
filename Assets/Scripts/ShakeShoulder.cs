@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ShakeShoulder : MonoBehaviour
 {
-    public GameObject shakingUI;
+    public Canvas shakingUI;
     public int maxHit;
 
     private int countShake;
@@ -24,7 +24,7 @@ public class ShakeShoulder : MonoBehaviour
         outlines = GetComponentsInChildren<Outline>();
         countShake = 0;
         shaking = false;
-        SetActiveShoulderIput(false);
+        SetActiveShoulderInput(false);
     }
 
     private void Update()
@@ -42,8 +42,8 @@ public class ShakeShoulder : MonoBehaviour
             if (countShake >= maxHit)
             {
                 shaking = true;
-                shakingUI.SetActive(false);
-                SetActiveShoulderIput(false);
+                shakingUI.gameObject.SetActive(false);
+                SetActiveShoulderInput(false);
             }
         }
     }
@@ -52,11 +52,14 @@ public class ShakeShoulder : MonoBehaviour
     {
         countShake = 0;
         shaking = false;
-        SetActiveShoulderIput(true);
+        SetActiveShoulderInput(true);
+        shakingUI.gameObject.SetActive(true);
+
     }
 
-    private void SetActiveShoulderIput(bool value) {
-        shakingUI.SetActive(value);
+    private void SetActiveShoulderInput(bool value) {
+        Debug.Log("shake UI"+ value);
+//        shakingUI.gameObject.SetActive(value);
         enableVibration = value;
         foreach (Collider col in shoulderColliders)
         {
