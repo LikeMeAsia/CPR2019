@@ -63,7 +63,9 @@ public class GamePlayEvent : SceneEvent
     public override void UpdateEvent()
     {
         if (waitCutscene) {
-            passEventCondition = SimpleDirectorController.Instance.Interruptable;
+            passEventCondition = SimpleDirectorController.Instance.Interruptable; //INTERRUBABLE MEANS THE CUTSCENE CAN BE INTERRUPTED
+            //INSERT SETACTIVE CANVAS HERE
+            gameManager.EnableScoreBoard();
         }
         else if (gameManager.rhythmController != null)
         {

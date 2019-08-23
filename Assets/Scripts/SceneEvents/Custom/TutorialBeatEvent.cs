@@ -58,8 +58,8 @@ public class TutorialBeatEvent : SceneEvent
             totalCount = gameManager.rhythmController.goodHit + gameManager.rhythmController.perfectHit;
             if (totalCount >= count || skip)
             {
-                passEventCondition = true;
                 gameManager.DisableUI();
+                passEventCondition = true;
             }
 
             Debug.Log("Total Count: " + totalCount);
@@ -72,16 +72,16 @@ public class TutorialBeatEvent : SceneEvent
                     gameManager.rhythmController.StartRhythm();
                 }
                 else {
-                    passEventCondition = true;
                     gameManager.DisableUI();
+                    passEventCondition = true;
                 }
             }
 
         }
         else
         {
-            passEventCondition = true;
             gameManager.DisableUI();
+            passEventCondition = true;
         }
 
     }

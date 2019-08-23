@@ -78,7 +78,7 @@ public class Game_Manager : MonoBehaviour
         Player.Instance.cprHand.enabledSnap = false;
         rhythmController.StopRhythm();
         uiGamePlayCanvas.gameObject.SetActive(false);
-       // totalScoreBoard.gameObject.SetActive(true);
+       // totalScoreBoard.gameObject.SetActive(true); //shouldnt setActive here, it should be after cut scene
     }
 
     void HpDad()
@@ -145,6 +145,11 @@ public class Game_Manager : MonoBehaviour
             goodHit.transform.localPosition = Vector3.zero;
             goodHit.transform.localEulerAngles = Vector3.zero;
         }
+    }
+
+    public void EnableScoreBoard()
+    {
+        totalScoreBoard.gameObject.SetActive(true);
     }
 
 }
