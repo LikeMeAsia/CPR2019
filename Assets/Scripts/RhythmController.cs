@@ -95,7 +95,7 @@ public class RhythmController : MonoBehaviour
             ChangeColorCountdown();
             if (!mainAudioSource.isPlaying)
             {
-                Debug.Log("Song stop");
+                //Debug.Log("Song stop");
                 //gamestart = false;
                 StopRhythm();
             }
@@ -211,7 +211,7 @@ public class RhythmController : MonoBehaviour
 
     private void RegisterHit(HIT hit)
     {
-        Debug.Log("On hit case [" + hit + "] at : " + mainAudioSource.time);
+        //Debug.Log("On hit case [" + hit + "] at : " + mainAudioSource.time);
         switch (hit)
         {
             case HIT.perfect:

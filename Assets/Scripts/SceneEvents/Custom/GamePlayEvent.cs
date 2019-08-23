@@ -20,7 +20,7 @@ public class GamePlayEvent : SceneEvent
         skip = false;
         bool found = SceneAssetManager.GetAssetComponent<Game_Manager>(assetName, out gameManager);
         Debug.Log("Found Game_Manager[" + assetName + "]: " + found);
-        gameManager.DisableUI(); //disable UI and collider from game manager
+        gameManager.DisableBeatUI(); //disable UI and collider from game manager
         gameManager.hpReduction = false;
     }
     public override bool Skip()
@@ -46,7 +46,7 @@ public class GamePlayEvent : SceneEvent
         else
         {
             gameManager.Setup(clip); //insert GamePlay song
-            gameManager.EnableUI(); //enable Beat UI and Beat collider from game manager
+            gameManager.EnableBeatUI(); //enable Beat UI and Beat collider from game manager
             gameManager.curhpDad = 50f;
             gameManager.StartGamePlayAndUI();
             gameManager.hpReduction = true;
@@ -55,7 +55,7 @@ public class GamePlayEvent : SceneEvent
 
     public override void StopEvent()
     {
-        gameManager.DisableUI();
+        gameManager.DisableBeatUI();
         gameManager.StopGamePlayAndUI();
         waitCutscene = false;
     }
@@ -63,15 +63,15 @@ public class GamePlayEvent : SceneEvent
     public override void UpdateEvent()
     {
         if (waitCutscene) {
-            passEventCondition = SimpleDirectorController.Instance.Interruptable; //INTERRUBABLE MEANS THE CUTSCENE CAN BE INTERRUPTED
-            //INSERT SETACTIVE CANVAS HERE
-            gameManager.EnableScoreBoard();
+            passEventCondition = SimpleDirectorController.Instance.Interruptable; //INTERRUBABLE MEANS THE CUTSCENE CAN BE INTERRUPTED           
+            gameManager.EnableScoreBoard(); //INSERT SETACTIVE CANVAS HERE
+            gameManager.DefaultDadShirtColour();
         }
         else if (gameManager.rhythmController != null)
         {
             if (!gameManager.rhythmController.GameStart)
             {
-                gameManager.DisableUI();
+                gameManager.DisableBeatUI();
                 gameManager.StopGamePlayAndUI();
                 if (gameManager.curhpDad > 50) {
                     SimpleDirectorController.Instance.PlayTrack(goodEndingTrack);
@@ -84,7 +84,7 @@ public class GamePlayEvent : SceneEvent
         }
         else
         {
-            gameManager.DisableUI();
+            gameManager.DisableBeatUI();
             passEventCondition = true;
         }
 

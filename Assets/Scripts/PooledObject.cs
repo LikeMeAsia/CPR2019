@@ -22,7 +22,7 @@ public class PooledObject : MonoBehaviour
         // WHEN SETACTIVE(FALSE), THIS FUNC WILL BE CALLED.
         if (ObjectPooler.Instance.poolDictionary != null)
         {
-            Debug.Log("Enqueue [" + label + "]");
+            //Debug.Log("Enqueue [" + label + "]");
             ObjectPooler.Instance.poolDictionary[label].queue.Enqueue(gameObject); //ENQUEUE WHEN INACTIVE
         }
     }

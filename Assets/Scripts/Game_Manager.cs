@@ -26,12 +26,15 @@ public class Game_Manager : MonoBehaviour
 
     [Header("Dad's Material")]
     public Renderer fatherBodyMaterial;
+    //private Color32 transparentShirtColour = new Color32(255, 255, 255, 225);
+    private Color32 opaqueShirtColour = new Color32(255, 255, 255, 255);
+
+
 
     void Start()
     {
         hpReduction = false;
-        DisableUI();
-        fatherBodyMaterial = GetComponent<Renderer>();
+        DisableBeatUI();
     }
 
     void Update()
@@ -43,7 +46,8 @@ public class Game_Manager : MonoBehaviour
         HpDad();
     }
 
-    public void Heal(float healed) {
+    public void Heal(float healed)
+    {
         curhpDad = curhpDad + healed;
     }
 
@@ -81,7 +85,7 @@ public class Game_Manager : MonoBehaviour
         Player.Instance.cprHand.enabledSnap = false;
         rhythmController.StopRhythm();
         uiGamePlayCanvas.gameObject.SetActive(false);
-       // totalScoreBoard.gameObject.SetActive(true); //shouldnt setActive here, it should be after cut scene
+        // totalScoreBoard.gameObject.SetActive(true); //shouldnt setActive here, it should be after cut scene
     }
 
     void HpDad()
@@ -96,18 +100,18 @@ public class Game_Manager : MonoBehaviour
             curhpDad = 120;
         }
         hpBarValue = curhpDad / maxHp;
-        
+
         hpdadText.text = "" + Mathf.CeilToInt(curhpDad) + "/" + maxHp;
         hpBar.fillAmount = hpBarValue;
         soulPosX.localPosition = new Vector3(hpBarValue, 0.0f, 0.0f);
     }
 
-    public void EnableUI()
+    public void EnableBeatUI()
     {
         rhythmController.SetBeatEnabled(true);
     }
 
-    public void DisableUI()
+    public void DisableBeatUI()
     {
         rhythmController.SetBeatEnabled(false);
     }
@@ -115,7 +119,8 @@ public class Game_Manager : MonoBehaviour
     public void BadHit()
     {
         GameObject missHit = ObjectPooler.Instance.SpawnFromPool("MissHit", popupHitCanvas.transform.position, popupHitCanvas.transform.rotation);
-        if (missHit.transform.parent != null) {
+        if (missHit.transform.parent != null)
+        {
             Transform parent = missHit.transform.parent;
             missHit.transform.SetParent(null);
             missHit.transform.SetParent(parent);
@@ -155,10 +160,17 @@ public class Game_Manager : MonoBehaviour
         totalScoreBoard.gameObject.SetActive(true);
     }
 
-    public void ChangeMaterialRenderingMode()
+    public void MakeDadShirtTransparent()
     {
-        fatherBodyMaterial.material.SetFloat("_Mode", 2);//change to fade mode?
-        //fatherBodyMaterial.materials
+        fatherBodyMaterial.materials[1].SetFloat("_Mode", 2);//fade
+        Color32 transparentShirtColour = new Color32(255, 255, 255, 90);
+        fatherBodyMaterial.materials[1].SetColor("_Color", transparentShirtColour);
     }
 
+    public void DefaultDadShirtColour()
+    {
+        //fatherBodyMaterial.materials[1].SetColor("_Color", opaqueShirtColour);
+        Debug.Log(fatherBodyMaterial.materials[1].name);
+        fatherBodyMaterial.materials[1].SetFloat("_Mode", 0); //opaque
+    }
 }

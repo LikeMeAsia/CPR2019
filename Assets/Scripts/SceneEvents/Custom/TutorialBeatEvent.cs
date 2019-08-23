@@ -28,8 +28,9 @@ public class TutorialBeatEvent : SceneEvent
         found = SceneAssetManager.GetAssetComponent<Renderer>(assetName2, out fatherBodyMaterial);
         Debug.Log("Found Material[" + assetName2 + "]: " + found);
 
-        gameManager.DisableUI(); //disable UI and collider from game manager
+        gameManager.DisableBeatUI(); //disable UI and collider from game manager
         gameManager.hpReduction = false;
+        gameManager.DefaultDadShirtColour();
     }
     public override bool Skip()
     {
@@ -46,16 +47,14 @@ public class TutorialBeatEvent : SceneEvent
         else{
             gameManager.Setup(clip);
             gameManager.StartGame();
-            gameManager.EnableUI(); //enable Beat UI and Beat collider from game manager
-            //fatherBodyMaterial.SetFloat("_Mode", 2);//change to fade mode?
-            gameManager.ChangeMaterialRenderingMode();
+            gameManager.EnableBeatUI(); //enable Beat UI and Beat collider from game manager
+            gameManager.MakeDadShirtTransparent();
         }
     }
 
     public override void StopEvent()
     {
         gameManager.StopGame();
-        //fatherBodyMaterial.SetFloat("_Mode", 0);
     }
 
     public override void UpdateEvent()
@@ -65,21 +64,21 @@ public class TutorialBeatEvent : SceneEvent
             totalCount = gameManager.rhythmController.goodHit + gameManager.rhythmController.perfectHit;
             if (totalCount >= count || skip)
             {
-                gameManager.DisableUI();
+                gameManager.DisableBeatUI();
                 passEventCondition = true;
             }
 
-            Debug.Log("Total Count: " + totalCount);
+            //Debug.Log("Total Count: " + totalCount);
 
             if (!gameManager.rhythmController.GameStart) {
                 countLoop = countLoop + 1;
                 if (countLoop < loop)
                 {
-                    Debug.Log("Count Loop " + countLoop);
+                   // Debug.Log("Count Loop " + countLoop);
                     gameManager.rhythmController.StartRhythm();
                 }
                 else {
-                    gameManager.DisableUI();
+                    gameManager.DisableBeatUI();
                     passEventCondition = true;
                 }
             }
@@ -87,7 +86,7 @@ public class TutorialBeatEvent : SceneEvent
         }
         else
         {
-            gameManager.DisableUI();
+            gameManager.DisableBeatUI();
             passEventCondition = true;
         }
 
