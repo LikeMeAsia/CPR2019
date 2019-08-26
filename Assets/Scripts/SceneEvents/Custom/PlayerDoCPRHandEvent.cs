@@ -5,7 +5,6 @@
 public class PlayerDoCPRHandEvent : SceneEvent
 {
     public string assetName;
-    private SceneAssetManager.SceneAsset uiAsset;
     private Animator cprUIAnim;
 
 
@@ -34,9 +33,7 @@ public class PlayerDoCPRHandEvent : SceneEvent
         {
             passEventCondition = true;
         }
-        else if(uiAsset.gameObject != null)
-        {
-            uiAsset.gameObject.SetActive(true);
+        else {
             Player.Instance.cprHand.enabledSnap = true;
         }
     }
@@ -51,9 +48,9 @@ public class PlayerDoCPRHandEvent : SceneEvent
 
     public override void StopEvent()
     {
-        if (uiAsset.gameObject != null)
+        if (cprUIAnim != null)
         {
-            uiAsset.gameObject.SetActive(false);
+            cprUIAnim.SetBool("enable", false);
         }
     }
 
