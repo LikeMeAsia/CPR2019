@@ -99,6 +99,7 @@ public class ObjectPooler : MonoBehaviour
                 objectToSpawn.transform.rotation = rotation;
                 spawnObject = objectToSpawn;
                 //  poolDictionary[tag].Enqueue(objectToSpawn); enqueue when inactive
+                
             }
 
         }
