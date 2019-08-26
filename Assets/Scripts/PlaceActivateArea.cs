@@ -44,13 +44,7 @@ public class PlaceActivateArea : MonoBehaviour
             }
             if (placeable && !targetObject.isKinematic)
             {
-                isActivated = true;
-                areaImage.gameObject.SetActive(false);
-                foreach (Collider col in colliders)
-                {
-                    col.enabled = false;
-                }
-                activeEvents.Invoke();
+                Activated();
             }
         }
     }
@@ -63,5 +57,15 @@ public class PlaceActivateArea : MonoBehaviour
             placeable = false;
             areaImage.color = defaultColor;
         }
+    }
+
+    public void Activated() {
+        isActivated = true;
+        areaImage.gameObject.SetActive(false);
+        foreach (Collider col in colliders)
+        {
+            col.enabled = false;
+        }
+        activeEvents.Invoke();
     }
 }

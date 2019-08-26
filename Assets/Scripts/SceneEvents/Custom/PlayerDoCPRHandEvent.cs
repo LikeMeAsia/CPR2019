@@ -56,6 +56,8 @@ public class PlayerDoCPRHandEvent : SceneEvent
 
     public override bool Skip()
     {
-        return false;
+        passEventCondition = true;
+        return true;
+       // return false;
     }
 }

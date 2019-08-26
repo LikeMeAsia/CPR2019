@@ -37,6 +37,8 @@ public class PhoneCallingEvent : SceneEvent
     }
     public override bool Skip()
     {
-        return false;
+        phone.Call();
+        return true;
+       // return false;
     }
 }

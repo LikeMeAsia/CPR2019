@@ -40,6 +40,8 @@ public class PlaceObjectEvent : SceneEvent
     }
     public override bool Skip()
     {
-        return false;
+        placeArea.Activated();
+        return true;
+       // return false;
     }
 }
