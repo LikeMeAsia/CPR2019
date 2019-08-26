@@ -29,6 +29,9 @@ public class Game_Manager : MonoBehaviour
     public Text goodHitText;
     public Text missText;
     public Text hpDadtextscr;
+    public Image boardImg;
+    public Sprite boardWin;
+    public Sprite boardLose;
     public Image rank;
     public Sprite[] rankImg;
 
@@ -173,24 +176,27 @@ public class Game_Manager : MonoBehaviour
         float totalScore = (rhythmController.perfectHit * 2000f) + (rhythmController.goodHit * 1000f);
         float maxScore = (rhythmController.perfectHit + rhythmController.goodHit + rhythmController.missHit) * 2000f;
         float rankInPercentage = totalScore / maxScore;
-        totalScoreText.text = totalScore.ToString();
+        totalScoreText.text = Mathf.FloorToInt(totalScore).ToString();
         comboText.text = rhythmController.maxCombo.ToString();
         perfectHitText.text = rhythmController.perfectHit.ToString();
         goodHitText.text = rhythmController.goodHit.ToString();
         missText.text = rhythmController.missHit.ToString();
-        hpDadtextscr.text = curhpDad.ToString();
+        hpDadtextscr.text = Mathf.RoundToInt(curhpDad / maxHp) + "%";
 
-        if (rankInPercentage >= 0.7f)
+        if (rankInPercentage >= 0.8f)
         {
             rank.sprite = rankImg[0];
+            boardImg.sprite = boardWin;
         }
         else if(rankInPercentage >= 0.5f)
         {
             rank.sprite = rankImg[1];
+            boardImg.sprite = boardWin;
         }
         else
         {
             rank.sprite = rankImg[2];
+            boardImg.sprite = boardLose;
         }
     }
 
