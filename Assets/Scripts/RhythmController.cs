@@ -1,19 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(AudioSource), typeof(Collider))]
 public class RhythmController : MonoBehaviour
 {
     [Header("Music Settings")]
-    public AudioSource mainAudioSource;
+    private AudioSource mainAudioSource;
     public float tempo = 0.6f;
     public float offset = 0.25f;
     public float playbackOffset = 0.45f;
 
+    //startposition
+    private float pulseDirector = 0.0f;
+    private bool hitOnBar = true;
 
     [Header("Indicator Settings")]
+    public Canvas beatCanvas;
     public Image outerRing;
     public Image circle;
     public Image innerRing;
@@ -31,14 +34,12 @@ public class RhythmController : MonoBehaviour
     private bool canVibrateOnce = false;
 
     private float playbackPercent = 0.0f;
-    [HideInInspector] public bool Gamestart = false;
-    private Collider beatCollider;
+    [HideInInspector]
+    private bool gamestart = false;
+    public bool GameStart { get { return gamestart; } }
 
-    [Header ("Combo Popup")]
-    public GameObject perfectPopup;
-    public GameObject goodPopup;
-    public GameObject missPopup;
-    public float timeleft;
+    private Collider beatCollider;
+    public bool songHasStopped = false;
 
     #region EventSystem
     [Header("Scoring Event System")]
@@ -64,17 +65,18 @@ public class RhythmController : MonoBehaviour
         if (perfectEvent == null) perfectEvent = new UnityEvent();
         if (goodEvent == null) goodEvent = new UnityEvent();
         if (badEvent == null) badEvent = new UnityEvent();
+        mainAudioSource = this.GetComponent<AudioSource>();
+        beatCollider = this.GetComponent<Collider>();
     }
 
     void Start()
     {
         //gamestart need some fix. This is just a dummy assigning;
-        Gamestart = true;
-
-        beatCollider = this.GetComponent<Collider>();
+        gamestart = false;
+        pulseDirector = 0;
         defaultColor = circle.color;
-
-        resetScore();
+        ResetScore();
+        
     }
 
     void Update()
@@ -84,13 +86,19 @@ public class RhythmController : MonoBehaviour
         //if (Input.GetMouseButton(0)) RegisterHit(HIT.perfect);
         //if (Input.GetMouseButton(1)) RegisterHit(HIT.bad);
 
-        if (Gamestart == true)
+        if (gamestart == true && mainAudioSource.clip!=null)
         {
             playbackPercent = ((mainAudioSource.time + playbackOffset) % tempo) / tempo;
             RingTransform(playbackPercent);
             Pulse();
             if (enableVibration) { if (canVibrateOnce) Vibrate(); }
             ChangeColorCountdown();
+            if (!mainAudioSource.isPlaying)
+            {
+                //Debug.Log("Song stop");
+                //gamestart = false;
+                StopRhythm();
+            }
         }
     }
 
@@ -107,22 +115,19 @@ public class RhythmController : MonoBehaviour
                 {
                     RegisterHit(HIT.perfect);
                     AudioPlayer.PlayAudioClip(indicatorSound[0], true);
-                    perfectPopup.SetActive(true);
-                    ClearComboPopup(); //clear popup couroutine 0.5sec
+                    
                 }
                 else if (playbackPercent < 0.8f && playbackPercent > 0.4f)
                 {
                     RegisterHit(HIT.good);
                     AudioPlayer.PlayAudioClip(indicatorSound[0], true);
-                    goodPopup.SetActive(true);
-                    ClearComboPopup(); //clear popup couroutine 0.5sec
+                   
                 }
                 else
                 {
                     RegisterHit(HIT.bad);
                     AudioPlayer.PlayAudioClip(indicatorSound[1], true);
-                    missPopup.SetActive(true);
-                    ClearComboPopup(); //clear popup couroutine 0.5sec
+                  
                 }
                 hitOnBar = false;
             }
@@ -134,18 +139,23 @@ public class RhythmController : MonoBehaviour
         }
     }
 
-    private void ClearComboPopup()
-    {
-        Debug.Log("Enter clearpopup");
-        timeleft -= Time.deltaTime;
-        if (timeleft<=0)
-        {
-            Debug.Log("inside");
-            goodPopup.SetActive(false);
-            missPopup.SetActive(false);
-            perfectPopup.SetActive(false);
-            timeleft = 3;
-        }
+    public void Setup(AudioClip clip) {
+        mainAudioSource.clip = clip;
+    }
+
+    public void StartRhythm() {
+        if (mainAudioSource.clip == null) return;
+        gamestart = true;
+        pulseDirector = 0;
+        mainAudioSource.time = 0;
+        mainAudioSource.Play();
+        SetBeatEnabled(true);
+    }
+
+    public void StopRhythm() {
+        gamestart = false;
+        mainAudioSource.Stop();
+        SetBeatEnabled(false);
     }
 
     void RingTransform(float playbackPercent) //formally ExpandRing
@@ -161,16 +171,12 @@ public class RhythmController : MonoBehaviour
 
     }
 
-    //startposition
-    private float pulseDirector = 0.0f;
-    private bool hitOnBar = true;
     private void Pulse()
     {
         if (pulseDirector + offset <= mainAudioSource.time)
         {
             CheckHit();
             pulseDirector += tempo;
-            if (pulseDirector >= mainAudioSource.clip.length) pulseDirector = 0.055f;
         }
     }
 
@@ -205,7 +211,7 @@ public class RhythmController : MonoBehaviour
 
     private void RegisterHit(HIT hit)
     {
-        Debug.Log("On hit case [" + hit + "] at : " + mainAudioSource.time);
+        //Debug.Log("On hit case [" + hit + "] at : " + mainAudioSource.time);
         switch (hit)
         {
             case HIT.perfect:
@@ -264,12 +270,26 @@ public class RhythmController : MonoBehaviour
         if (isTriggerTimer) changeColorTimer = changeColorTime;
     }
 
-    public void resetScore()
+    public void ResetScore()
     {
         maxCombo = 0;
         combo = 0;
         perfectHit = 0;
         goodHit = 0;
         missHit = 0;
+    }
+
+    public void SetBeatEnabled(bool value) {
+        beatCollider.enabled = value;
+        beatCanvas.gameObject.SetActive(value);
+    }
+
+    public void SongIsPlaying()
+    {
+        if (!mainAudioSource.isPlaying)
+        {
+            songHasStopped = true;
+
+        }
     }
 }

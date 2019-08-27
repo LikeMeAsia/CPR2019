@@ -29,8 +29,9 @@ public class PlayTrackEvent : SceneEvent
 
     }
 
-    public override void Skip()
+    public override bool Skip()
     {
         SimpleDirectorController.Instance.SkipToEndTrack();
+        return true;
     }
 }

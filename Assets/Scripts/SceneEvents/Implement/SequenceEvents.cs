@@ -60,6 +60,7 @@ public class SequenceEvents : SceneEvent
         if (skip && !callNextProc)
         {
             sceneEvents[eventIter].Skip();
+            skip = false;
         }
     }
 
@@ -69,8 +70,9 @@ public class SequenceEvents : SceneEvent
 
     }
 
-    public override void Skip()
+    public override bool Skip()
     {
         skip = true;
+        return skip;
     }
 }

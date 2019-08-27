@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   delayNextEvent: 4
   gesture: 1
-  handTime: 4
+  handTime: 2

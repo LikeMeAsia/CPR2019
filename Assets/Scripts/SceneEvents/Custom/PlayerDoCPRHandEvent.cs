@@ -4,23 +4,32 @@
 [CreateAssetMenu(fileName = "PlayerDoCPRHandEvent", menuName = "SceneEvent/PlayerDoCPRHandEvent")]
 public class PlayerDoCPRHandEvent : SceneEvent
 {
-    public string uiName;
+    public string assetName;
     private SceneAssetManager.SceneAsset uiAsset;
+    private Animator cprUIAnim;
+
 
     public override void InitEvent()
     {
         base.InitEvent();
-        bool found = SceneAssetManager.GetAsset(uiName, out uiAsset);
-        Debug.Log("Found UI CPR[" + uiName + "]: " + found);
-        if (found)
+        bool found = SceneAssetManager.GetAssetComponent<Animator>(assetName, out cprUIAnim);
+        Debug.Log("Found UI CPR[" + assetName + "]: " + found);
+        if (cprUIAnim != null)
         {
-            uiAsset.gameObject.SetActive(false);
+            cprUIAnim.SetBool("enable", false);
         }
+        else { Debug.Log("it's nulllll"); }
     }
 
     public override void StartEvent()
     {
         InitEvent();
+        if (cprUIAnim != null)
+        {
+            //add debug here
+            cprUIAnim.SetBool("enable", true);
+        }
+
         if (CPRHand.Instance == null)
         {
             passEventCondition = true;
@@ -28,6 +37,7 @@ public class PlayerDoCPRHandEvent : SceneEvent
         else if(uiAsset.gameObject != null)
         {
             uiAsset.gameObject.SetActive(true);
+            Player.Instance.cprHand.enabledSnap = true;
         }
     }
 
@@ -47,8 +57,8 @@ public class PlayerDoCPRHandEvent : SceneEvent
         }
     }
 
-    public override void Skip()
+    public override bool Skip()
     {
-
+        return false;
     }
 }

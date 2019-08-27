@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: PlayerDoCPRHand
   m_EditorClassIdentifier: 
   delayNextEvent: 0
-  uiName: CPRUI
+  assetName: CPRUIAnim

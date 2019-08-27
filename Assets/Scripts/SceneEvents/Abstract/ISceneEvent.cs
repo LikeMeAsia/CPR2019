@@ -9,5 +9,6 @@ public interface ISceneEvent
     void StopEvent();
     bool CheckPassEventCondition();
     float GetDelayNextEvent();
-    void Skip();
+    // return is skippable
+    bool Skip();
 }

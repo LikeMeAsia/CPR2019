@@ -15,7 +15,7 @@ public abstract class SceneEvent : ScriptableObject, ISceneEvent
     public abstract void StartEvent();
     public abstract void UpdateEvent();
     public abstract void StopEvent();
-    public abstract void Skip();
+    public abstract bool Skip();
 
     public virtual bool CheckPassEventCondition()
     {

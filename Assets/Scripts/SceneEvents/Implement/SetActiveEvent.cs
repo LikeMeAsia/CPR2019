@@ -47,5 +47,5 @@ public class SetActiveEvent : SceneEvent
 
     public override void UpdateEvent() { }
     public override void StopEvent() { }
-    public override void Skip() { }
+    public override bool Skip() { return false; }
 }

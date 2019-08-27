@@ -46,8 +46,9 @@ public class OpenDoorEvent : SceneEvent
 
     }
 
-    public override void Skip()
+    public override bool Skip()
     {
         doorKnob.OpenDoor();
+        return true;
     }
 }
