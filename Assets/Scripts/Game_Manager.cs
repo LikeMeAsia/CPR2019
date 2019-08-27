@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class Game_Manager : MonoBehaviour
 {
     [Header("General Settings")]
@@ -20,6 +21,19 @@ public class Game_Manager : MonoBehaviour
     public float maxHp = 100;
     public float curhpDad = 0;
     public float hpreduction = 1.0f;
+
+    [Header("Scoring System")]
+    public Text totalScoreText;
+    public Text comboText;
+    public Text perfectHitText;
+    public Text goodHitText;
+    public Text missText;
+    public Text hpDadtextscr;
+    public Image boardImg;
+    public Sprite boardWin;
+    public Sprite boardLose;
+    public Image rank;
+    public Sprite[] rankImg;
 
     [Header("Combo Popup")]
     public Canvas popupHitCanvas;
@@ -139,6 +153,7 @@ public class Game_Manager : MonoBehaviour
             perfectHit.transform.SetParent(parent);
             perfectHit.transform.localPosition = Vector3.zero;
             perfectHit.transform.localEulerAngles = Vector3.zero;
+            
         }
     }
 
@@ -158,6 +173,31 @@ public class Game_Manager : MonoBehaviour
     public void EnableScoreBoard()
     {
         totalScoreBoard.gameObject.SetActive(true);
+        float totalScore = (rhythmController.perfectHit * 2000f) + (rhythmController.goodHit * 1000f);
+        float maxScore = (rhythmController.perfectHit + rhythmController.goodHit + rhythmController.missHit) * 2000f;
+        float rankInPercentage = totalScore / maxScore;
+        totalScoreText.text = Mathf.FloorToInt(totalScore).ToString();
+        comboText.text = rhythmController.maxCombo.ToString();
+        perfectHitText.text = rhythmController.perfectHit.ToString();
+        goodHitText.text = rhythmController.goodHit.ToString();
+        missText.text = rhythmController.missHit.ToString();
+        hpDadtextscr.text = Mathf.RoundToInt(curhpDad / maxHp) + "%";
+
+        if (rankInPercentage >= 0.8f)
+        {
+            rank.sprite = rankImg[0];
+            boardImg.sprite = boardWin;
+        }
+        else if(rankInPercentage >= 0.5f)
+        {
+            rank.sprite = rankImg[1];
+            boardImg.sprite = boardWin;
+        }
+        else
+        {
+            rank.sprite = rankImg[2];
+            boardImg.sprite = boardLose;
+        }
     }
 
     public void MakeDadShirtTransparent()

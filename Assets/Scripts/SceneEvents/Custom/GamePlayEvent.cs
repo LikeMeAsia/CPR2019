@@ -23,17 +23,6 @@ public class GamePlayEvent : SceneEvent
         gameManager.DisableBeatUI(); //disable UI and collider from game manager
         gameManager.hpReduction = false;
     }
-    public override bool Skip()
-    {
-        if (waitCutscene) {
-            SimpleDirectorController.Instance.SkipToEndTrack();
-            skip = true;
-        }
-        else {
-            skip = false;
-        }
-        return skip;
-    }
 
     public override void StartEvent()
     {
@@ -53,19 +42,11 @@ public class GamePlayEvent : SceneEvent
         }
     }
 
-    public override void StopEvent()
-    {
-        gameManager.DisableBeatUI();
-        gameManager.StopGamePlayAndUI();
-        waitCutscene = false;
-    }
-
     public override void UpdateEvent()
     {
         if (waitCutscene) {
-            passEventCondition = SimpleDirectorController.Instance.Interruptable; //INTERRUBABLE MEANS THE CUTSCENE CAN BE INTERRUPTED           
-            gameManager.EnableScoreBoard(); //INSERT SETACTIVE CANVAS HERE
-            gameManager.DefaultDadShirtColour();
+            passEventCondition = SimpleDirectorController.Instance.Interruptable;
+            //INTERRUBABLE MEANS THE CUTSCENE CAN BE INTERRUPTED 
         }
         else if (gameManager.rhythmController != null)
         {
@@ -73,6 +54,7 @@ public class GamePlayEvent : SceneEvent
             {
                 gameManager.DisableBeatUI();
                 gameManager.StopGamePlayAndUI();
+                gameManager.DefaultDadShirtColour();
                 if (gameManager.curhpDad > 50) {
                     SimpleDirectorController.Instance.PlayTrack(goodEndingTrack);
                 }
@@ -88,6 +70,29 @@ public class GamePlayEvent : SceneEvent
             passEventCondition = true;
         }
 
+    }
+
+    public override void StopEvent()
+    {
+        gameManager.DisableBeatUI();
+        gameManager.StopGamePlayAndUI();
+        gameManager.EnableScoreBoard(); //INSERT SETACTIVE CANVAS HERE
+        waitCutscene = false;
+    }
+
+    public override bool Skip()
+    {
+        if (waitCutscene)
+        {
+            SimpleDirectorController.Instance.SkipToEndTrack();
+            skip = true;
+        }
+        else
+            gameManager.rhythmController.StopRhythm();
+        {
+            skip = false;
+        }
+        return skip;
     }
 
 }

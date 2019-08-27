@@ -61,7 +61,9 @@ public class ShakeShoulderEvent : SceneEvent
 
     public override bool Skip()
     {
-        return false;
+        shoulder.SuccessShaking();
+        return true;
+        //return false;
     }
 
 }
