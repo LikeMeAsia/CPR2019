@@ -12,6 +12,7 @@ public class PlayerDoCPRHandEvent : SceneEvent
     public AudioClip[] audioClips;
     private int clipIter;
     private float clipTime;
+    private bool noMoreClips= false;
 
     public override void InitEvent()
     {
@@ -58,7 +59,7 @@ public class PlayerDoCPRHandEvent : SceneEvent
 
     public override void UpdateEvent()
     {
-        if (CPRHand.Instance != null && CPRHand.Instance.snaping && audioSource.isPlaying==false)
+        if (CPRHand.Instance != null && CPRHand.Instance.snaping && noMoreClips)
         {
             passEventCondition = true;
         }
@@ -72,7 +73,7 @@ public class PlayerDoCPRHandEvent : SceneEvent
         {
             clipTime = PlayClip();
             clipIter++;
-            passEventCondition = clipTime <= 0;
+            passEventCondition = (clipTime <= 0);
         }
 
     }
@@ -91,13 +92,15 @@ public class PlayerDoCPRHandEvent : SceneEvent
 
     private float PlayClip()
     {
-        if (audioSource == null || clipIter < 0 || clipIter >= audioClips.Length)
+        if (audioSource == null || clipIter < 0 || clipIter > audioClips.Length -1)
         {
+            noMoreClips = true;
             return 0f;
         }
         audioSource.Stop();
         audioSource.clip = audioClips[clipIter];
         audioSource.Play();
+
         return audioClips[clipIter].length + 0.5f;
     }
 
