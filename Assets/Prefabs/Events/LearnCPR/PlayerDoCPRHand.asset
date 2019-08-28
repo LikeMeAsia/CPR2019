@@ -14,3 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   delayNextEvent: 0
   assetName: CPRUIAnim
+  audioSourceAssetName: Phone
+  audioClips:
+  - {fileID: 8300000, guid: 8327ed46b78b3054fa799fe52010ca5f, type: 3}
+  - {fileID: 8300000, guid: e24aa2ebc63140048929586d3fa159c2, type: 3}
+  - {fileID: 8300000, guid: 2c298e7fbf3861642ae0b416ea537412, type: 3}
