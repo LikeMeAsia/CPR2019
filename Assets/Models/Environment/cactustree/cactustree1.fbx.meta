@@ -1,64 +1,9 @@
 fileFormatVersion: 2
-guid: a78edda52beee1b47b6980c56e6c9152
+guid: d86b568eaa5725447847780ec02513d9
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: book_10_mat
-    second: {fileID: 2100000, guid: a9d0587aa24219249ae917f7672f918d, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: book_11_mat
-    second: {fileID: 2100000, guid: bfcda7ee2c6a823429c787e6fccab37c, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: book_1_mat
-    second: {fileID: 2100000, guid: cf5d752e25025094690be82854db88a9, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: book_3_mat
-    second: {fileID: 2100000, guid: 631456ea9d2dc6d44a66b894f979104a, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: book_4_mat
-    second: {fileID: 2100000, guid: 25e971820f71713458bce30eb7a3a885, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: book_5_mat
-    second: {fileID: 2100000, guid: 71bfa64ceca9e8e4eb0cc196b0b80a38, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: book_6_mat
-    second: {fileID: 2100000, guid: dadd0bb0c8e410c41afea45fa5f9b13b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: book_7_mat
-    second: {fileID: 2100000, guid: 52bff2bbfe595374aa343b8170a82c06, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: book_8_mat
-    second: {fileID: 2100000, guid: c1fa9b6c9da61254ba8b80b8f555a3b3, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: book_9_mat
-    second: {fileID: 2100000, guid: 92f7d7d460013b649996f4dae999286d, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: bookshelf_mat
-    second: {fileID: 2100000, guid: 90a41f4b652525d459b178eab537c8b2, type: 2}
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
