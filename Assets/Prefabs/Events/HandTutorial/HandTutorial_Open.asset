@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bef51dfa1d08d446812b9632bce8ea1, type: 3}
   m_Name: HandTutorial_Open
   m_EditorClassIdentifier: 
-  delayNextEvent: 4
+  delayNextEvent: 1
   gesture: 1
   handTime: 2
