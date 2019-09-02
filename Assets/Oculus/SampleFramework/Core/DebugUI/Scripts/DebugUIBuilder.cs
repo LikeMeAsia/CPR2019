@@ -83,7 +83,7 @@ public class DebugUIBuilder : MonoBehaviour
     Debug.Assert(instance == null);
     instance = this;
     menuOffset = transform.position; // TODO: this is unpredictable/busted
-    gameObject.SetActive(false);
+    //gameObject.SetActive(false);
     rig = FindObjectOfType<OVRCameraRig>();
     for (int i = 0; i < toEnable.Count; ++i)
     {

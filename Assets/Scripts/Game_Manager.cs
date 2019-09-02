@@ -222,6 +222,7 @@ public class Game_Manager : MonoBehaviour
     public void RestartGame()
     {
         SceneManager.LoadScene("Playscene");
+        Debug.Log("restartgame");   
     }
 
     //public void OnPointerEnter(PointerEventData eventData)
