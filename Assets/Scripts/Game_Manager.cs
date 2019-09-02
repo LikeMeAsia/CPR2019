@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 
 public class Game_Manager : MonoBehaviour
@@ -34,6 +36,9 @@ public class Game_Manager : MonoBehaviour
     public Sprite boardLose;
     public Image rank;
     public Sprite[] rankImg;
+    public Button restartButton;
+    public Sprite newSprite;
+
 
     [Header("Combo Popup")]
     public Canvas popupHitCanvas;
@@ -213,4 +218,21 @@ public class Game_Manager : MonoBehaviour
         Debug.Log(fatherBodyMaterial.materials[1].name);
         fatherBodyMaterial.materials[1].SetFloat("_Mode", 0); //opaque
     }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene("Playscene");
+    }
+
+    //public void OnPointerEnter(PointerEventData eventData)
+    //{
+    //    restartButton.image.sprite = newSprite;
+    //    Debug.Log("Mouse Enter");
+
+    //}
+
+    //public void OnPointerExit(PointerEventData eventData)
+    //{
+    //    restartButton.color = Color.white; //Or however you do your color
+    //}
 }
