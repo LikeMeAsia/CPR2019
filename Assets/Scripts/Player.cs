@@ -269,7 +269,9 @@ public class Player : MonoBehaviour
         }
         else
         {
-            toPos = new Vector3(targetTransform.position.x, Player.Instance.transform.position.y, targetTransform.position.z);
+            //toPos = new Vector3(targetTransform.position.x, Player.Instance.transform.position.y, targetTransform.position.z);
+            toPos = Vector3.SmoothDamp(Player.Instance.transform.position, toPos, ref velocity, smoothTime);
+
         }
         moveSpeed = Mathf.Max(0.01f, imoveSpeed);
         moveDelay = imoveDelay;

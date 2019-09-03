@@ -4,7 +4,11 @@ using UnityEngine.Events;
 public class PhysicalButtonScript : MonoBehaviour, ITriggerListener
 {
     public enum PhysicalButtonState { Default, Touch, Pressed, Released}
+
     public UnityEvent pressedEvent;
+    public UnityEvent touchEvent;
+    public UnityEvent defualtEvent;
+
     public bool callEventOnlyOnce;
     [ReadOnly]
     [SerializeField]
@@ -48,7 +52,7 @@ public class PhysicalButtonScript : MonoBehaviour, ITriggerListener
     
     void LateUpdate()
     {
-        if (pressJoint.currentForce.sqrMagnitude == 0)
+        if (pressJoint.currentForce.sqrMagnitude == 0 && !pressed)
         {
             UpdateState(PhysicalButtonState.Default);
             pressRigid.isKinematic = false;
@@ -70,7 +74,7 @@ public class PhysicalButtonScript : MonoBehaviour, ITriggerListener
 
     void ITriggerListener.OnTriggerEnter(Collider collider)
     {
-        if (!pressed) {
+        if (!activated) {
             UpdateState(PhysicalButtonState.Touch);
         }
         pressRigid.isKinematic = false;
@@ -89,7 +93,12 @@ public class PhysicalButtonScript : MonoBehaviour, ITriggerListener
             pressRigid.isKinematic = true;
         }
         else {
+            if (!activated)
+            {
+                UpdateState(PhysicalButtonState.Touch);
+            }
             pressRigid.isKinematic = false;
+            pressed = false;
         }
     }
 
@@ -104,6 +113,7 @@ public class PhysicalButtonScript : MonoBehaviour, ITriggerListener
         switch (updatedState) {
             case PhysicalButtonState.Touch:
                 OVRInput.SetControllerVibration(1f, 0.5f, OVRInput.Controller.RTouch);
+                touchEvent.Invoke();
                 break;
             case PhysicalButtonState.Pressed:
                 if (!activated)
@@ -118,6 +128,7 @@ public class PhysicalButtonScript : MonoBehaviour, ITriggerListener
                 break;
             default:
                 OVRInput.SetControllerVibration(0, 0, OVRInput.Controller.RTouch);
+                defualtEvent.Invoke();
                 break;
         }
     }
