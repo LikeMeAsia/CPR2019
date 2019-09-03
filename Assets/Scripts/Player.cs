@@ -161,7 +161,12 @@ public class Player : MonoBehaviour
                 l_indexTipCollider.isTrigger = true;
                 l_indexTipCollider.radius = 0.01f;
                 l_indexTipCollider.center = new Vector3(0.01f, 0, 0);
+                l_indexTipCollider = fingerTipObj.AddComponent<SphereCollider>();
+                l_indexTipCollider.isTrigger = false;
+                l_indexTipCollider.radius = 0.01f;
+                l_indexTipCollider.center = new Vector3(0.01f, 0, 0);
                 fingerTipObj.tag = "FingerTip";
+                fingerTipObj.layer = LayerMask.NameToLayer("Player");
             }
         }
 
@@ -175,7 +180,12 @@ public class Player : MonoBehaviour
                 r_indexTipCollider.isTrigger = true;
                 r_indexTipCollider.radius = 0.01f;
                 r_indexTipCollider.center = new Vector3(0.01f, 0, 0);
+                r_indexTipCollider = fingerTipObj.AddComponent<SphereCollider>();
+                r_indexTipCollider.isTrigger = false;
+                r_indexTipCollider.radius = 0.01f;
+                r_indexTipCollider.center = new Vector3(0.01f, 0, 0);
                 fingerTipObj.tag = "FingerTip";
+                fingerTipObj.layer = LayerMask.NameToLayer("Player");
             }
         }
         
@@ -265,13 +275,16 @@ public class Player : MonoBehaviour
             {
                 toPos = targetTransform.position;
                 toPos = new Vector3(toPos.x, Player.Instance.transform.position.y, toPos.z);
+                //toPos = Vector3.SmoothDamp(Player.Instance.transform.position, toPos, ref velocity, smoothTime);
+                Debug.Log("idk?");
+
             }
         }
         else
         {
-            //toPos = new Vector3(targetTransform.position.x, Player.Instance.transform.position.y, targetTransform.position.z);
-            toPos = Vector3.SmoothDamp(Player.Instance.transform.position, toPos, ref velocity, smoothTime);
-
+            toPos = new Vector3(targetTransform.position.x, Player.Instance.transform.position.y, targetTransform.position.z);
+            //toPos = Vector3.SmoothDamp(Player.Instance.transform.position, toPos, ref velocity, smoothTime);
+            Debug.Log("smooth?");
         }
         moveSpeed = Mathf.Max(0.01f, imoveSpeed);
         moveDelay = imoveDelay;

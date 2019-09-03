@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   delayNextEvent: 0
   positionName: Point3
-  moveSpeed: 0.5
+  moveSpeed: 1
   moveDelay: 1
   waitFinishMove: 1
