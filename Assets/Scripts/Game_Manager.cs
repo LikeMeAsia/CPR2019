@@ -18,6 +18,7 @@ public class Game_Manager : MonoBehaviour
     public Text hpdadText;
     public Canvas uiGamePlayCanvas;
     public Canvas totalScoreBoard;
+    public GameObject restartButton;
     public RectTransform soulPosX;
     private float hpBarValue;
     public float maxHp = 100;
@@ -36,9 +37,6 @@ public class Game_Manager : MonoBehaviour
     public Sprite boardLose;
     public Image rank;
     public Sprite[] rankImg;
-    public Button restartButton;
-    public Sprite newSprite;
-
 
     [Header("Combo Popup")]
     public Canvas popupHitCanvas;
@@ -91,6 +89,7 @@ public class Game_Manager : MonoBehaviour
         rhythmController.StartRhythm();
         uiGamePlayCanvas.gameObject.SetActive(true);
         totalScoreBoard.gameObject.SetActive(false);
+        restartButton.gameObject.SetActive(false);
     }
 
     public void StopGame()
@@ -178,6 +177,7 @@ public class Game_Manager : MonoBehaviour
     public void EnableScoreBoard()
     {
         totalScoreBoard.gameObject.SetActive(true);
+        restartButton.gameObject.SetActive(true);
         float totalScore = (rhythmController.perfectHit * 2000f) + (rhythmController.goodHit * 1000f);
         float maxScore = (rhythmController.perfectHit + rhythmController.goodHit + rhythmController.missHit) * 2000f;
         float rankInPercentage = totalScore / maxScore;

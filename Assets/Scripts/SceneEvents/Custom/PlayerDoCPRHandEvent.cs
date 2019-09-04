@@ -8,6 +8,7 @@ public class PlayerDoCPRHandEvent : SceneEvent
     public string audioSourceAssetName; //name = Phone
 
     private Animator cprUIAnim;
+    private Animator sitUIAnim;
     private AudioSource audioSource;
     public AudioClip[] audioClips;
     private int clipIter;
@@ -19,30 +20,35 @@ public class PlayerDoCPRHandEvent : SceneEvent
         base.InitEvent();
         bool found = SceneAssetManager.GetAssetComponent<Animator>(assetName, out cprUIAnim);
         Debug.Log("Found UI CPR[" + assetName + "]: " + found);
+        found = SceneAssetManager.GetAssetComponent<Animator>("SitUIAnim", out sitUIAnim);
+        Debug.Log("Found UI CPR[" + assetName + "]: " + found);
         found = SceneAssetManager.GetAssetComponent<AudioSource>(audioSourceAssetName, out audioSource);
         Debug.Log("Found Phone[" + assetName + "]: " + found);
 
         clipIter = 0;
         clipTime = 0;
 
-        if (audioSource == null && cprUIAnim == null)
+        if (audioSource == null && cprUIAnim == null && sitUIAnim == null)
         {
             passEventCondition = true;
         }
 
-        if (audioSource != null && cprUIAnim != null)
+        if (audioSource != null && cprUIAnim != null && sitUIAnim != null)
         {
             cprUIAnim.SetBool("enable", false);
+            sitUIAnim.SetBool("enable", false);
         }
     }
 
     public override void StartEvent()
     {
         InitEvent();
-        if (audioSource != null && cprUIAnim != null)
+        if (audioSource != null && cprUIAnim != null && sitUIAnim != null)
         {
             //add debug here
             cprUIAnim.SetBool("enable", true);
+            sitUIAnim.SetBool("enable", true);
+
             //add SPC sound here
             clipTime = PlayClip();
             clipIter++;
@@ -80,9 +86,10 @@ public class PlayerDoCPRHandEvent : SceneEvent
 
     public override void StopEvent()
     {
-        if (cprUIAnim != null)
+        if (cprUIAnim != null && sitUIAnim != null)
         {
             cprUIAnim.SetBool("enable", false);
+            sitUIAnim.SetBool("enable", false);
         }
 
         if (audioSource == null) return;
