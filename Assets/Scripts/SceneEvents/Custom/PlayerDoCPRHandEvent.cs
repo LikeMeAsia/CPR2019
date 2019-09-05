@@ -8,8 +8,8 @@ public class PlayerDoCPRHandEvent : SceneEvent
     public string audioSourceAssetName; //name = Phone
 
     private Animator cprUIAnim;
-    private Animator sitUIAnim;
-    private AudioSource audioSource;
+    //private Animator sitUIAnim;
+    public AudioSource audioSource;
     public AudioClip[] audioClips;
     private int clipIter;
     private float clipTime;
@@ -20,37 +20,32 @@ public class PlayerDoCPRHandEvent : SceneEvent
         base.InitEvent();
         bool found = SceneAssetManager.GetAssetComponent<Animator>(assetName, out cprUIAnim);
         Debug.Log("Found UI CPR[" + assetName + "]: " + found);
-        found = SceneAssetManager.GetAssetComponent<Animator>("SitUIAnim", out sitUIAnim);
-        Debug.Log("Found UI CPR[" + assetName + "]: " + found);
         found = SceneAssetManager.GetAssetComponent<AudioSource>(audioSourceAssetName, out audioSource);
         Debug.Log("Found Phone[" + assetName + "]: " + found);
 
         clipIter = 0;
         clipTime = 0;
 
-        if (audioSource == null && cprUIAnim == null && sitUIAnim == null)
+        if (audioSource == null && cprUIAnim == null )
         {
             passEventCondition = true;
         }
 
-        if (audioSource != null && cprUIAnim != null && sitUIAnim != null)
+        if (audioSource != null && cprUIAnim != null )
         {
             cprUIAnim.SetBool("enable", false);
-            sitUIAnim.SetBool("enable", false);
         }
     }
 
     public override void StartEvent()
     {
         InitEvent();
-        if (audioSource != null && cprUIAnim != null && sitUIAnim != null)
+        if (audioSource != null && cprUIAnim != null )
         {
             //add debug here
             cprUIAnim.SetBool("enable", true);
-            sitUIAnim.SetBool("enable", true);
 
-            //add SPC sound here
-            clipTime = PlayClip();
+            clipTime = PlayClip();  //add SPC sound here
             clipIter++;
         }
 
@@ -65,7 +60,7 @@ public class PlayerDoCPRHandEvent : SceneEvent
 
     public override void UpdateEvent()
     {
-        if (CPRHand.Instance != null && CPRHand.Instance.snaping && noMoreClips)
+        if (CPRHand.Instance != null && CPRHand.Instance.snaping && noMoreClips ) //and animation finishes too
         {
             passEventCondition = true;
         }
@@ -77,29 +72,32 @@ public class PlayerDoCPRHandEvent : SceneEvent
         }
         else if (!passEventCondition)
         {
-            //clipTime = PlayClip();
-            //clipIter++;
+            if(audioSource.isPlaying == false)
+            {
+                clipTime = PlayClip();
+                clipIter++;
+            }
+
             passEventCondition = (clipTime <= 0);
+        }
+
+        if(clipIter==2)
+        {
+            cprUIAnim.SetTrigger("StartPump");
+            Debug.Log("startToPump?");
         }
     }
 
     public override void StopEvent()
     {
-        if (cprUIAnim != null && sitUIAnim != null)
+        if (cprUIAnim != null)
         {
             cprUIAnim.SetBool("enable", false);
-            sitUIAnim.SetBool("enable", false);
         }
 
         if (audioSource == null) return;
         audioSource.Stop();
         audioSource.clip = null;
-    }
-
-    public void ChangeToNextClip()
-    {
-        clipTime = PlayClip();
-        clipIter++;
     }
 
     private float PlayClip()

@@ -9,6 +9,8 @@ public class PlayDialogueClips : SceneEvent
     private AudioSource audioSource;
     private int clipIter;
     private float clipTime;
+    private Animator cprUIAnim;
+
 
     public override void InitEvent()
     {
@@ -17,11 +19,14 @@ public class PlayDialogueClips : SceneEvent
         clipTime = 0;
         bool found = SceneAssetManager.GetAssetComponent<AudioSource>(audioSourceAssetName, out audioSource);
         Debug.Log("Found Phone[" + audioSourceAssetName + "]: " + found);
+        found = SceneAssetManager.GetAssetComponent<Animator>("CPRUIAnim", out cprUIAnim);
+        Debug.Log("Found UI CPR[" + "CPRUIAnim" + "]: " + found);
     }
 
     public override void StartEvent()
     {
         InitEvent();
+        cprUIAnim.SetBool("enable", false);
         if (audioSource == null)
         {
             passEventCondition = true;
