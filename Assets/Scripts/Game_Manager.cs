@@ -89,7 +89,7 @@ public class Game_Manager : MonoBehaviour
         rhythmController.StartRhythm();
         uiGamePlayCanvas.gameObject.SetActive(true);
         totalScoreBoard.gameObject.SetActive(false);
-        restartButton.gameObject.SetActive(false);
+        restartButton.SetActive(false);
     }
 
     public void StopGame()
@@ -177,7 +177,7 @@ public class Game_Manager : MonoBehaviour
     public void EnableScoreBoard()
     {
         totalScoreBoard.gameObject.SetActive(true);
-        restartButton.gameObject.SetActive(true);
+        restartButton.SetActive(true);
         float totalScore = (rhythmController.perfectHit * 2000f) + (rhythmController.goodHit * 1000f);
         float maxScore = (rhythmController.perfectHit + rhythmController.goodHit + rhythmController.missHit) * 2000f;
         float rankInPercentage = totalScore / maxScore;

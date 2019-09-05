@@ -77,11 +77,10 @@ public class PlayerDoCPRHandEvent : SceneEvent
         }
         else if (!passEventCondition)
         {
-            clipTime = PlayClip();
-            clipIter++;
+            //clipTime = PlayClip();
+            //clipIter++;
             passEventCondition = (clipTime <= 0);
         }
-
     }
 
     public override void StopEvent()
@@ -95,6 +94,12 @@ public class PlayerDoCPRHandEvent : SceneEvent
         if (audioSource == null) return;
         audioSource.Stop();
         audioSource.clip = null;
+    }
+
+    public void ChangeToNextClip()
+    {
+        clipTime = PlayClip();
+        clipIter++;
     }
 
     private float PlayClip()
