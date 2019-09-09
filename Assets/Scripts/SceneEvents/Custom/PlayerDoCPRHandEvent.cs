@@ -14,6 +14,8 @@ public class PlayerDoCPRHandEvent : SceneEvent
     private int clipIter;
     private float clipTime;
     private bool noMoreClips= false;
+    private TouchChestCollider touchChestCollider;
+    private bool touchFatherChest;
 
     public override void InitEvent()
     {
@@ -21,7 +23,10 @@ public class PlayerDoCPRHandEvent : SceneEvent
         bool found = SceneAssetManager.GetAssetComponent<Animator>(assetName, out cprUIAnim);
         Debug.Log("Found UI CPR[" + assetName + "]: " + found);
         found = SceneAssetManager.GetAssetComponent<AudioSource>(audioSourceAssetName, out audioSource);
-        Debug.Log("Found Phone[" + assetName + "]: " + found);
+        Debug.Log("Found Phone[" + audioSourceAssetName + "]: " + found);
+        found = SceneAssetManager.GetAssetComponent<TouchChestCollider>("ChestCollider", out touchChestCollider);
+        Debug.Log("Found chest collider script[" + "ChestCollider" + "]: " + found);
+
 
         clipIter = 0;
         clipTime = 0;
@@ -40,6 +45,7 @@ public class PlayerDoCPRHandEvent : SceneEvent
     public override void StartEvent()
     {
         InitEvent();
+        touchFatherChest = touchChestCollider.touchFatherChest;
         if (audioSource != null && cprUIAnim != null )
         {
             //add debug here
@@ -49,18 +55,21 @@ public class PlayerDoCPRHandEvent : SceneEvent
             clipIter++;
         }
 
-        if (CPRHand.Instance == null && audioSource == null)
+        if (CPRHand.Instance == null && audioSource == null&& touchChestCollider == null)
         {
             passEventCondition = true;
         }
-        else {
+        else
+        {
             Player.Instance.cprHand.enabledSnap = true;
         }
+
+     
     }
 
     public override void UpdateEvent()
     {
-        if (CPRHand.Instance != null && CPRHand.Instance.snaping && noMoreClips ) //and animation finishes too
+        if (CPRHand.Instance != null && CPRHand.Instance.snaping && noMoreClips && touchFatherChest) //and animation finishes too
         {
             passEventCondition = true;
         }
