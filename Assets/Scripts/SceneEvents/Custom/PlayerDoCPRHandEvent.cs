@@ -16,6 +16,8 @@ public class PlayerDoCPRHandEvent : SceneEvent
     private bool noMoreClips= false;
     private TouchChestCollider touchChestCollider;
     private bool touchFatherChest;
+    private Game_Manager gameManager;
+
 
     public override void InitEvent()
     {
@@ -26,6 +28,8 @@ public class PlayerDoCPRHandEvent : SceneEvent
         Debug.Log("Found Phone[" + audioSourceAssetName + "]: " + found);
         found = SceneAssetManager.GetAssetComponent<TouchChestCollider>("ChestCollider", out touchChestCollider);
         Debug.Log("Found chest collider script[" + "ChestCollider" + "]: " + found);
+        found = SceneAssetManager.GetAssetComponent<Game_Manager>("GameManager", out gameManager);
+        Debug.Log("Found Game_Manager[" + "GameManager" + "]: " + found);
 
 
         clipIter = 0;
@@ -45,7 +49,10 @@ public class PlayerDoCPRHandEvent : SceneEvent
     public override void StartEvent()
     {
         InitEvent();
-        touchFatherChest = touchChestCollider.touchFatherChest;
+        gameManager.MakeDadShirtTransparent();
+        gameManager.EnableBeatUI();
+        gameManager.CallSetBeatColliderEnabled(false);
+
         if (audioSource != null && cprUIAnim != null )
         {
             //add debug here
@@ -58,6 +65,7 @@ public class PlayerDoCPRHandEvent : SceneEvent
         if (CPRHand.Instance == null && audioSource == null&& touchChestCollider == null)
         {
             passEventCondition = true;
+            Debug.Log("passEvent here");
         }
         else
         {
@@ -72,6 +80,7 @@ public class PlayerDoCPRHandEvent : SceneEvent
         if (CPRHand.Instance != null && CPRHand.Instance.snaping && noMoreClips && touchFatherChest) //and animation finishes too
         {
             passEventCondition = true;
+            Debug.Log(touchChestCollider + "pass event already");
         }
 
         if (clipTime > 0)
@@ -86,8 +95,9 @@ public class PlayerDoCPRHandEvent : SceneEvent
                 clipTime = PlayClip();
                 clipIter++;
             }
-
-            passEventCondition = (clipTime <= 0);
+            touchFatherChest = touchChestCollider.touchFatherChest;
+            //passEventCondition = (clipTime <= 0)&&touchFatherChest;
+            Debug.Log("cliptime" + passEventCondition + "passEventCondition");
         }
 
         if(clipIter==2)
@@ -126,7 +136,6 @@ public class PlayerDoCPRHandEvent : SceneEvent
     public override bool Skip()
     {
         passEventCondition = true;
-
         if (audioSource != null)
         {
             audioSource.Stop();

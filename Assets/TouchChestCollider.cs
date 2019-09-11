@@ -19,8 +19,9 @@ public class TouchChestCollider : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Hand"))
+        if (other.gameObject.CompareTag("Hand Checker"))
         {
+            Debug.Log("touchFatherChest = true");
             touchFatherChest = true;
         }
     }

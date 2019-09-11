@@ -219,6 +219,12 @@ public class Game_Manager : MonoBehaviour
         fatherBodyMaterial.materials[1].SetFloat("_Mode", 0); //opaque
     }
 
+    public void CallSetBeatColliderEnabled(bool value)
+    {
+        rhythmController.ForSetBeatColliderOnly(value);
+    }
+
+
     public void RestartGame()
     {
         SceneManager.LoadScene("Playscene");
