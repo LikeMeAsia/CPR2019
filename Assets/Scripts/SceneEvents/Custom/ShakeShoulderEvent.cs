@@ -33,7 +33,6 @@ public class ShakeShoulderEvent : SceneEvent
         gameManager.DefaultDadShirtColour();
         if (shakeShoulderAnim != null)
         {
-            Debug.Log("enable!!!!");
             shakeShoulderAnim.SetBool("enable", true);
         }
         if (shoulder == null)
