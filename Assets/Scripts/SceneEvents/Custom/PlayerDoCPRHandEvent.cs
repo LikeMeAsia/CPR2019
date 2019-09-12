@@ -121,10 +121,13 @@ public class PlayerDoCPRHandEvent : SceneEvent
 
     private float PlayClip()
     {
-        if (audioSource == null || clipIter < 0 || clipIter > audioClips.Length -1)
+        if (audioSource == null || clipIter < 0 )
+        {
+            return 0f;
+        }
+        if (clipIter > audioClips.Length - 1)
         {
             noMoreClips = true;
-            return 0f;
         }
         audioSource.Stop();
         audioSource.clip = audioClips[clipIter];
