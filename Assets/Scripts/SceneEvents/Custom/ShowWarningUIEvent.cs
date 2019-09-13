@@ -7,12 +7,12 @@ public class ShowWarningUIEvent : SceneEvent
 {
     private Animator warningUIAnim;
     public string assetName= "WarningUIAnim";
-    private int countDown=8;
+    private float countDown;
     private bool skip;
-    private bool changeToPageOne = true;
-    private bool enableFalse = false;
+    private bool changeToPageOne;
+    private bool enableFalse;
 
-    //TODO: add passeventcond + chexck countdowntime + cpr exit time + and clipiter Check if it's cos of nomoreclips or touchChestCollider
+
 
     public override void InitEvent()
     {
@@ -20,23 +20,31 @@ public class ShowWarningUIEvent : SceneEvent
         skip = false;
         bool found = SceneAssetManager.GetAssetComponent<Animator>(assetName, out warningUIAnim);
         Debug.Log("Found Game_Manager[" + assetName + "]: " + found);
-
+        
         if (warningUIAnim == null)
         {
             passEventCondition = true;
+            Debug.Log("passEvent pai la");
         }
         if (warningUIAnim != null)
         {
             warningUIAnim.SetBool("enable", false);
+            Debug.Log("warning mai null at Init");
         }
     }
 
     public override void StartEvent()
     {
+        enableFalse = false;
+        countDown = 5f;
+        changeToPageOne = true;
+
         if (warningUIAnim != null)
         {
             warningUIAnim.SetBool("enable", true);
+            Debug.Log("starteventwarning");
         }
+        Debug.Log(countDown + "countDown at StartEvent");
     }
 
     public override void StopEvent()
@@ -49,21 +57,23 @@ public class ShowWarningUIEvent : SceneEvent
 
     public override void UpdateEvent()
     {
-        countDown--;
-        //Debug.Log(countDown + "countdown");
-        if (countDown <= 0&&changeToPageOne)
+        countDown-=Time.deltaTime;
+        Debug.Log(countDown + "countdown");
+
+        if (countDown <= 0 &&changeToPageOne)
         {
             Debug.Log("page 1");
             warningUIAnim.SetInteger("page", 1);
-            countDown = 5;
+            countDown = 5f;
             changeToPageOne = false;
             enableFalse = true;
         }
+
         if(countDown<0&& enableFalse)
         {
             warningUIAnim.SetBool("enable", false);
             passEventCondition = true;
-
+            Debug.Log("pass event at enable false = true");
         }
 
 
