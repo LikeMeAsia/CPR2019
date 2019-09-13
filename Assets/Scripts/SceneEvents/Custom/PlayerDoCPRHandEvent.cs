@@ -17,7 +17,7 @@ public class PlayerDoCPRHandEvent : SceneEvent
     private bool touchFatherChest;
     private Game_Manager gameManager;
     private bool skip;
-
+    private int audioClipsminusone;
     public override void InitEvent()
     {
         base.InitEvent();
@@ -58,7 +58,7 @@ public class PlayerDoCPRHandEvent : SceneEvent
             cprUIAnim.SetBool("enable", true);
 
             clipTime = PlayClip();  //add SPC sound here
-            clipIter++;
+            //clipIter++;
         }
 
         if (CPRHand.Instance == null && audioSource == null&& touchChestCollider == null)
@@ -70,8 +70,8 @@ public class PlayerDoCPRHandEvent : SceneEvent
         {
             Player.Instance.cprHand.enabledSnap = true;
         }
-
-     
+        audioClipsminusone = audioClips.Length - 1;
+//        Debug.Log(audioClips.Length + "audioclipsLength" + audioClipsminusone + "audioClipsLengthminusone");
     }
 
     public override void UpdateEvent()
@@ -89,12 +89,14 @@ public class PlayerDoCPRHandEvent : SceneEvent
         }
         else if (!passEventCondition)
         {
-            if(audioSource.isPlaying == false&& clipIter <= audioClips.Length - 1)
+            if(audioSource.isPlaying == false&& clipIter <= audioClips.Length-1)
             {
                 clipTime = PlayClip();
-                clipIter++;
+                //clipIter++;
+                Debug.Log(clipIter + "clipIter new cond");
             }
             touchFatherChest = touchChestCollider.touchFatherChest;
+            //Debug.Log(touchFatherChest + "touchFatherChest");
         }
 
         if(clipIter==2)
@@ -119,11 +121,13 @@ public class PlayerDoCPRHandEvent : SceneEvent
     private float PlayClip()
     {
         Debug.Log("playClip");
+        Debug.Log(clipIter + "clipIter" + audioClipsminusone + "audioClip.lengthminusone in playclip");
         if (audioSource == null || clipIter < 0 || clipIter > audioClips.Length)
         {
+            Debug.Log(clipIter + "clipIter" + audioClips + "audioclip-1 then return 0");
             return 0f;
         }
-        if (clipIter > audioClips.Length - 1)
+        if (clipIter >= audioClips.Length - 1)
         {
             Debug.Log("clipIter more than audioClipLength" + clipIter + "clipIter" + audioClips.Length + "audioClips.length");
             noMoreClips = true;
