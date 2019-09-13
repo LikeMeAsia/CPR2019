@@ -89,7 +89,7 @@ public class PlayerDoCPRHandEvent : SceneEvent
         }
         else if (!passEventCondition)
         {
-            if(audioSource.isPlaying == false)
+            if(audioSource.isPlaying == false&& clipIter <= audioClips.Length - 1)
             {
                 clipTime = PlayClip();
                 clipIter++;
