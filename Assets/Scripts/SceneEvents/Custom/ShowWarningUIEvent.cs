@@ -64,7 +64,7 @@ public class ShowWarningUIEvent : SceneEvent
         {
             Debug.Log("page 1");
             warningUIAnim.SetInteger("page", 1);
-            countDown = 5f;
+            countDown = 10f;
             changeToPageOne = false;
             enableFalse = true;
         }
