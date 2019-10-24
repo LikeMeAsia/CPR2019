@@ -66,6 +66,7 @@ public class Game_Manager : MonoBehaviour
     public void Heal(float healed)
     {
         curhpDad = curhpDad + healed;
+        curhpDad = Mathf.Clamp(curhpDad, 0, 100);
     }
 
     public void Setup(AudioClip clip)
@@ -113,9 +114,9 @@ public class Game_Manager : MonoBehaviour
         {
             curhpDad = 0;
         }
-        else if (curhpDad >= 120.0f)
+        else if (curhpDad >= 100.0f)
         {
-            curhpDad = 120;
+            curhpDad = 100;
         }
         hpBarValue = curhpDad / maxHp;
 
