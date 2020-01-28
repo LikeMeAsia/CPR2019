@@ -14,7 +14,7 @@ public class HandTutorialEvent : SceneEvent
     [SerializeField]
     private float handTime = 4f;
     private float handTimer;
-    private float delayInputReceiveTime = 1f;
+    private float delayInputReceiveTime = 2f;
     private float delayInputReceiveTimer;
     private bool skip;
 
@@ -44,12 +44,22 @@ public class HandTutorialEvent : SceneEvent
             handTutorialAnim.SetBool("action", false);
             delayInputReceiveTimer = delayInputReceiveTime;
         }
-        EnableOutline();
     }
 
     public override void UpdateEvent()
     {
         passEventCondition = CheckHandGestureInput();
+        if (Player.Instance.showController) {
+            OVRInput.Controller activeController = OVRInput.GetActiveController();
+            if (activeController == OVRInput.Controller.Touch)
+            {
+                EnableOutline();
+            }
+            else
+            {
+                Player.Instance.EnableOutlineBareHands();
+            }
+        }
     }
 
     public override void StopEvent() {

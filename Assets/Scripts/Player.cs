@@ -65,19 +65,6 @@ public class Player : MonoBehaviour
     // Check initial all required parameters
     public bool ready = false;
 
-
-    [Header("Movement")]
-    [SerializeField]
-    private float moveSpeed = 0.1f;
-    [SerializeField]
-    private float moveDelay = 0;
-    private float delayTimer = 0;
-    private float smoothTime = 0.2f;
-    private Vector3 velocity;
-    private bool isMove;
-    public bool IsMove { get { return isMove; } }
-    private Vector3 toPos = Vector3.zero;
-
     [Header("For Debug")]
     public bool l_button01_outline;
     public bool l_button02_outline;
@@ -92,10 +79,6 @@ public class Player : MonoBehaviour
 
     IEnumerator Start()
     {
-        delayTimer = 0;
-        velocity = Vector3.zero;
-        isMove = false;
-
         m_OvrAvatar = this.GetComponentInChildren<OvrAvatar>();
         m_OvrCamera = this.GetComponentInChildren<OVRCameraRig>();
         m_OvrAvatar.ShowControllers(showController);
@@ -191,22 +174,6 @@ public class Player : MonoBehaviour
         
         UpdateCapTouchStates();
 
-        if (isMove)
-        {
-            if (delayTimer < moveDelay)
-            {
-                delayTimer += Time.deltaTime;
-            }
-            else {
-                Player.Instance.transform.position = Vector3.SmoothDamp(Player.Instance.transform.position, toPos,
-                                                        ref velocity, smoothTime, moveSpeed);
-                if (Vector3.Distance(Player.Instance.transform.position, toPos) < 0.1f)
-                {
-                    Player.Instance.transform.position = toPos;
-                   isMove = false;
-                }
-            }
-        }
     }
 
     private void UpdateCapTouchStates()
@@ -258,45 +225,10 @@ public class Player : MonoBehaviour
         leftButtons.EnableOutlineBareHand();
         rightButtons.EnableOutlineBareHand();
     }
-
-
-    public void MoveTo(Transform targetTransform, float imoveSpeed, float imoveDelay)
-    {
-        if (targetTransform == null)
-        {
-            targetTransform = Player.Instance.transform;
-        }
-        bool configured = OVRManager.boundary.GetConfigured();
-        if (configured)
-        {
-            Vector3[] boundaryPoints = OVRManager.boundary.GetGeometry(OVRBoundary.BoundaryType.PlayArea);
-            BoxCollider box = targetTransform.GetComponentInChildren<BoxCollider>();
-            if (box != null)
-            {
-                toPos = targetTransform.position;
-                toPos = new Vector3(toPos.x, Player.Instance.transform.position.y, toPos.z);
-                //toPos = Vector3.SmoothDamp(Player.Instance.transform.position, toPos, ref velocity, smoothTime);
-                Debug.Log("idk?");
-
-            }
-        }
-        else
-        {
-            toPos = new Vector3(targetTransform.position.x, Player.Instance.transform.position.y, targetTransform.position.z);
-            //toPos = Vector3.SmoothDamp(Player.Instance.transform.position, toPos, ref velocity, smoothTime);
-            Debug.Log("smooth?");
-        }
-        moveSpeed = Mathf.Max(0.01f, imoveSpeed);
-        moveDelay = imoveDelay;
-        delayTimer = 0;
-        velocity = Vector3.zero;
-        isMove = true;
-    }
+    
 
     public void SetEnabledHands(bool enabled) {
-        r_hand.gameObject.SetEnabledRenderers(enabled);
-        r_hand.gameObject.SetEnabledColliders(enabled);
-        l_hand.gameObject.SetEnabledRenderers(enabled);
-        l_hand.gameObject.SetEnabledColliders(enabled);
+        r_hand.gameObject.SetActive(enabled);
+        l_hand.gameObject.SetActive(enabled);
     }
 }

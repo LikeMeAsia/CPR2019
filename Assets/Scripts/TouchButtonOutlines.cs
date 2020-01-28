@@ -109,5 +109,7 @@ public class TouchButtonOutlines : MonoBehaviour
     {
         EnableOutlineBareHand();
         SetEnableOutline(TouchButtonName.side_trigger, true);
+        SetEnableOutline(TouchButtonName.buttonX, true);
+        SetEnableOutline(TouchButtonName.buttonY, true);
     }
 }
