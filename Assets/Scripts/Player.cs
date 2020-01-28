@@ -293,4 +293,10 @@ public class Player : MonoBehaviour
         isMove = true;
     }
 
+    public void SetEnabledHands(bool enabled) {
+        r_hand.gameObject.SetEnabledRenderers(enabled);
+        r_hand.gameObject.SetEnabledColliders(enabled);
+        l_hand.gameObject.SetEnabledRenderers(enabled);
+        l_hand.gameObject.SetEnabledColliders(enabled);
+    }
 }

@@ -76,8 +76,7 @@ public class CPRHand : MonoBehaviour
             centerPoint = (Player.Instance.l_hand.position + Player.Instance.r_hand.position) / 2;
             transform.position = centerPoint;
             transform.rotation = Quaternion.identity;
-            Player.Instance.r_hand.gameObject.SetActive(false);
-            Player.Instance.l_hand.gameObject.SetActive(false);
+            Player.Instance.SetEnabledHands(false);
             cprHandCollider.enabled = true;
 
             if (handsState == HandsState.LeftHandUnder)
@@ -95,8 +94,7 @@ public class CPRHand : MonoBehaviour
         }
         else
         {
-            Player.Instance.r_hand.gameObject.SetActive(true);
-            Player.Instance.l_hand.gameObject.SetActive(true);
+            Player.Instance.SetEnabledHands(true);
             DisabledSnapping();
         }
 
