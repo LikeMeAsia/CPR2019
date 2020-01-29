@@ -33,8 +33,12 @@ public class Game_Manager : MonoBehaviour
     public Text missText;
     public Text hpDadtextscr;
     public Image boardImg;
-    public Sprite boardWin;
-    public Sprite boardLose;
+    public Image header;
+    public Sprite headerWin;
+    public Sprite headerLose;
+    public Image message;
+    public Sprite messageWin;
+    public Sprite messageLose;
     public Image rank;
     public Sprite[] rankImg;
 
@@ -192,30 +196,33 @@ public class Game_Manager : MonoBehaviour
         if (rankInPercentage >= 0.8f)
         {
             rank.sprite = rankImg[0];
-            boardImg.sprite = boardWin;
+            header.sprite = headerWin;
+            message.sprite = messageWin;
         }
         else if(rankInPercentage >= 0.5f)
         {
             rank.sprite = rankImg[1];
-            boardImg.sprite = boardWin;
+            header.sprite = headerWin;
+            message.sprite = messageWin;
         }
         else
         {
             rank.sprite = rankImg[2];
-            boardImg.sprite = boardLose;
+            header.sprite = headerLose;
+            message.sprite = messageLose;
         }
     }
 
     public void MakeDadShirtTransparent()
     {
         fatherBodyMaterial.materials[1].SetFloat("_Mode", 2);//fade
-        Color32 transparentShirtColour = new Color32(255, 255, 255, 90);
+        Color32 transparentShirtColour = new Color32(255, 255, 255, 200);
         fatherBodyMaterial.materials[1].SetColor("_Color", transparentShirtColour);
     }
 
     public void DefaultDadShirtColour()
     {
-        //fatherBodyMaterial.materials[1].SetColor("_Color", opaqueShirtColour);
+        fatherBodyMaterial.materials[1].SetColor("_Color", opaqueShirtColour);
         Debug.Log(fatherBodyMaterial.materials[1].name);
         fatherBodyMaterial.materials[1].SetFloat("_Mode", 0); //opaque
     }
@@ -231,16 +238,5 @@ public class Game_Manager : MonoBehaviour
         SceneManager.LoadScene("Playscene");
         Debug.Log("restartgame");   
     }
-
-    //public void OnPointerEnter(PointerEventData eventData)
-    //{
-    //    restartButton.image.sprite = newSprite;
-    //    Debug.Log("Mouse Enter");
-
-    //}
-
-    //public void OnPointerExit(PointerEventData eventData)
-    //{
-    //    restartButton.color = Color.white; //Or however you do your color
-    //}
+    
 }

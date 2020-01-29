@@ -16,6 +16,5 @@ MonoBehaviour:
   sceneEvents:
   - {fileID: 11400000, guid: 06aa3b46c37b14849adc05fa28b94dbe, type: 2}
   - {fileID: 11400000, guid: c4c50cc979215e747a9063d483ef5d6c, type: 2}
-  - {fileID: 11400000, guid: 53b0658619d0fc842945c23049f3ceda, type: 2}
   - {fileID: 11400000, guid: 570df7bd82ac9ff4b8e269a560e0d193, type: 2}
   - {fileID: 11400000, guid: 0a733ca9ad444114c941f379b296d459, type: 2}

@@ -55,22 +55,18 @@ public class ShowWarningUIEvent : SceneEvent
     public override void UpdateEvent()
     {
         countDown-=Time.deltaTime;
-        Debug.Log(countDown + "countdown");
 
         if (countDown <= 0 &&changeToPageOne)
         {
-            Debug.Log("page 1");
             warningUIAnim.SetInteger("page", 1);
-            countDown = 10f;
+            countDown = 5f;
             changeToPageOne = false;
             enableFalse = true;
         }
 
-        if(countDown<0&& enableFalse)
+        if(countDown <=0 && enableFalse)
         {
-            warningUIAnim.SetBool("enable", false);
             passEventCondition = true;
-            Debug.Log("pass event at enable false = true");
         }
 
 
@@ -79,7 +75,6 @@ public class ShowWarningUIEvent : SceneEvent
     {
         skip = true;
         passEventCondition = true;
-        Debug.Log("Skippu");
         return skip;
     }
 }

@@ -47,7 +47,7 @@ public class PhysicalButtonScript : MonoBehaviour, ITriggerListener
 
     void Start()
     {
-
+        activated = false;
     }
     
     void LateUpdate()
