@@ -24,12 +24,9 @@ public class ShowWarningUIEvent : SceneEvent
         if (warningUIAnim == null)
         {
             passEventCondition = true;
-            Debug.Log("passEvent pai la");
         }
-        if (warningUIAnim != null)
-        {
+        else {
             warningUIAnim.SetBool("enable", false);
-            Debug.Log("warning mai null at Init");
         }
     }
 

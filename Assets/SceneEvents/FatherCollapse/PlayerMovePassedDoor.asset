@@ -15,5 +15,5 @@ MonoBehaviour:
   delayNextEvent: 0
   positionName: Point2
   moveSpeed: 1
-  moveDelay: 0
+  layerMask: 1647
   waitFinishMove: 0

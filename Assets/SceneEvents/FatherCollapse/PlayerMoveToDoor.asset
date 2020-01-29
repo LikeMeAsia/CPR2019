@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d26421488e7de1a4abbc74d907957f6a, type: 3}
-  m_Name: PlayerMoveToFather
+  m_Name: PlayerMoveToDoor
   m_EditorClassIdentifier: 
   delayNextEvent: 0
-  positionName: Point3
+  positionName: Point1
   moveSpeed: 1
-  moveDelay: 1
-  waitFinishMove: 1
+  layerMask: 1647
+  waitFinishMove: 0
