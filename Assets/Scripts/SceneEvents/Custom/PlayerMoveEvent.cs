@@ -70,9 +70,9 @@ public class PlayerMoveEvent : SceneEvent
                 pastFollowerPosition = Player.Instance.transform.position;
                 pastTargetPosition = targetTransform.position;
 
-                if (Vector3.Distance(Player.Instance.transform.position, toPos) < 0.1f)
+                if (Vector3.Distance(Player.Instance.transform.position, toPos) < 0.05f)
                 {
-                    Player.Instance.transform.position = toPos;
+                    //Player.Instance.transform.position = toPos;
                     isMove = false;
                 }
             }
@@ -120,20 +120,18 @@ public class PlayerMoveEvent : SceneEvent
     }
 
     private void CreateMarker() {
-       // lookPoint = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         lookPoint = Instantiate(Resources.Load("Prefabs/LookHere")) as GameObject;
-        // lookPoint.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
         Vector3 lookPointPos = new Vector3(targetTransform.position.x, Camera.main.transform.position.y, targetTransform.position.z);
         Vector3 additionPos = targetTransform.position - Camera.main.transform.position;
         additionPos.y = 0;
         lookPoint.transform.position = lookPointPos + additionPos.normalized * 1f;
         
-        curLookPoint = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        curLookPoint.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        /*curLookPoint = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        curLookPoint.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);*/
     }
 
     private bool IsPlayerLookAtTarget() {
-        curLookPoint.transform.position = Camera.main.transform.position+ Camera.main.transform.forward * 2f;
+       // curLookPoint.transform.position = Camera.main.transform.position+ Camera.main.transform.forward * 2f;
 
         RaycastHit[] hits = Physics.RaycastAll(Camera.main.transform.position, Camera.main.transform.forward, 5f, layerMask);
         if (hits!=null && hits.Length>0)

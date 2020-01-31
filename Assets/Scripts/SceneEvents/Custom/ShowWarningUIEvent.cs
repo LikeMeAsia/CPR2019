@@ -9,11 +9,8 @@ public class ShowWarningUIEvent : SceneEvent
     public string assetName= "WarningUIAnim";
     private float countDown;
     private bool skip;
-    private bool changeToPageOne;
     private bool enableFalse;
-
-
-
+    
     public override void InitEvent()
     {
         base.InitEvent();
@@ -33,9 +30,7 @@ public class ShowWarningUIEvent : SceneEvent
     public override void StartEvent()
     {
         enableFalse = false;
-        countDown = 5f;
-        changeToPageOne = true;
-
+        countDown = 8f;
         if (warningUIAnim != null)
         {
             warningUIAnim.SetBool("enable", true);
@@ -49,6 +44,7 @@ public class ShowWarningUIEvent : SceneEvent
         if (warningUIAnim != null)
         {
             warningUIAnim.SetBool("enable", false);
+            warningUIAnim.SetTrigger("action");
         }
     }
 
@@ -56,15 +52,7 @@ public class ShowWarningUIEvent : SceneEvent
     {
         countDown-=Time.deltaTime;
 
-        if (countDown <= 0 &&changeToPageOne)
-        {
-            warningUIAnim.SetInteger("page", 1);
-            countDown = 5f;
-            changeToPageOne = false;
-            enableFalse = true;
-        }
-
-        if(countDown <=0 && enableFalse)
+        if(countDown <= 0 && enableFalse)
         {
             passEventCondition = true;
         }

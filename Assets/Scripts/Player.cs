@@ -149,7 +149,7 @@ public class Player : MonoBehaviour
                 l_indexTipCollider.radius = 0.01f;
                 l_indexTipCollider.center = new Vector3(0.01f, 0, 0);
                 fingerTipObj.tag = "FingerTip";
-                fingerTipObj.layer = LayerMask.NameToLayer("Player");
+                fingerTipObj.layer = LayerMask.NameToLayer("FingerTip");
             }
         }
 
@@ -226,9 +226,21 @@ public class Player : MonoBehaviour
         rightButtons.EnableOutlineBareHand();
     }
     
-
     public void SetEnabledHands(bool enabled) {
         r_hand.gameObject.SetActive(enabled);
         l_hand.gameObject.SetActive(enabled);
+    }
+
+    public OVRInput.Controller GetTouchOVRController(Collider col)
+    {
+        if (col == l_indexTipCollider)
+        {
+            return OVRInput.Controller.LTouch;
+        }
+        if (col == r_indexTipCollider)
+        {
+            return OVRInput.Controller.RTouch;
+        }
+        return OVRInput.Controller.None;
     }
 }

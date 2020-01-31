@@ -50,4 +50,20 @@ public class SceneAssetManager : MonoBehaviour
         }
         return false;
     }
+
+    public static bool GetAssetComponentInChildren<T>(string name, out T asset)
+    {
+        asset = default;
+        if (SceneAssetManager.instance != null && SceneAssetManager.instance.assetDictionary != null)
+        {
+            SceneAsset sceneAsset = new SceneAsset();
+            bool found = SceneAssetManager.instance.assetDictionary.TryGetValue(name, out sceneAsset);
+            if (found && sceneAsset.gameObject != null)
+            {
+                asset = sceneAsset.gameObject.GetComponentInChildren<T>();
+                return asset != null;
+            }
+        }
+        return false;
+    }
 }

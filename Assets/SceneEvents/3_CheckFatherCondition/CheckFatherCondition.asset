@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 455d7cdd1a8b7b647b1e53f82a24f5d9, type: 3}
+  m_Name: CheckFatherCondition
+  m_EditorClassIdentifier: 
+  delayNextEvent: 0
+  sceneEvents:
+  - {fileID: 11400000, guid: 35fbc93c14b206b4881d0221569760c8, type: 2}
+  - {fileID: 11400000, guid: f09b8f55df733d4408e9d395d9d5a514, type: 2}
+  - {fileID: 11400000, guid: 408d42c04f5cf214bbef656592ccbe86, type: 2}
+  - {fileID: 11400000, guid: bef83fe70326fb74dabac26990ad42ba, type: 2}
+  - {fileID: 11400000, guid: a85a39675df438148bef29c60957e481, type: 2}

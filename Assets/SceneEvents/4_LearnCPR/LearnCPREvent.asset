@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 455d7cdd1a8b7b647b1e53f82a24f5d9, type: 3}
+  m_Name: LearnCPREvent
+  m_EditorClassIdentifier: 
+  delayNextEvent: 0
+  sceneEvents:
+  - {fileID: 11400000, guid: 18d0de0843442944bb6b15376ebf04d0, type: 2}
+  - {fileID: 11400000, guid: c3c49d6deb9a44b49b945f9a0564ccf9, type: 2}
+  - {fileID: 11400000, guid: 31ac2112e8c9d814492deb08299ba35c, type: 2}
+  - {fileID: 11400000, guid: 6a5ecac65e74c464890ea4b9a3d5fca3, type: 2}
+  - {fileID: 11400000, guid: 0fff3802654480748b9a8759fa447ebf, type: 2}
+  - {fileID: 11400000, guid: f3ab94fa3b574834d84b5332eb31b253, type: 2}
+  - {fileID: 11400000, guid: 73e134ee26243d44691f241e43e4f56b, type: 2}

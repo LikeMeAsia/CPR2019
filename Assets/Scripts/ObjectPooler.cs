@@ -120,19 +120,5 @@ public class ObjectPooler : MonoBehaviour
 
         return spawnObject;
     }
-
-    /* public bool IteratePoolsWithTag(string tag, out Pool retPool)
-     {
-         retPool = new Pool();
-         for (int i = 0; i < pools.Count; i++)
-         {
-             if (pools[i].poolTag == tag)
-             {
-                 retPool = pools[i];
-                 return true;
-             }
-         }
-         return false;
-     }*/
-
+    
 }

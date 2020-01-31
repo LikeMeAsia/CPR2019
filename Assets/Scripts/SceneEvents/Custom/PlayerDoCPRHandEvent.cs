@@ -8,11 +8,10 @@ public class PlayerDoCPRHandEvent : SceneEvent
     public string audioSourceAssetName; //name = Phone
 
     private Animator cprUIAnim;
-    public AudioSource audioSource;
+    private AudioSource audioSource;
     public AudioClip[] audioClips;
     private int clipIter;
     private float clipTime;
-    private bool noMoreClips = false;
     private TouchChestCollider touchChestCollider;
     private bool touchFatherChest;
     private Game_Manager gameManager;
@@ -47,7 +46,7 @@ public class PlayerDoCPRHandEvent : SceneEvent
     public override void StartEvent()
     {
         InitEvent();
-        noMoreClips = false;
+        touchFatherChest = false;
         gameManager.MakeDadShirtTransparent();
         gameManager.EnableBeatUI();
         gameManager.CallSetBeatColliderEnabled(false);
@@ -72,10 +71,9 @@ public class PlayerDoCPRHandEvent : SceneEvent
 
     public override void UpdateEvent()
     {
-        if (CPRHand.Instance != null && CPRHand.Instance.snaping && noMoreClips && touchFatherChest) //and animation finishes too
+        if (CPRHand.Instance != null && CPRHand.Instance.snaping && touchFatherChest && !IsAudioClipPlayable()) //and animation finishes too
         {
             passEventCondition = true;
-            Debug.Log("touchChestCollider"+touchChestCollider + "pass event already"+clipIter+"clipIter" + audioClips.Length+"audioclip.length MINUS 1"+noMoreClips+"nomoreclips");
         }
 
         if (clipTime > 0)
@@ -85,18 +83,12 @@ public class PlayerDoCPRHandEvent : SceneEvent
         }
         else if (!passEventCondition)
         {
-            if(audioSource.isPlaying == false && !noMoreClips)
+            if(audioSource.isPlaying == false && IsAudioClipPlayable())
             {
                 clipTime = PlayClip();
                 clipIter++;
-                Debug.Log(clipIter + "clipIter new cond");
             }
             touchFatherChest = touchChestCollider.touchFatherChest;
-        }
-
-        if(clipIter==2)
-        {
-            cprUIAnim.SetTrigger("StartPump");
         }
 
     }
@@ -106,6 +98,7 @@ public class PlayerDoCPRHandEvent : SceneEvent
         if (cprUIAnim != null)
         {
             cprUIAnim.SetBool("enable", false);
+            cprUIAnim.SetTrigger("action");
         }
 
         if (audioSource == null) return;
@@ -115,22 +108,18 @@ public class PlayerDoCPRHandEvent : SceneEvent
 
     private float PlayClip()
     {
-        Debug.Log("playClip");
-        if (audioSource == null || clipIter < 0 || clipIter > audioClips.Length)
+        if (audioSource == null || !IsAudioClipPlayable())
         {
-            return 0f;
-        }
-        if (clipIter >= audioClips.Length )
-        {
-            //Debug.Log("clipIter more than audioClipLength" + clipIter + "clipIter" + audioClips.Length + "audioClips.length");
-            noMoreClips = true;
-            Debug.Log("nomoreclips"+noMoreClips);
             return 0f;
         }
         audioSource.Stop();
         audioSource.clip = audioClips[clipIter];
         audioSource.Play();
         return audioClips[clipIter].length + 0.5f;
+    }
+
+    private bool IsAudioClipPlayable() {
+        return clipIter >= 0 && clipIter < audioClips.Length;
     }
 
     public override bool Skip()
