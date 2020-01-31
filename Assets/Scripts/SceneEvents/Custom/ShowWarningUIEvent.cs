@@ -9,7 +9,6 @@ public class ShowWarningUIEvent : SceneEvent
     public string assetName= "WarningUIAnim";
     private float countDown;
     private bool skip;
-    private bool enableFalse;
     
     public override void InitEvent()
     {
@@ -29,7 +28,6 @@ public class ShowWarningUIEvent : SceneEvent
 
     public override void StartEvent()
     {
-        enableFalse = false;
         countDown = 8f;
         if (warningUIAnim != null)
         {
@@ -52,12 +50,10 @@ public class ShowWarningUIEvent : SceneEvent
     {
         countDown-=Time.deltaTime;
 
-        if(countDown <= 0 && enableFalse)
+        if(countDown <= 0)
         {
             passEventCondition = true;
         }
-
-
     }
     public override bool Skip() 
     {

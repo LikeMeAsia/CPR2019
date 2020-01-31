@@ -25,7 +25,7 @@ public class PlayerMoveEvent : SceneEvent
     private Vector3 toPos = Vector3.zero;
 
     [SerializeField, Layer]
-    private int layerMask;
+    private int layerMask=0;
 
     [SerializeField]
     private bool waitFinishMove;
