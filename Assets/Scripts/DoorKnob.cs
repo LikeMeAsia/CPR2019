@@ -19,6 +19,7 @@ public class DoorKnob : MonoBehaviour
         audioSource = this.GetComponent<AudioSource>();
         handleCollider = this.GetComponent<Collider>();
         doorUIAnim.gameObject.SetActive(false);
+        handleCollider.enabled = false;
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -39,6 +40,7 @@ public class DoorKnob : MonoBehaviour
     public void ShowUI() {
         doorUIAnim.gameObject.SetActive(true);
         doorUIAnim.SetBool("disable", false);
+        handleCollider.enabled = true;
     }
     public void HideUI()
     {
@@ -50,7 +52,6 @@ public class DoorKnob : MonoBehaviour
         doorAnim.SetTrigger("open");
         doorUIAnim.SetBool("disable", true);
         audioSource.PlayOneShot(doorOpenSound);
-        //SimpleDirectorController.Instance.PlayTrack(0);
         doorOpen = true;
         handleCollider.enabled = false;
     }

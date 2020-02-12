@@ -168,7 +168,7 @@ public class Player : MonoBehaviour
                 r_indexTipCollider.radius = 0.01f;
                 r_indexTipCollider.center = new Vector3(0.01f, 0, 0);
                 fingerTipObj.tag = "FingerTip";
-                fingerTipObj.layer = LayerMask.NameToLayer("Player");
+                fingerTipObj.layer = LayerMask.NameToLayer("FingerTip");
             }
         }
         

@@ -37,15 +37,24 @@ public class PlayerMoveEvent : SceneEvent
         delayTimer = 0;
         velocity = Vector3.zero;
         SceneAssetManager.GetAssetComponent<Transform>(positionName, out targetTransform);
+
+        LookMarker lookMarker = targetTransform.GetComponentInChildren<LookMarker>();
+        if (lookMarker != null)
+        {
+            lookPoint = lookMarker.gameObject;
+            lookPoint.SetActive(false);
+        }
     }
 
     public override void StartEvent()
     {
         InitEvent();
-        if (targetTransform == null) {
+        if (targetTransform == null)
+        {
             passEventCondition = true;
         }
-        else{
+        else
+        {
             moveSpeed = Mathf.Max(0.01f, moveSpeed);
             delayTimer = 0;
             velocity = Vector3.zero;
@@ -53,8 +62,14 @@ public class PlayerMoveEvent : SceneEvent
             toPos = GetTargetPosition(targetTransform);
             pastFollowerPosition = Player.Instance.transform.position;
             pastTargetPosition = targetTransform.position;
-
-            CreateMarker();
+            if (lookPoint == null)
+            {
+                CreateMarker();
+            }
+            else
+            {
+                lookPoint.SetActive(true);
+            }
         }
     }
 
@@ -72,7 +87,6 @@ public class PlayerMoveEvent : SceneEvent
 
                 if (Vector3.Distance(Player.Instance.transform.position, toPos) < 0.05f)
                 {
-                    //Player.Instance.transform.position = toPos;
                     isMove = false;
                 }
             }
@@ -125,14 +139,9 @@ public class PlayerMoveEvent : SceneEvent
         Vector3 additionPos = targetTransform.position - Camera.main.transform.position;
         additionPos.y = 0;
         lookPoint.transform.position = lookPointPos + additionPos.normalized * 1f;
-        
-        /*curLookPoint = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        curLookPoint.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);*/
     }
 
     private bool IsPlayerLookAtTarget() {
-       // curLookPoint.transform.position = Camera.main.transform.position+ Camera.main.transform.forward * 2f;
-
         RaycastHit[] hits = Physics.RaycastAll(Camera.main.transform.position, Camera.main.transform.forward, 5f, layerMask);
         if (hits!=null && hits.Length>0)
         {

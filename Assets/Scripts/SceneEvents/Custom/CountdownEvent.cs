@@ -30,7 +30,7 @@ public class CountdownEvent : SceneEvent
 
         if (countdownUIText != null)
         {
-            countdownUIText.text = countDown.ToString();
+            countdownUIText.text = Mathf.FloorToInt(countDown).ToString();
             Debug.Log("start CountdownEvent");
         }
     }
@@ -46,7 +46,7 @@ public class CountdownEvent : SceneEvent
     public override void UpdateEvent()
     {
         countDown-=Time.deltaTime;
-        countdownUIText.text = Mathf.RoundToInt(countDown).ToString();
+        countdownUIText.text = Mathf.FloorToInt(countDown).ToString();
 
         if (countDown <= 0)
         {

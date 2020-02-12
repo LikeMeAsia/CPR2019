@@ -187,11 +187,11 @@ public class Game_Manager : MonoBehaviour
         float maxScore = (rhythmController.perfectHit + rhythmController.goodHit + rhythmController.missHit) * 2000f;
         float rankInPercentage = totalScore / maxScore;
         totalScoreText.text = Mathf.FloorToInt(totalScore).ToString();
-        comboText.text = rhythmController.maxCombo.ToString();
+        comboText.text = "x"+rhythmController.maxCombo.ToString();
         perfectHitText.text = rhythmController.perfectHit.ToString();
         goodHitText.text = rhythmController.goodHit.ToString();
         missText.text = rhythmController.missHit.ToString();
-        hpDadtextscr.text = Mathf.RoundToInt(curhpDad / maxHp) + "%";
+        hpDadtextscr.text = Mathf.RoundToInt(curhpDad * 100f / maxHp) + "%";
 
         if (rankInPercentage >= 0.8f)
         {
