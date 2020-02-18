@@ -189,7 +189,7 @@ namespace cakeslice
                 {
                     LayerMask l = sourceCamera.cullingMask;
 
-                    if(outline != null && l == (l | (1 << outline.gameObject.layer)))
+                    if(outline != null && outline.Renderer!=null && l == (l | (1 << outline.gameObject.layer)))
                     {
                         for(int v = 0; v < outline.Renderer.sharedMaterials.Length; v++)
                         {

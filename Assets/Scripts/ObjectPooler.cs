@@ -41,7 +41,7 @@ public class ObjectPooler : MonoBehaviour
             for (int i = 0; i < pool.size; i++) //make sure we add all the objects we wanna add to the queue
             {
                 GameObject goingToCreateObject = CreateObject(pool);
-                Debug.Log("Create [" + pool.poolTag + "]");
+                //Debug.Log("Create [" + pool.poolTag + "]");
                 goingToCreateObject.SetActive(false);
                 //objectQueue.Enqueue(goingToCreateObject);
             }
@@ -120,19 +120,5 @@ public class ObjectPooler : MonoBehaviour
 
         return spawnObject;
     }
-
-    /* public bool IteratePoolsWithTag(string tag, out Pool retPool)
-     {
-         retPool = new Pool();
-         for (int i = 0; i < pools.Count; i++)
-         {
-             if (pools[i].poolTag == tag)
-             {
-                 retPool = pools[i];
-                 return true;
-             }
-         }
-         return false;
-     }*/
-
+    
 }

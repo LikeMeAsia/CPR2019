@@ -19,10 +19,10 @@ public class SetActiveEvent : SceneEvent
         {
             switch (type) {
                 case ActiveType.ToActive:
-                    target.gameObject.SetActive(false);
+                    //target.gameObject.SetActive(false);
                     break;
                 case ActiveType.ToDeactive:
-                    target.gameObject.SetActive(true);
+                    //target.gameObject.SetActive(true);
                     break;
             }
         }

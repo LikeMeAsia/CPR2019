@@ -67,7 +67,7 @@ public class ShakeShoulder : MonoBehaviour
     }
 
     private void SetActiveShoulderInput(bool value) {
-        Debug.Log("shake UI"+ value);
+        //Debug.Log("shake UI"+ value);
         enableVibration = value;
         foreach (Collider col in shoulderColliders)
         {

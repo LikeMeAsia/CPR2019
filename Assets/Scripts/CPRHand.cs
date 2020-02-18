@@ -16,6 +16,9 @@ public class CPRHand : MonoBehaviour
     public Vector3 centerPoint;
     public Collider cprHandCollider;
 
+    public Transform rHandTrack;
+    public Transform lHandTrack;
+
     public GameObject l_cprHandUnderObj;
     public GameObject r_cprHandUnderObj;
     public HandsState handsState;
@@ -29,7 +32,7 @@ public class CPRHand : MonoBehaviour
     public bool r_handDown;
 
     [Header("Parameters")]
-    public float minDist = 0.3f;
+    public float minDist = 0.15f;
     public float r_rot;
     public float l_rot;
     public Vector2 r_rotationHandThreshold = new Vector2(-30f, 30f);
@@ -50,17 +53,17 @@ public class CPRHand : MonoBehaviour
 
     private void CheckHandSnapping()
     {
-        handsNear = Vector3.Distance(Player.Instance.l_hand.transform.position, Player.Instance.r_hand.transform.position) <= minDist;
-        l_rot = Player.Instance.l_hand.transform.eulerAngles.z;
-        r_rot = Player.Instance.r_hand.transform.eulerAngles.z;
+        handsNear = Vector3.Distance(lHandTrack.position, rHandTrack.position) <= minDist;
+        l_rot = lHandTrack.eulerAngles.z;
+        r_rot = rHandTrack.eulerAngles.z;
         l_handDown = IsBetween(l_rot, l_rotationHandThreshold.x, l_rotationHandThreshold.y);
         r_handDown = IsBetween(r_rot, r_rotationHandThreshold.x, r_rotationHandThreshold.y);
 
-        if (Player.Instance.l_hand.position.y < Player.Instance.r_hand.position.y && Player.Instance.r_ful)
+        if (lHandTrack.position.y < rHandTrack.position.y && Player.Instance.r_ful)
         {
             handsState = HandsState.LeftHandUnder;
         }
-        else if (Player.Instance.l_hand.position.y > Player.Instance.r_hand.position.y && Player.Instance.l_ful)
+        else if (lHandTrack.position.y > rHandTrack.position.y && Player.Instance.l_ful)
         {
             handsState = HandsState.RightHandUnder;
         }
@@ -73,30 +76,30 @@ public class CPRHand : MonoBehaviour
     {
         if (snaping)
         {
-            centerPoint = (Player.Instance.l_hand.position + Player.Instance.r_hand.position) / 2;
-            transform.position = centerPoint;
+            centerPoint = (lHandTrack.position + rHandTrack.position) / 2;
             transform.rotation = Quaternion.identity;
-            Player.Instance.r_hand.gameObject.SetActive(false);
-            Player.Instance.l_hand.gameObject.SetActive(false);
+            Player.Instance.SetEnabledHands(false);
             cprHandCollider.enabled = true;
 
             if (handsState == HandsState.LeftHandUnder)
             {
                 l_cprHandUnderObj.SetActive(true);
                 r_cprHandUnderObj.SetActive(false);
-                transform.rotation = Player.Instance.l_hand.transform.rotation;
+                transform.rotation = lHandTrack.rotation;
+                centerPoint.y = lHandTrack.position.y;
+                transform.position = centerPoint;
             }
             else if (handsState == HandsState.RightHandUnder)
             {
                 r_cprHandUnderObj.SetActive(true);
                 l_cprHandUnderObj.SetActive(false);
-                transform.rotation = Player.Instance.r_hand.transform.rotation;
+                centerPoint.y = rHandTrack.position.y;
+                transform.rotation = rHandTrack.rotation;
             }
         }
         else
         {
-            Player.Instance.r_hand.gameObject.SetActive(true);
-            Player.Instance.l_hand.gameObject.SetActive(true);
+            Player.Instance.SetEnabledHands(true);
             DisabledSnapping();
         }
 

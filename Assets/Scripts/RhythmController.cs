@@ -284,6 +284,12 @@ public class RhythmController : MonoBehaviour
         beatCanvas.gameObject.SetActive(value);
     }
 
+    public void ForSetBeatColliderOnly(bool value)
+    {
+        beatCollider.enabled = value;
+
+    }
+
     public void SongIsPlaying()
     {
         if (!mainAudioSource.isPlaying)
