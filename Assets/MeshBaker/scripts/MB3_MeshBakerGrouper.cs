@@ -40,19 +40,21 @@ public class MB3_MeshBakerGrouper : MonoBehaviour, MB_IMeshBakerSettingsHolder
         }
     }
 
-    public void GetMeshBakerSettingsAsSerializedProperty(out string propertyName, out UnityEngine.Object targetObj)
+#if UNITY_EDITOR
+    public SerializedProperty GetMeshBakerSettingsAsSerializedProperty()
     {
         if (meshBakerSettingsAsset == null)
         {
-            targetObj = this;
-            propertyName = "meshBakerSettings";
+            UnityEditor.SerializedObject so = new UnityEditor.SerializedObject(this);
+            return so.FindProperty("meshBakerSettings");
         }
         else
         {
-            targetObj = meshBakerSettingsAsset;
-            propertyName = "data";
+            UnityEditor.SerializedObject so = new UnityEditor.SerializedObject(meshBakerSettingsAsset);
+            return so.FindProperty("data");
         }
     }
+#endif
 
 
     void OnDrawGizmosSelected()

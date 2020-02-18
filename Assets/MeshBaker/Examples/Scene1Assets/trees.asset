@@ -8,21 +8,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 499468296, guid: 0f20771f34eefe549a7337a23c679743, type: 3}
+  m_Script: {fileID: 11500000, guid: 7d41887b1546f5c44ab54e7e65aad3bc, type: 3}
   m_Name: trees
   m_EditorClassIdentifier: 
   version: 3252
-  resultType: 0
   materialsAndUVRects:
   - material: {fileID: 2100000, guid: 071cd512bd11410ba00004694ada8c59, type: 2}
     atlasRect:
       serializedVersion: 2
-      x: 0.001953125
-      y: 0.001953125
-      width: 0.99609375
-      height: 0.99609375
+      x: 0
+      y: 0
+      width: 1
+      height: 1
     srcObjName: tree
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2
@@ -48,5 +46,4 @@ MonoBehaviour:
     considerMeshUVs: 0
     sourceMaterials:
     - {fileID: 2100000, guid: 071cd512bd11410ba00004694ada8c59, type: 2}
-  resultMaterialsTexArray: []
   doMultiMaterial: 0

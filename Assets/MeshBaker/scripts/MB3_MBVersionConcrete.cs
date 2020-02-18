@@ -12,7 +12,7 @@ namespace DigitalOpus.MB.Core
     {
         public string version()
         {
-            return "3.29.0";
+            return "3.28.1";
         }
 
         public int GetMajorVersion()

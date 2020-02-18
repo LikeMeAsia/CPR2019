@@ -16,6 +16,7 @@
             #pragma fragment frag
             // make fog work
             #pragma multi_compile_fog
+			#pragma target 3.5
 
             #include "UnityCG.cginc"
 

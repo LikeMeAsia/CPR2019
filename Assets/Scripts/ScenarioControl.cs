@@ -39,7 +39,7 @@ public class ScenarioControl : MonoBehaviour
 
     void Update()
     {
-        if (OVRInput.GetUp(OVRInput.RawButton.Start)) {
+        if (OVRInput.GetUp(OVRInput.RawButton.Start) || Input.GetKeyUp(KeyCode.S)) {
             skip = true;
         }
 

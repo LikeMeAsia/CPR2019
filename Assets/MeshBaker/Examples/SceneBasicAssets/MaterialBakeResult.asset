@@ -8,7 +8,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 499468296, guid: 0f20771f34eefe549a7337a23c679743, type: 3}
+  m_Script: {fileID: 11500000, guid: 7d41887b1546f5c44ab54e7e65aad3bc, type: 3}
   m_Name: MaterialBakeResult
   m_EditorClassIdentifier: 
   version: 3252
@@ -17,12 +17,11 @@ MonoBehaviour:
   - material: {fileID: 2100000, guid: feccc9b89c26805468d1bdcb46344626, type: 2}
     atlasRect:
       serializedVersion: 2
-      x: 0.5097656
-      y: 0.5058594
-      width: 0.25
-      height: 0.25
+      x: 0.25195312
+      y: 0.5019531
+      width: 0.24609375
+      height: 0.24609375
     srcObjName: Cube1
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2
@@ -49,9 +48,8 @@ MonoBehaviour:
       x: 0.001953125
       y: 0.001953125
       width: 0.75
-      height: 0.5
+      height: 0.49609375
     srcObjName: Cube2
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2
@@ -75,12 +73,11 @@ MonoBehaviour:
   - material: {fileID: 2100000, guid: 4cc14f2d300d0c445b1ff0006e0737c8, type: 2}
     atlasRect:
       serializedVersion: 2
-      x: 0.25585938
-      y: 0.5058594
-      width: 0.25
-      height: 0.25
+      x: 0.001953125
+      y: 0.7519531
+      width: 0.24609375
+      height: 0.24609375
     srcObjName: Cube3
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2
@@ -105,11 +102,10 @@ MonoBehaviour:
     atlasRect:
       serializedVersion: 2
       x: 0.001953125
-      y: 0.5058594
-      width: 0.25
-      height: 0.25
+      y: 0.5019531
+      width: 0.24609375
+      height: 0.24609375
     srcObjName: Cube4
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2

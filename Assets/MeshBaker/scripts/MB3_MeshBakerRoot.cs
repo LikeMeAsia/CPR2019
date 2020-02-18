@@ -15,6 +15,8 @@ using DigitalOpus.MB.Core;
 /// </summary>
 public abstract class MB3_MeshBakerRoot : MonoBehaviour {
 
+    public static bool DO_INTEGRITY_CHECKS = false;
+
     /**
      * Transparent shaders often require objects to be sorted along 
      */

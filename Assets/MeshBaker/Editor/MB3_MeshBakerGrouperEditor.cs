@@ -68,11 +68,7 @@ namespace DigitalOpus.MB.MBEditor
             if (mbSettingsAsset.objectReferenceValue != null)
             {
                 meshBakerSettingsExternal = new MB_MeshBakerSettingsEditor();
-                UnityEngine.Object targetObj;
-                string propertyName;
-                ((MB3_MeshCombinerSettings)mbSettingsAsset.objectReferenceValue).GetMeshBakerSettingsAsSerializedProperty(out propertyName, out targetObj);
-                SerializedProperty meshBakerSettings = new SerializedObject(targetObj).FindProperty(propertyName);
-                meshBakerSettingsExternal.OnEnable(meshBakerSettings);
+                meshBakerSettingsExternal.OnEnable(((MB3_MeshCombinerSettings)mbSettingsAsset.objectReferenceValue).GetMeshBakerSettingsAsSerializedProperty());
             }
         }
 
@@ -311,10 +307,8 @@ namespace DigitalOpus.MB.MBEditor
             {
                 if (meshBakerSettingsExternal == null || oldObjVal != mbSettingsAsset.objectReferenceValue)
                 {
-                    UnityEngine.Object targetObj;
-                    string propertyName;
-                    ((MB3_MeshCombinerSettings)mbSettingsAsset.objectReferenceValue).GetMeshBakerSettingsAsSerializedProperty(out propertyName, out targetObj);
-                    SerializedProperty meshBakerSettings = new SerializedObject(targetObj).FindProperty(propertyName);
+                    meshBakerSettingsExternal = new MB_MeshBakerSettingsEditor();
+                    meshBakerSettingsExternal.OnEnable(((MB3_MeshCombinerSettings)mbSettingsAsset.objectReferenceValue).GetMeshBakerSettingsAsSerializedProperty());
                 }
 
                 meshBakerSettingsExternal.DrawGUI(((MB3_MeshCombinerSettings)mbSettingsAsset.objectReferenceValue).data, false, doingTextureArrays);

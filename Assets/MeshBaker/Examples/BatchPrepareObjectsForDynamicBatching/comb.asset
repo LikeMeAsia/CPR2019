@@ -8,11 +8,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 499468296, guid: 0f20771f34eefe549a7337a23c679743, type: 3}
+  m_Script: {fileID: 11500000, guid: 7d41887b1546f5c44ab54e7e65aad3bc, type: 3}
   m_Name: comb
   m_EditorClassIdentifier: 
   version: 3252
-  resultType: 0
   materialsAndUVRects:
   - material: {fileID: 2100000, guid: 6b6b8ddc63cc3a048a48a8e66837be11, type: 2}
     atlasRect:
@@ -22,7 +21,6 @@ MonoBehaviour:
       width: 0.001953125
       height: 0.001953125
     srcObjName: Sword
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2
@@ -51,7 +49,6 @@ MonoBehaviour:
       width: 0.375
       height: 0.25
     srcObjName: Cube
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2
@@ -80,7 +77,6 @@ MonoBehaviour:
       width: 0.4345703
       height: 0.4345703
     srcObjName: Platform
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2
@@ -109,7 +105,6 @@ MonoBehaviour:
       width: 0.5
       height: 0.5
     srcObjName: rooT
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2
@@ -138,5 +133,4 @@ MonoBehaviour:
     - {fileID: 2100000, guid: d76898e20fbb4d345b4606f98f5307f4, type: 2}
     - {fileID: 2100000, guid: fc0aa96dcd117aa1a00026ba4ada8c59, type: 2}
     - {fileID: 2100000, guid: 0abcbdfebcf554547998a4df82cae2bc, type: 2}
-  resultMaterialsTexArray: []
   doMultiMaterial: 0
