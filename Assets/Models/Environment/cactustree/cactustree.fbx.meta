@@ -1,9 +1,14 @@
 fileFormatVersion: 2
 guid: d5508448098640745a51ed4463e79c96
 ModelImporter:
-  serializedVersion: 25
+  serializedVersion: 26
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: cactustree_mat2
+    second: {fileID: 2100000, guid: b6c2f0abcbed0d344b2aaf240add40ef, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -38,6 +43,7 @@ ModelImporter:
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 0
