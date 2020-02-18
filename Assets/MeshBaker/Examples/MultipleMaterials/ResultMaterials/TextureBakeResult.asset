@@ -8,11 +8,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 499468296, guid: 0f20771f34eefe549a7337a23c679743, type: 3}
+  m_Script: {fileID: 11500000, guid: 7d41887b1546f5c44ab54e7e65aad3bc, type: 3}
   m_Name: TextureBakeResult
   m_EditorClassIdentifier: 
   version: 3252
-  resultType: 0
   materialsAndUVRects:
   - material: {fileID: 2100000, guid: d483a780cfcd6924a94f956c1adbaaab, type: 2}
     atlasRect:
@@ -22,7 +21,6 @@ MonoBehaviour:
       width: 1
       height: 1
     srcObjName: House
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2
@@ -51,7 +49,6 @@ MonoBehaviour:
       width: 0.3075995
       height: 0.9864865
     srcObjName: TreeFoliage
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2
@@ -80,7 +77,6 @@ MonoBehaviour:
       width: 0.6875754
       height: 0.996139
     srcObjName: Bush
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2
@@ -109,7 +105,6 @@ MonoBehaviour:
       width: 0.9977064
       height: 0.49805826
     srcObjName: House
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2
@@ -138,7 +133,6 @@ MonoBehaviour:
       width: 0.9977064
       height: 0.49805826
     srcObjName: House
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2
@@ -167,7 +161,6 @@ MonoBehaviour:
       width: 0.49804688
       height: 0.9961165
     srcObjName: House
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2
@@ -196,7 +189,6 @@ MonoBehaviour:
       width: 0.49804688
       height: 0.9961165
     srcObjName: House
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2
@@ -225,7 +217,6 @@ MonoBehaviour:
       width: 0.9988088
       height: 0.19664268
     srcObjName: House
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2
@@ -254,7 +245,6 @@ MonoBehaviour:
       width: 0.64204884
       height: 0.30095923
     srcObjName: House
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2
@@ -283,7 +273,6 @@ MonoBehaviour:
       width: 0.9988088
       height: 0.19664268
     srcObjName: House
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2
@@ -312,7 +301,6 @@ MonoBehaviour:
       width: 0.64204884
       height: 0.30095923
     srcObjName: House
-    textureArraySliceIdx: -1
     allPropsUseSameTiling: 1
     allPropsUseSameTiling_sourceMaterialTiling:
       serializedVersion: 2
@@ -360,5 +348,4 @@ MonoBehaviour:
     - {fileID: 2100000, guid: 69b5721e37860ab4199ddb2d6684c64b, type: 2}
     - {fileID: 2100000, guid: f0788963e7a9ac4418742439b8707317, type: 2}
     - {fileID: 2100000, guid: 6e3b019fd01df0e4a963f2f27a73745c, type: 2}
-  resultMaterialsTexArray: []
   doMultiMaterial: 1

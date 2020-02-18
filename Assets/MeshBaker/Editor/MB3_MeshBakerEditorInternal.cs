@@ -341,11 +341,7 @@ namespace DigitalOpus.MB.MBEditor
                     {
                         settingsHolder.objectReferenceValue = settingsHolderComponent;
                         meshBakerSettingsExternal = new MB_MeshBakerSettingsEditor();
-                        UnityEngine.Object targetObj;
-                        string propertyName;
-                        itf.GetMeshBakerSettingsAsSerializedProperty(out propertyName, out targetObj);
-                        SerializedProperty meshBakerSettings = new SerializedObject(targetObj).FindProperty(propertyName);
-                        meshBakerSettingsExternal.OnEnable(meshBakerSettings);
+                        meshBakerSettingsExternal.OnEnable(itf.GetMeshBakerSettingsAsSerializedProperty());
                     }
                 }
                 else
@@ -366,11 +362,7 @@ namespace DigitalOpus.MB.MBEditor
                 {
                     settingsHolder.objectReferenceValue = obj;
                     meshBakerSettingsExternal = new MB_MeshBakerSettingsEditor();
-                    UnityEngine.Object targetObj;
-                    string propertyName;
-                    ((MB_IMeshBakerSettingsHolder)obj).GetMeshBakerSettingsAsSerializedProperty(out propertyName, out targetObj);
-                    SerializedProperty meshBakerSettings = new SerializedObject(targetObj).FindProperty(propertyName);
-                    meshBakerSettingsExternal.OnEnable(meshBakerSettings);
+                    meshBakerSettingsExternal.OnEnable(((MB_IMeshBakerSettingsHolder)obj).GetMeshBakerSettingsAsSerializedProperty());
                 }
             }
             else
@@ -389,11 +381,7 @@ namespace DigitalOpus.MB.MBEditor
                 if (meshBakerSettingsExternal == null)
                 {
                     meshBakerSettingsExternal = new MB_MeshBakerSettingsEditor();
-                    UnityEngine.Object targetObj;
-                    string propertyName;
-                    ((MB_IMeshBakerSettingsHolder)obj).GetMeshBakerSettingsAsSerializedProperty(out propertyName, out targetObj);
-                    SerializedProperty meshBakerSettings = new SerializedObject(targetObj).FindProperty(propertyName);
-                    meshBakerSettingsExternal.OnEnable(meshBakerSettings);
+                    meshBakerSettingsExternal.OnEnable(((MB_IMeshBakerSettingsHolder)obj).GetMeshBakerSettingsAsSerializedProperty());
                 }
                 meshBakerSettingsExternal.DrawGUI(((MB_IMeshBakerSettingsHolder)settingsHolder.objectReferenceValue).GetMeshBakerSettings(), settingsEnabled, doingTextureArray);
             }

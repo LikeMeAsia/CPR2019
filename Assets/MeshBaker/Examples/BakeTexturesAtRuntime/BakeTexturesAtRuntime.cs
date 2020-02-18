@@ -18,7 +18,7 @@ using DigitalOpus.MB.Core;
 public class BakeTexturesAtRuntime : MonoBehaviour {
 	public GameObject target;
 	float elapsedTime = 0;
-	MB3_TextureCombiner.CreateAtlasesCoroutineResult result = new MB3_TextureCombiner.CreateAtlasesCoroutineResult();
+	MB3_TextureBaker.CreateAtlasesCoroutineResult result = new MB3_TextureBaker.CreateAtlasesCoroutineResult();
 	
 	void OnGUI(){
 		GUILayout.Label("Time to bake textures: " + elapsedTime);
