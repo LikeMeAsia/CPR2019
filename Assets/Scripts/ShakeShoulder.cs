@@ -15,7 +15,7 @@ public class ShakeShoulder : MonoBehaviour
 
     private bool enableVibration;
     public float vibrateTime = 0.1f;
-    public float vibrateDelay = 0.1f;
+    public float vibrateDelay = 0.03f;
     private float vibrateTimer = 0.0f;
     private bool canVibrateOnce = false;
 

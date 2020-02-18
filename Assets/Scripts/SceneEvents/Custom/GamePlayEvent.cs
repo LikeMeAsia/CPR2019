@@ -55,7 +55,7 @@ public class GamePlayEvent : SceneEvent
                 gameManager.DisableBeatUI();
                 gameManager.StopGamePlayAndUI();
                 gameManager.DefaultDadShirtColour();
-                if (gameManager.curhpDad > 50) {
+                if (gameManager.curhpDad >= 50) {
                     SimpleDirectorController.Instance.PlayTrack(goodEndingTrack);
                 }
                 else {

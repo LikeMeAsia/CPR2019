@@ -109,9 +109,9 @@ public class Game_Manager : MonoBehaviour
         {
             curhpDad = 0;
         }
-        else if (curhpDad >= 120.0f)
+        else if (curhpDad >= maxHp)
         {
-            curhpDad = 120;
+            curhpDad = maxHp;
         }
         hpBarValue = curhpDad / maxHp;
 
@@ -181,7 +181,7 @@ public class Game_Manager : MonoBehaviour
         perfectHitText.text = rhythmController.perfectHit.ToString();
         goodHitText.text = rhythmController.goodHit.ToString();
         missText.text = rhythmController.missHit.ToString();
-        hpDadtextscr.text = Mathf.RoundToInt(curhpDad / maxHp) + "%";
+        hpDadtextscr.text = Mathf.RoundToInt((curhpDad / maxHp)*100f) + "%";
 
         if (rankInPercentage >= 0.8f)
         {
