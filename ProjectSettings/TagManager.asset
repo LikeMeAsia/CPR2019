@@ -29,8 +29,8 @@ TagManager:
   - Grabable
   - Tap
   - FingerTip
-  - 
-  - 
+  - Camera/FadeCamera
+  - Camera/FadeOut
   - 
   - 
   - 

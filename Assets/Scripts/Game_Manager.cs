@@ -33,12 +33,8 @@ public class Game_Manager : MonoBehaviour
     public Text missText;
     public Text hpDadtextscr;
     public Image boardImg;
-    public Image header;
-    public Sprite headerWin;
-    public Sprite headerLose;
-    public Image message;
-    public Sprite messageWin;
-    public Sprite messageLose;
+    public GameObject headerWin;
+    public GameObject headerLose;
     public Image rank;
     public Sprite[] rankImg;
 
@@ -193,23 +189,28 @@ public class Game_Manager : MonoBehaviour
         missText.text = rhythmController.missHit.ToString();
         hpDadtextscr.text = Mathf.RoundToInt((curhpDad / maxHp)*100f) + "%";
 
-        if (rankInPercentage >= 0.8f)
+        if (rankInPercentage >= 0.9f)
         {
             rank.sprite = rankImg[0];
-            header.sprite = headerWin;
-            message.sprite = messageWin;
+            headerWin.SetActive(true);
+            headerLose.SetActive(false);
         }
-        else if(rankInPercentage >= 0.5f)
+        else if(rankInPercentage >= 0.7f)
         {
             rank.sprite = rankImg[1];
-            header.sprite = headerWin;
-            message.sprite = messageWin;
+            headerWin.SetActive(true);
+            headerLose.SetActive(false);
+        }
+        else if (rankInPercentage >= 0.5f)
+        {
+            rank.sprite = rankImg[2];
+            headerWin.SetActive(true);
+            headerLose.SetActive(false);
         }
         else
         {
-            rank.sprite = rankImg[2];
-            header.sprite = headerLose;
-            message.sprite = messageLose;
+            headerWin.SetActive(false);
+            headerLose.SetActive(true);
         }
     }
 

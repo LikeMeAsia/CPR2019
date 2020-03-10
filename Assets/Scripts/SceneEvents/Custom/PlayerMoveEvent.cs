@@ -16,7 +16,7 @@ public class PlayerMoveEvent : SceneEvent
 
     [Header("Movement")]
     [SerializeField]
-    private float moveSpeed = 0.1f;
+    private float moveSpeed = 1f;
     private float delayTimer = 0;
     private readonly float smoothTime = 3f;
     private Vector3 velocity;
@@ -26,9 +26,7 @@ public class PlayerMoveEvent : SceneEvent
 
     [SerializeField, Layer]
     private int layerMask=0;
-
-    [SerializeField]
-    private bool waitFinishMove;
+    
 
     public override void InitEvent()
     {
@@ -55,7 +53,6 @@ public class PlayerMoveEvent : SceneEvent
         }
         else
         {
-            moveSpeed = Mathf.Max(0.01f, moveSpeed);
             delayTimer = 0;
             velocity = Vector3.zero;
             isMove = true;
@@ -85,7 +82,7 @@ public class PlayerMoveEvent : SceneEvent
                 pastFollowerPosition = Player.Instance.transform.position;
                 pastTargetPosition = targetTransform.position;
 
-                if (Vector3.Distance(Player.Instance.transform.position, toPos) < 0.05f)
+                if (Vector3.Distance(Player.Instance.transform.position, toPos) < 0.1f)
                 {
                     isMove = false;
                 }
