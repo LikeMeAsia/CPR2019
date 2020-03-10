@@ -1,9 +1,14 @@
 fileFormatVersion: 2
 guid: 89e9c2b2eca6c6d4893699b90b11ac33
 ModelImporter:
-  serializedVersion: 25
+  serializedVersion: 26
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: power_plug_mat
+    second: {fileID: 2100000, guid: 32215db66da5f5d41af4f47e60576be2, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -38,6 +43,7 @@ ModelImporter:
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 0

@@ -99,7 +99,7 @@ public class Phone : MonoBehaviour
         {
             isGrabbed = true;
         }
-        
+        /*
         if (activate && phone_rigidbody.isKinematic && ovrGrabbable != null && ovrGrabbable.grabbedBy != null)
         {
             OVRInput.Controller grabControllerType = ((CustomOVRGrabber)ovrGrabbable.grabbedBy).GetControllerType();
@@ -109,10 +109,17 @@ public class Phone : MonoBehaviour
             ) {
                 Call();
             }
-        }
+        }*/
     }
 
     public void Call() {
+        if (isCalling) return;
+        
+        /*OVRInput.Controller grabControllerType = ((CustomOVRGrabber)ovrGrabbable.grabbedBy).GetControllerType();
+        bool tapHandIsNotGrab = (Player.Instance.l_isPointing && grabControllerType == OVRInput.Controller.RTouch)
+                                || (Player.Instance.r_isPointing && grabControllerType == OVRInput.Controller.LTouch);
+        if (!tapHandIsNotGrab) return;*/
+
         if (phoneButtonClick != null) {
             audioSource.PlayOneShot(phoneButtonClick);
         }

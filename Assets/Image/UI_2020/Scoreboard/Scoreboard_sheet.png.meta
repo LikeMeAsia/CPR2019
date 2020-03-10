@@ -1,0 +1,463 @@
+fileFormatVersion: 2
+guid: 25d83b4b2eb33ca4fa01dcedc020a86e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2149299553502474704
+    second: Scoreboard_board
+  - first:
+      213: 1489951556771306125
+    second: Scoreboard_rank_A
+  - first:
+      213: -635018749092062658
+    second: Scoreboard_rank_B
+  - first:
+      213: 2794250751171707684
+    second: Scoreboard_rank_C
+  - first:
+      213: 3458630596382847244
+    second: Scoreboard_rank_F
+  - first:
+      213: 2896614896475396403
+    second: Scoreboard_rank_bg
+  - first:
+      213: -1342897202888825860
+    second: Scoreboard_badge_success
+  - first:
+      213: 3204019978808374498
+    second: Scoreboard_badge_fail
+  - first:
+      213: -8547288916063506168
+    second: Scoreboard_text_congrats
+  - first:
+      213: -6173458056840567744
+    second: Scoreboard_text_success
+  - first:
+      213: 5800285559411125718
+    second: Scoreboard_text_sorry
+  - first:
+      213: 1605160436166111410
+    second: Scoreboard_text_fail
+  - first:
+      213: 2057796873573315309
+    second: Scoreboard_sheet_55
+  - first:
+      213: 6750044685509356836
+    second: Scoreboard_sheet_56
+  - first:
+      213: 4566634878870532291
+    second: Scoreboard_sheet_57
+  externalObjects: {}
+  serializedVersion: 10
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: -1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Scoreboard_board
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 178
+        width: 581
+        height: 671
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f409cf864339a1a4c8d2c6944e1c8c7a
+      internalID: -2149299553502474704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Scoreboard_rank_A
+      rect:
+        serializedVersion: 2
+        x: 692
+        y: 558
+        width: 154
+        height: 186
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b48509ba279b724d96618c8e39bcac9
+      internalID: 1489951556771306125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Scoreboard_rank_B
+      rect:
+        serializedVersion: 2
+        x: 923
+        y: 561
+        width: 129
+        height: 180
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 87fa8ddd5f9aac742952b771c164c4fe
+      internalID: -635018749092062658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Scoreboard_rank_C
+      rect:
+        serializedVersion: 2
+        x: 1112
+        y: 561
+        width: 168
+        height: 179
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dbd450f8edf9b9948a3e9adf90e65164
+      internalID: 2794250751171707684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Scoreboard_rank_F
+      rect:
+        serializedVersion: 2
+        x: 1381
+        y: 563
+        width: 182
+        height: 174
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04fda3ca6092b4a4f93c957626740dd1
+      internalID: 3458630596382847244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Scoreboard_rank_bg
+      rect:
+        serializedVersion: 2
+        x: 1666
+        y: 563
+        width: 298
+        height: 179
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39e0327a42268de4da80c32d2096a9ee
+      internalID: 2896614896475396403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Scoreboard_badge_success
+      rect:
+        serializedVersion: 2
+        x: 692
+        y: 433
+        width: 246
+        height: 60
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3842ac90856e0aa4bbe83e50bc6a50be
+      internalID: -1342897202888825860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Scoreboard_badge_fail
+      rect:
+        serializedVersion: 2
+        x: 1013
+        y: 434
+        width: 237
+        height: 57
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e210d2c058c6bfd40be770ac39efbdee
+      internalID: 3204019978808374498
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Scoreboard_text_congrats
+      rect:
+        serializedVersion: 2
+        x: 1311
+        y: 433
+        width: 233
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb1e86e87e8391249b01fbb38bbb38d9
+      internalID: -8547288916063506168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Scoreboard_text_success
+      rect:
+        serializedVersion: 2
+        x: 1661
+        y: 422
+        width: 316
+        height: 47
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b7ee291a6063b74cab27f41104b8b4a
+      internalID: -6173458056840567744
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Scoreboard_text_sorry
+      rect:
+        serializedVersion: 2
+        x: 1313
+        y: 351
+        width: 269
+        height: 52
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b55514b97762ac84ab7b52502a5548f5
+      internalID: 5800285559411125718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Scoreboard_text_fail
+      rect:
+        serializedVersion: 2
+        x: 1661
+        y: 343
+        width: 313
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 99772679c7b74aa4c851fbe541e2d0d9
+      internalID: 1605160436166111410
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Scoreboard_sheet_55
+      rect:
+        serializedVersion: 2
+        x: 778
+        y: 264
+        width: 105
+        height: 106
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06742fd2607a61147a2c1f5cd086e7b4
+      internalID: 2057796873573315309
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Scoreboard_sheet_56
+      rect:
+        serializedVersion: 2
+        x: 917
+        y: 265
+        width: 105
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e43587a0731c134083ade26e90115e1
+      internalID: 6750044685509356836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Scoreboard_sheet_57
+      rect:
+        serializedVersion: 2
+        x: 1054
+        y: 265
+        width: 104
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73b72b4b0f2ec8545835c6d60f3346f8
+      internalID: 4566634878870532291
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: fa0ada85f43691841b858c4b9342f267
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
