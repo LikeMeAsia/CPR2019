@@ -218,6 +218,7 @@ namespace DigitalOpus.MB.MBEditor
             }
 
             List<MB3_BatchPrefabBaker.MB3_PrefabBakerRow> newRows = new List<MB3_BatchPrefabBaker.MB3_PrefabBakerRow>();
+            if (prefabBaker.prefabRows == null) prefabBaker.prefabRows = new MB3_BatchPrefabBaker.MB3_PrefabBakerRow[0];
             newRows.AddRange(prefabBaker.prefabRows);
             for (int i = 0; i < newPrefabs.Count; i++)
             {
@@ -302,14 +303,14 @@ namespace DigitalOpus.MB.MBEditor
                         return;
                     }
                 }
-                if (MBVersionEditor.GetPrefabType(pb.prefabRows[i].sourcePrefab) != MB_PrefabType.modelPrefab &&
-                    MBVersionEditor.GetPrefabType(pb.prefabRows[i].sourcePrefab) != MB_PrefabType.prefab)
+                if (MBVersionEditor.GetPrefabType(pb.prefabRows[i].sourcePrefab) != MB_PrefabType.modelPrefabAsset &&
+                    MBVersionEditor.GetPrefabType(pb.prefabRows[i].sourcePrefab) != MB_PrefabType.prefabAsset)
                 {
                     Debug.LogError("Row " + i + " source prefab is not a prefab asset ");
                     return;
                 }
-                if (MBVersionEditor.GetPrefabType(pb.prefabRows[i].resultPrefab) != MB_PrefabType.modelPrefab &&
-                    MBVersionEditor.GetPrefabType(pb.prefabRows[i].resultPrefab) != MB_PrefabType.prefab)
+                if (MBVersionEditor.GetPrefabType(pb.prefabRows[i].resultPrefab) != MB_PrefabType.modelPrefabAsset &&
+                    MBVersionEditor.GetPrefabType(pb.prefabRows[i].resultPrefab) != MB_PrefabType.prefabAsset)
                 {
                     Debug.LogError("Row " + i + " result prefab is not a prefab asset");
                     return;
@@ -317,7 +318,7 @@ namespace DigitalOpus.MB.MBEditor
 
                 GameObject so = (GameObject)Instantiate(pb.prefabRows[i].sourcePrefab);
                 GameObject ro = (GameObject)Instantiate(pb.prefabRows[i].resultPrefab);
-                Renderer[] rs = (Renderer[])so.GetComponentsInChildren<Renderer>();
+                Renderer[] rs = (Renderer[])so.GetComponentsInChildren<Renderer>(true);
 
                 for (int j = 0; j < rs.Length; j++)
                 {
@@ -326,7 +327,7 @@ namespace DigitalOpus.MB.MBEditor
                         sourceMeshes.Add(MB_Utility.GetMesh(rs[j].gameObject));
                     }
                 }
-                rs = (Renderer[])ro.GetComponentsInChildren<Renderer>();
+                rs = ro.GetComponentsInChildren<Renderer>(true);
 
                 for (int j = 0; j < rs.Length; j++)
                 {
@@ -382,7 +383,7 @@ namespace DigitalOpus.MB.MBEditor
             GameObject srcPrefabInstance = GameObject.Instantiate(srcPrefab);
             GameObject targPrefabInstance = GameObject.Instantiate(targetPrefab);
 
-            Renderer[] rs = srcPrefabInstance.GetComponentsInChildren<Renderer>();
+            Renderer[] rs = srcPrefabInstance.GetComponentsInChildren<Renderer>(true);
             if (rs.Length < 1)
             {
                 Debug.LogWarning("Prefab " + pr.sourcePrefab + " does not have a renderer");
@@ -391,7 +392,7 @@ namespace DigitalOpus.MB.MBEditor
                 return;
             }
 
-            Renderer[] sourceRenderers = srcPrefabInstance.GetComponentsInChildren<Renderer>();
+            Renderer[] sourceRenderers = srcPrefabInstance.GetComponentsInChildren<Renderer>(true);
             Dictionary<Mesh, List<ProcessedMeshInfo>> processedMeshesSrcToTargetMap = new Dictionary<Mesh, List<ProcessedMeshInfo>>();
             for (int i = 0; i < sourceRenderers.Length; i++)
             {
@@ -599,15 +600,15 @@ namespace DigitalOpus.MB.MBEditor
             string targetPrefabName = AssetDatabase.GetAssetPath(targetPrefab);
             GameObject prefabInstance = GameObject.Instantiate(srcPrefab);
 
-            Renderer[] rs = prefabInstance.GetComponentsInChildren<Renderer>();
+            Renderer[] rs = prefabInstance.GetComponentsInChildren<Renderer>(true);
             if (rs.Length < 1)
             {
-                Debug.LogWarning("Prefab " + pr.sourcePrefab + " does not have a renderer");
+                Debug.Log("Prefab " + pr.sourcePrefab + " does not have a renderer. Not replacing prefab.");
                 DestroyImmediate(prefabInstance);
                 return;
             }
 
-            Renderer[] sourceRenderers = prefabInstance.GetComponentsInChildren<Renderer>();
+            Renderer[] sourceRenderers = prefabInstance.GetComponentsInChildren<Renderer>(true);
 
             Dictionary<Mesh, List<ProcessedMeshInfo>> processedMeshesSrcToTargetMap = new Dictionary<Mesh, List<ProcessedMeshInfo>>();
             for (int i = 0; i < sourceRenderers.Length; i++)
@@ -958,7 +959,7 @@ namespace DigitalOpus.MB.MBEditor
             return true;
         }
 
-        private static Transform FindCorrespondingTransform(Transform srcRoot, Transform srcChild,
+        internal static Transform FindCorrespondingTransform(Transform srcRoot, Transform srcChild,
                                              Transform targRoot)
         {
             if (srcRoot == srcChild) return targRoot;

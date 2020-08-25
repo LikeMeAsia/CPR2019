@@ -208,13 +208,21 @@ namespace DigitalOpus.MB.Core
             }
         }
 
-        private static IEnumerator _CreateAtlasesCoroutineSingleResultMaterial(int resMatIdx, MB_TextureArrayResultMaterial bakedMatsAndSlicesResMat, MB_MultiMaterialTexArray resMatConfig, MB3_TextureBaker tb, MB3_TextureCombiner combiner, ProgressUpdateDelegate progressInfo, MB3_TextureBaker.CreateAtlasesCoroutineResult coroutineResult, bool saveAtlasesAsAssets = false, MB2_EditorMethodsInterface editorMethods = null, float maxTimePerFrame = .01f)
+        internal static IEnumerator _CreateAtlasesCoroutineSingleResultMaterial(int resMatIdx, 
+                            MB_TextureArrayResultMaterial bakedMatsAndSlicesResMat, 
+                            MB_MultiMaterialTexArray resMatConfig, 
+                            List<GameObject> objsToMesh,
+                            MB3_TextureCombiner combiner,
+                            MB_TextureArrayFormatSet[] textureArrayOutputFormats,
+                            MB_MultiMaterialTexArray[] resultMaterialsTexArray,
+                            List<ShaderTextureProperty> customShaderProperties,
+                            ProgressUpdateDelegate progressInfo,
+                            MB3_TextureCombiner.CreateAtlasesCoroutineResult coroutineResult, 
+                            bool saveAtlasesAsAssets = false, 
+                            MB2_EditorMethodsInterface editorMethods = null, 
+                            float maxTimePerFrame = .01f)
         {
-            MB2_LogLevel LOG_LEVEL = tb.LOG_LEVEL;
-            MB_TextureArrayFormatSet[] textureArrayOutputFormats = tb.textureArrayOutputFormats;
-            MB_MultiMaterialTexArray[] resultMaterialsTexArray = tb.resultMaterialsTexArray;
-            List<ShaderTextureProperty> customShaderProperties = tb.customShaderProperties;
-            
+            MB2_LogLevel LOG_LEVEL = combiner.LOG_LEVEL;
 
             if (LOG_LEVEL >= MB2_LogLevel.debug) Debug.Log("Baking atlases for result material " + resMatIdx + " num slices:" + resMatConfig.slices.Count);
             // Each result material can be one set of slices per textureProperty. Each slice can be an atlas.
@@ -236,7 +244,7 @@ namespace DigitalOpus.MB.Core
                     List<Material> usedMats = new List<Material>();
                     slicesConfig[sliceIdx].GetAllUsedMaterials(usedMats);
 
-                    yield return combiner.CombineTexturesIntoAtlasesCoroutine(progressInfo, sliceAtlasesAndRectOutput, resMatToPass, slicesConfig[sliceIdx].GetAllUsedRenderers(tb.objsToMesh), usedMats, editorMethods, coroutineResult2, maxTimePerFrame,
+                    yield return combiner.CombineTexturesIntoAtlasesCoroutine(progressInfo, sliceAtlasesAndRectOutput, resMatToPass, slicesConfig[sliceIdx].GetAllUsedRenderers(objsToMesh), usedMats, editorMethods, coroutineResult2, maxTimePerFrame,
                                                 onlyPackRects: false, splitAtlasWhenPackingIfTooBig: false);
                     coroutineResult.success = coroutineResult2.success;
                     if (!coroutineResult.success)
@@ -307,7 +315,7 @@ namespace DigitalOpus.MB.Core
 
 
                 MB3_TextureCombinerNonTextureProperties textureBlender = null;
-                textureBlender = new MB3_TextureCombinerNonTextureProperties(LOG_LEVEL, tb.considerNonTextureProperties);
+                textureBlender = new MB3_TextureCombinerNonTextureProperties(LOG_LEVEL, combiner.considerNonTextureProperties);
                 textureBlender.LoadTextureBlendersIfNeeded(resMatConfig.combinedMaterial);
                 textureBlender.AdjustNonTextureProperties(resMatConfig.combinedMaterial, texPropertyNames, editorMethods);
 
@@ -318,7 +326,7 @@ namespace DigitalOpus.MB.Core
                     editorMethods.Clear();
 
                     MB_TextureArrays.TexturePropertyData texPropertyData = new MB_TextureArrays.TexturePropertyData();
-                    MB_TextureArrays.FindBestSizeAndMipCountAndFormatForTextureArrays(texPropertyNames, tb.maxAtlasSize, textureArrayFormatSet, bakedMatsAndSlicesResMat.slices, texPropertyData);
+                    MB_TextureArrays.FindBestSizeAndMipCountAndFormatForTextureArrays(texPropertyNames, combiner.maxAtlasSize, textureArrayFormatSet, bakedMatsAndSlicesResMat.slices, texPropertyData);
 
                     // Create textures we might need if they don't exist.
                     {
@@ -397,109 +405,6 @@ namespace DigitalOpus.MB.Core
                     editorMethods.DestroyAsset(temporaryTextureAssets[i]);
                 }
                 temporaryTextureAssets.Clear();
-            }
-        }
-        internal static IEnumerator _CreateAtlasesCoroutineTextureArray(MB3_TextureBaker tb, MB3_TextureCombiner combiner, ProgressUpdateDelegate progressInfo, MB3_TextureBaker.CreateAtlasesCoroutineResult coroutineResult, bool saveAtlasesAsAssets = false, MB2_EditorMethodsInterface editorMethods = null, float maxTimePerFrame = .01f)
-        {
-            MB_TextureArrayResultMaterial[] bakedMatsAndSlices = null;
-
-            // Validate the formats
-            if (tb.textureArrayOutputFormats == null || tb.textureArrayOutputFormats.Length == 0)
-            {
-                Debug.LogError("No Texture Array Output Formats. There must be at least one entry.");
-                coroutineResult.isFinished = true;
-                yield break;
-            }
-
-            for (int i = 0; i < tb.textureArrayOutputFormats.Length; i++)
-            {
-                if (!tb.textureArrayOutputFormats[i].ValidateTextureImporterFormatsExistsForTextureFormats(editorMethods, i))
-                {
-                    Debug.LogError("Could not map the selected texture format to a Texture Importer Format. Safest options are ARGB32, or RGB24.");
-                    coroutineResult.isFinished = true;
-                    yield break;
-                }
-            }
-
-            for (int resMatIdx = 0; resMatIdx < tb.resultMaterialsTexArray.Length; resMatIdx++)
-            {
-                MB_MultiMaterialTexArray textureArraySliceConfig = tb.resultMaterialsTexArray[resMatIdx];
-                if (textureArraySliceConfig.combinedMaterial == null)
-                {
-                    Debug.LogError("Material is null for Texture Array Slice Configuration: " + resMatIdx + ".");
-                    coroutineResult.isFinished = true;
-                    yield break;
-                }
-
-
-                List<MB_TexArraySlice> slices = textureArraySliceConfig.slices;
-                for (int sliceIdx = 0; sliceIdx < slices.Count; sliceIdx++)
-                {
-                    for (int srcMatIdx = 0; srcMatIdx < slices[sliceIdx].sourceMaterials.Count; srcMatIdx++)
-                    {
-                        MB_TexArraySliceRendererMatPair sourceMat = slices[sliceIdx].sourceMaterials[srcMatIdx];
-                        if (sourceMat.sourceMaterial == null)
-                        {
-                            Debug.LogError("Source material is null for Texture Array Slice Configuration: " + resMatIdx + " slice: " + sliceIdx);
-                            coroutineResult.isFinished = true;
-                            yield break;
-                        }
-
-                        if (slices[sliceIdx].considerMeshUVs)
-                        {
-                            if (sourceMat.renderer == null)
-                            {
-                                Debug.LogError("Renderer is null for Texture Array Slice Configuration: " + resMatIdx + " slice: " + sliceIdx + ". If considerUVs is enabled then a renderer must be supplied for each source material. The same source material can be used multiple times.");
-                                coroutineResult.isFinished = true;
-                                yield break;
-                            }
-                        } else
-                        {
-                            // TODO check for duplicate source mats.
-                        }
-                    }
-                }
-            }
-
-            for (int resMatIdx = 0; resMatIdx < tb.resultMaterialsTexArray.Length; resMatIdx++)
-            {
-                MB_MultiMaterialTexArray textureArraySliceConfig = tb.resultMaterialsTexArray[resMatIdx];
-            }
-
-            // initialize structure to store results. For texture arrays the structure is two layers deep.
-            // First layer is resultMaterial / submesh (each result material can use a different shader)
-            // Second layer is a set of TextureArrays for the TextureProperties on that result material.
-                int numResultMats = tb.resultMaterialsTexArray.Length;
-            bakedMatsAndSlices = new MB_TextureArrayResultMaterial[numResultMats];
-            for (int resMatIdx = 0; resMatIdx < bakedMatsAndSlices.Length; resMatIdx++)
-            {
-                bakedMatsAndSlices[resMatIdx] = new MB_TextureArrayResultMaterial();
-                int numSlices = tb.resultMaterialsTexArray[resMatIdx].slices.Count;
-                MB_AtlasesAndRects[] slices = bakedMatsAndSlices[resMatIdx].slices = new MB_AtlasesAndRects[numSlices];
-                for (int j = 0; j < numSlices; j++) slices[j] = new MB_AtlasesAndRects();
-            }
-
-            // Some of the slices will be atlases (more than one atlas per slice).
-            // Do the material combining for these. First loop over the result materials (1 per submeshes).
-            for (int resMatIdx = 0; resMatIdx < bakedMatsAndSlices.Length; resMatIdx++)
-            {
-                yield return _CreateAtlasesCoroutineSingleResultMaterial(resMatIdx, bakedMatsAndSlices[resMatIdx], tb.resultMaterialsTexArray[resMatIdx],
-                    tb, combiner, progressInfo, coroutineResult, saveAtlasesAsAssets, editorMethods, maxTimePerFrame);
-                if (!coroutineResult.success) yield break;
-            }
-
-            if (coroutineResult.success)
-            {
-                // Save the results into the TextureBakeResults.
-                tb.unpackMat2RectMap(bakedMatsAndSlices);
-                tb.textureBakeResults.resultType = MB2_TextureBakeResults.ResultType.textureArray;
-                tb.textureBakeResults.resultMaterials = new MB_MultiMaterial[0];
-                tb.textureBakeResults.resultMaterialsTexArray = tb.resultMaterialsTexArray;
-                if (tb.LOG_LEVEL >= MB2_LogLevel.info) Debug.Log("Created Texture2DArrays");
-            }
-            else
-            {
-                if (tb.LOG_LEVEL >= MB2_LogLevel.info) Debug.Log("Failed to create Texture2DArrays");
             }
         }
     }

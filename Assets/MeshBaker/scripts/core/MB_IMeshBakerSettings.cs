@@ -5,9 +5,13 @@ namespace DigitalOpus.MB.Core
     public interface MB_IMeshBakerSettingsHolder
     {
         MB_IMeshBakerSettings GetMeshBakerSettings();
-#if UNITY_EDITOR
-        UnityEditor.SerializedProperty GetMeshBakerSettingsAsSerializedProperty();
-#endif
+
+        /// <summary>
+        /// A settings holder could store settings in one of several places. We can't return a 
+        /// SerializedProperty because that would be editor only. Instead we return the parameters
+        /// needed to construct a serialized property.
+        /// </summary>
+        void GetMeshBakerSettingsAsSerializedProperty(out string propertyName, out UnityEngine.Object targetObj);
     }
 
     public interface MB_IMeshBakerSettings

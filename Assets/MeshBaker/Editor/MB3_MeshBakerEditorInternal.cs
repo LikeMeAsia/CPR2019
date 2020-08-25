@@ -146,12 +146,12 @@ namespace DigitalOpus.MB.MBEditor
             if (meshBakerSettingsExternal != null) meshBakerSettingsExternal.OnDisable();
         }
 
-        public void OnInspectorGUI(SerializedObject meshBaker, MB3_MeshBakerCommon target, System.Type editorWindowType)
+        public void OnInspectorGUI(SerializedObject meshBaker, MB3_MeshBakerCommon target, UnityEngine.Object[] targets, System.Type editorWindowType)
         {
-            DrawGUI(meshBaker, target, editorWindowType);
+            DrawGUI(meshBaker, target, targets, editorWindowType);
         }
 
-        public void DrawGUI(SerializedObject meshBaker, MB3_MeshBakerCommon target, System.Type editorWindowType)
+        public void DrawGUI(SerializedObject meshBaker, MB3_MeshBakerCommon target, UnityEngine.Object[] targets, System.Type editorWindowType)
         {
             if (meshBaker == null)
             {
@@ -218,7 +218,11 @@ namespace DigitalOpus.MB.MBEditor
                 EditorGUILayout.BeginHorizontal();
                 if (GUILayout.Button("Select Objects In Scene"))
                 {
-                    Selection.objects = momm.GetObjectsToCombine().ToArray();
+                    List<MB3_MeshBakerCommon> selectedBakers = _getBakersFromTargets(targets);
+                    List<GameObject> obsToCombine = new List<GameObject>();
+
+                    foreach(MB3_MeshBakerCommon baker in selectedBakers) obsToCombine.AddRange(baker.GetObjectsToCombine());
+                    Selection.objects = obsToCombine.ToArray();
                     if (momm.GetObjectsToCombine().Count > 0)
                     {
                         SceneView.lastActiveSceneView.pivot = momm.GetObjectsToCombine()[0].transform.position;
@@ -267,7 +271,31 @@ namespace DigitalOpus.MB.MBEditor
             }
             else if (momm.meshCombiner.outputOption == MB2_OutputOptions.bakeIntoPrefab)
             {
+                if (momm.meshCombiner.settings.renderType == MB_RenderType.skinnedMeshRenderer)
+                {
+                    EditorGUILayout.HelpBox("The workflow for baking Skinned Meshes into prefabs has changed as of version 29.1. " +
+                        "It is no longer necessary to manually copy bones to the target prefab after baking. This should happen automatically.", MessageType.Info);
+                }
+
                 momm.resultPrefab = (GameObject)EditorGUILayout.ObjectField(gc_combinedMeshPrefabGUIContent, momm.resultPrefab, typeof(GameObject), true);
+                if (momm.resultPrefab != null)
+                {
+                    string assetPath = AssetDatabase.GetAssetPath(momm.resultPrefab);
+                    if (assetPath == null || assetPath.Length == 0)
+                    {
+                        Debug.LogError("The " + gc_combinedMeshPrefabGUIContent.text + " must be a prefab asset, not a scene GameObject");
+                        momm.resultPrefab = null;
+                    } else
+                    {
+                        MB_PrefabType pt = MBVersionEditor.GetPrefabType(momm.resultPrefab);
+                        if (pt != MB_PrefabType.prefabAsset)
+                        {
+                            Debug.LogError("The " + gc_combinedMeshPrefabGUIContent.text + " must be a prefab asset, the prefab type was '" + pt + "'");
+                            momm.resultPrefab = null;
+                        }
+                    }
+                }
+
                 if (momm is MB3_MeshBaker)
                 {
                     string l = "Mesh";
@@ -292,8 +320,16 @@ namespace DigitalOpus.MB.MBEditor
                 {
                     string newFolder = EditorUtility.SaveFolderPanel("Folder For Bake In Place Meshes", Application.dataPath, "");
                     if (!newFolder.Contains(Application.dataPath)) Debug.LogWarning("The chosen folder must be in your assets folder.");
-                    momm.bakeAssetsInPlaceFolderPath = "Assets" + newFolder.Replace(Application.dataPath, "");
+                    string folder = "Assets" + newFolder.Replace(Application.dataPath, "");
+                    List<MB3_MeshBakerCommon> selectedBakers = _getBakersFromTargets(targets);
+                    Undo.RecordObjects(targets, "Undo Set Folder");
+                    foreach (MB3_MeshBakerCommon baker in selectedBakers)
+                    {
+                        baker.bakeAssetsInPlaceFolderPath = folder;
+                        EditorUtility.SetDirty(baker);
+                    }
                 }
+
                 EditorGUILayout.LabelField("Folder For Meshes: " + momm.bakeAssetsInPlaceFolderPath);
             }
 
@@ -341,7 +377,11 @@ namespace DigitalOpus.MB.MBEditor
                     {
                         settingsHolder.objectReferenceValue = settingsHolderComponent;
                         meshBakerSettingsExternal = new MB_MeshBakerSettingsEditor();
-                        meshBakerSettingsExternal.OnEnable(itf.GetMeshBakerSettingsAsSerializedProperty());
+                        UnityEngine.Object targetObj;
+                        string propertyName;
+                        itf.GetMeshBakerSettingsAsSerializedProperty(out propertyName, out targetObj);
+                        SerializedProperty meshBakerSettings = new SerializedObject(targetObj).FindProperty(propertyName);
+                        meshBakerSettingsExternal.OnEnable(meshBakerSettings);
                     }
                 }
                 else
@@ -362,7 +402,11 @@ namespace DigitalOpus.MB.MBEditor
                 {
                     settingsHolder.objectReferenceValue = obj;
                     meshBakerSettingsExternal = new MB_MeshBakerSettingsEditor();
-                    meshBakerSettingsExternal.OnEnable(((MB_IMeshBakerSettingsHolder)obj).GetMeshBakerSettingsAsSerializedProperty());
+                    UnityEngine.Object targetObj;
+                    string propertyName;
+                    ((MB_IMeshBakerSettingsHolder)obj).GetMeshBakerSettingsAsSerializedProperty(out propertyName, out targetObj);
+                    SerializedProperty meshBakerSettings = new SerializedObject(targetObj).FindProperty(propertyName);
+                    meshBakerSettingsExternal.OnEnable(meshBakerSettings);
                 }
             }
             else
@@ -381,7 +425,11 @@ namespace DigitalOpus.MB.MBEditor
                 if (meshBakerSettingsExternal == null)
                 {
                     meshBakerSettingsExternal = new MB_MeshBakerSettingsEditor();
-                    meshBakerSettingsExternal.OnEnable(((MB_IMeshBakerSettingsHolder)obj).GetMeshBakerSettingsAsSerializedProperty());
+                    UnityEngine.Object targetObj;
+                    string propertyName;
+                    ((MB_IMeshBakerSettingsHolder)obj).GetMeshBakerSettingsAsSerializedProperty(out propertyName, out targetObj);
+                    SerializedProperty meshBakerSettings = new SerializedObject(targetObj).FindProperty(propertyName);
+                    meshBakerSettingsExternal.OnEnable(meshBakerSettings);
                 }
                 meshBakerSettingsExternal.DrawGUI(((MB_IMeshBakerSettingsHolder)settingsHolder.objectReferenceValue).GetMeshBakerSettings(), settingsEnabled, doingTextureArray);
             }
@@ -390,7 +438,17 @@ namespace DigitalOpus.MB.MBEditor
             GUI.backgroundColor = buttonColor;
             if (GUILayout.Button("Bake"))
             {
-                bake(momm, ref meshBaker);
+                List<MB3_MeshBakerCommon> selectedBakers = _getBakersFromTargets(targets);
+                if (selectedBakers.Count > 1) Debug.Log("About to bake " + selectedBakers.Count);
+                foreach(MB3_MeshBakerCommon baker in selectedBakers)
+                {
+                    // Why are we caching and recreating the SerializedObject? Because "bakeIntoPrefab" corrupts the serialized object
+                    // and the meshBaker SerializedObject throws an NRE the next time it gets used.
+                    MB3_MeshBakerCommon mbr  = (MB3_MeshBakerCommon) meshBaker.targetObject;
+                    bake(baker);
+                    meshBaker = new SerializedObject(mbr);
+                }
+                
             }
             GUI.backgroundColor = oldColor;
 
@@ -411,7 +469,11 @@ namespace DigitalOpus.MB.MBEditor
             }
             if (GUILayout.Button(enableRenderersLabel))
             {
-                momm.EnableDisableSourceObjectRenderers(!disableRendererInSource);
+                List<MB3_MeshBakerCommon> selectedBakers = _getBakersFromTargets(targets);
+                foreach (MB3_MeshBakerCommon baker in selectedBakers)
+                {
+                    baker.EnableDisableSourceObjectRenderers(!disableRendererInSource);
+                }
             }
 
             meshBaker.ApplyModifiedProperties();
@@ -427,6 +489,17 @@ namespace DigitalOpus.MB.MBEditor
         {
             SerializedObject so = null;
             return bake(mom, ref so);
+        }
+
+        private List<MB3_MeshBakerCommon> _getBakersFromTargets(UnityEngine.Object[] targs)
+        {
+            List<MB3_MeshBakerCommon> outList = new List<MB3_MeshBakerCommon>(targs.Length);
+            for (int i = 0; i < targs.Length; i++)
+            {
+                outList.Add((MB3_MeshBakerCommon) targs[i]);
+            }
+
+            return outList;
         }
 
         /// <summary>

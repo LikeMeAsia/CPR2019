@@ -222,7 +222,7 @@ namespace DigitalOpus.MB.MBEditor
             editorStyles.DestroyTextures();
         }
 
-        public void DrawGUI(SerializedObject textureBaker, MB3_TextureBaker momm, System.Type editorWindow)
+        public void DrawGUI(SerializedObject textureBaker, MB3_TextureBaker momm, UnityEngine.Object[] targets, System.Type editorWindow)
         {
             if (textureBaker == null)
             {
@@ -251,8 +251,8 @@ namespace DigitalOpus.MB.MBEditor
             EditorGUILayout.LabelField("Objects To Be Combined", EditorStyles.boldLabel);
             if (GUILayout.Button(openToolsWindowLabelContent))
             {
-                MB3_MeshBakerEditorWindowInterface mmWin = (MB3_MeshBakerEditorWindowInterface)EditorWindow.GetWindow(editorWindow);
-                mmWin.target = (MB3_MeshBakerRoot)momm;
+                MB3_MeshBakerEditorWindow mmWin = (MB3_MeshBakerEditorWindow) EditorWindow.GetWindow(editorWindow);
+                mmWin.SetTarget((MB3_MeshBakerRoot) momm);
             }
 
             object[] objs = MB3_EditorMethods.DropZone("Drag & Drop Renderers Or Parents Here To Add Objects To Be Combined", 300, 50);
@@ -263,7 +263,11 @@ namespace DigitalOpus.MB.MBEditor
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Select Objects In Scene"))
             {
-                Selection.objects = momm.GetObjectsToCombine().ToArray();
+                List<MB3_TextureBaker> selectedBakers = _getBakersFromTargets(targets);
+                List<GameObject> obsToCombine = new List<GameObject>();
+
+                foreach (MB3_TextureBaker baker in selectedBakers) obsToCombine.AddRange(baker.GetObjectsToCombine());
+                Selection.objects = obsToCombine.ToArray();
                 if (momm.GetObjectsToCombine().Count > 0)
                 {
                     SceneView.lastActiveSceneView.pivot = momm.GetObjectsToCombine()[0].transform.position;
@@ -289,10 +293,14 @@ namespace DigitalOpus.MB.MBEditor
 
             if (GUILayout.Button(createPrefabAndMaterialLabelContent))
             {
+                List<MB3_TextureBaker> selectedBakers = _getBakersFromTargets(targets);
                 string newPrefabPath = EditorUtility.SaveFilePanelInProject("Asset name", "", "asset", "Enter a name for the baked texture results");
                 if (newPrefabPath != null)
                 {
-                    CreateCombinedMaterialAssets(momm, newPrefabPath);
+                    for (int i = 0; i < selectedBakers.Count; i++)
+                    {
+                        CreateCombinedMaterialAssets(selectedBakers[i], newPrefabPath, i == 0 ? true : false);
+                    }
                 }
             }
 
@@ -374,9 +382,13 @@ namespace DigitalOpus.MB.MBEditor
             GUI.color = buttonColor;
             if (GUILayout.Button("Bake Materials Into Combined Material"))
             {
-                momm.CreateAtlases(updateProgressBar, true, new MB3_EditorMethods());
-                EditorUtility.ClearProgressBar();
-                if (momm.textureBakeResults != null) EditorUtility.SetDirty(momm.textureBakeResults);
+                List<MB3_TextureBaker> selectedBakers = _getBakersFromTargets(targets);
+                foreach (MB3_TextureBaker tb in selectedBakers)
+                {
+                    tb.CreateAtlases(updateProgressBar, true, new MB3_EditorMethods());
+                    EditorUtility.ClearProgressBar();
+                    if (tb.textureBakeResults != null) EditorUtility.SetDirty(momm.textureBakeResults);
+                }
             }
             GUI.backgroundColor = oldColor;
             textureBaker.ApplyModifiedProperties();
@@ -399,19 +411,21 @@ namespace DigitalOpus.MB.MBEditor
             EditorUtility.DisplayProgressBar("Combining Meshes", msg, progress);
         }
 
-        public static void CreateCombinedMaterialAssets(MB3_TextureBaker target, string pth)
+        public static void CreateCombinedMaterialAssets(MB3_TextureBaker target, string pth, bool allowOverwrite=true)
         {
             MB3_TextureBaker mom = (MB3_TextureBaker)target;
             string baseName = Path.GetFileNameWithoutExtension(pth);
             if (baseName == null || baseName.Length == 0) return;
-            string folderPath = pth.Substring(0, pth.Length - baseName.Length - 6);
+            string folderPath = Path.GetDirectoryName(pth) + "/";
 
             List<string> matNames = new List<string>();
             if (mom.resultType == MB2_TextureBakeResults.ResultType.textureArray)
             {
                 for (int i = 0; i < mom.resultMaterialsTexArray.Length; i++)
                 {
-                    matNames.Add(folderPath + baseName + "-mat" + i + ".mat");
+                    string nm = folderPath + baseName + "-mat" + i + ".mat";
+                    if (!allowOverwrite) nm = AssetDatabase.GenerateUniqueAssetPath(nm);
+                    matNames.Add(nm);
                     AssetDatabase.CreateAsset(new Material(Shader.Find("Diffuse")), matNames[i]);
                     mom.resultMaterialsTexArray[i].combinedMaterial = (Material) AssetDatabase.LoadAssetAtPath(matNames[i], typeof(Material));
                 }
@@ -422,14 +436,18 @@ namespace DigitalOpus.MB.MBEditor
                 {
                     for (int i = 0; i < mom.resultMaterials.Length; i++)
                     {
-                        matNames.Add(folderPath + baseName + "-mat" + i + ".mat");
+                        string nm = folderPath + baseName + "-mat" + i + ".mat";
+                        if (!allowOverwrite) nm = AssetDatabase.GenerateUniqueAssetPath(nm);
+                        matNames.Add(nm);
                         AssetDatabase.CreateAsset(new Material(Shader.Find("Diffuse")), matNames[i]);
                         mom.resultMaterials[i].combinedMaterial = (Material)AssetDatabase.LoadAssetAtPath(matNames[i], typeof(Material));
                     }
                 }
                 else
                 {
-                    matNames.Add(folderPath + baseName + "-mat.mat");
+                    string nm = folderPath + baseName + "-mat.mat";
+                    if (!allowOverwrite) nm = AssetDatabase.GenerateUniqueAssetPath(nm);
+                    matNames.Add(nm);
                     Material newMat = null;
                     if (mom.GetObjectsToCombine().Count > 0 && mom.GetObjectsToCombine()[0] != null)
                     {
@@ -462,9 +480,22 @@ namespace DigitalOpus.MB.MBEditor
             }
 
             //create the MB2_TextureBakeResults
-            AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<MB2_TextureBakeResults>(), pth);
-            mom.textureBakeResults = (MB2_TextureBakeResults)AssetDatabase.LoadAssetAtPath(pth, typeof(MB2_TextureBakeResults));
+            string nmm = pth;
+            if (!allowOverwrite) nmm = AssetDatabase.GenerateUniqueAssetPath(nmm);
+            AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<MB2_TextureBakeResults>(), nmm);
+            mom.textureBakeResults = (MB2_TextureBakeResults)AssetDatabase.LoadAssetAtPath(nmm, typeof(MB2_TextureBakeResults));
             AssetDatabase.Refresh();
+        }
+
+        List<MB3_TextureBaker> _getBakersFromTargets(UnityEngine.Object[] targs)
+        {
+            List<MB3_TextureBaker> outList = new List<MB3_TextureBaker>(targs.Length);
+            for (int i = 0; i < targs.Length; i++)
+            {
+                outList.Add((MB3_TextureBaker) targs[i]);
+            }
+
+            return outList;
         }
     }
 }

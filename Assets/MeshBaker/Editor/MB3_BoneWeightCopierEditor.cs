@@ -17,7 +17,6 @@ namespace DigitalOpus.MB.MBEditor
 {
 
     [CustomEditor(typeof(MB3_BoneWeightCopier))]
-    [CanEditMultipleObjects]
     public class MB3_BoneWeightCopierEditor : Editor
     {
         SerializedProperty inputGameObjectProp;
@@ -148,7 +147,7 @@ namespace DigitalOpus.MB.MBEditor
                 Debug.LogError(string.Format("The output game object must be assigned and must be a prefab of a game object in the project folder."));
                 return;
             }
-            if (MBVersionEditor.GetPrefabType(bwc.outputPrefab) != MB_PrefabType.prefab)
+            if (MBVersionEditor.GetPrefabType(bwc.outputPrefab) != MB_PrefabType.prefabAsset)
             {
                 Debug.LogError("The output game object must be a prefab. Create a prefab in the project and drag an empty game object to it.");
                 return;
@@ -170,7 +169,7 @@ namespace DigitalOpus.MB.MBEditor
                     return;
                 }
                 MB_PrefabType pt = MBVersionEditor.GetPrefabType(targSkinnedMeshes[i].gameObject);
-                if (pt == MB_PrefabType.modelPrefab)
+                if (pt == MB_PrefabType.modelPrefabAsset)
                 {
                     Debug.LogError(string.Format("Target Mesh {0} is an imported model prefab. Can't modify these meshes because changes will be overwritten the next time the model is saved or reimported. Try instantiating the prefab and using skinned meshes from the scene instance.", i));
                     return;
@@ -208,7 +207,7 @@ namespace DigitalOpus.MB.MBEditor
                     return;
                 }
                 MB_PrefabType pt = MBVersionEditor.GetPrefabType(targetMeshes[i]);
-                if (pt == MB_PrefabType.modelPrefab)
+                if (pt == MB_PrefabType.modelPrefabAsset)
                 {
                     Debug.LogError(string.Format("Target Mesh {0} is an imported model prefab. Can't modify these meshes because changes will be overwritten the next time the model is saved or reimported. Try instantiating the prefab and using skinned meshes from the scene instance.", i));
                     return;

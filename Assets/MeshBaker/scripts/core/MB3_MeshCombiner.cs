@@ -106,7 +106,7 @@ namespace DigitalOpus.MB.Core {
             set { _LOG_LEVEL = value; }
         }
 
-        protected MB_IMeshBakerSettings settings
+        public MB_IMeshBakerSettings settings
         {
             get
             {

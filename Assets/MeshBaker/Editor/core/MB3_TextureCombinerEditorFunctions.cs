@@ -718,7 +718,7 @@ namespace DigitalOpus.MB.Core
             for (int i = 0; i < objsToMesh.Count; i++)
             {
                 MB_PrefabType pt = MBVersionEditor.GetPrefabType(objsToMesh[i]);
-                if (pt == MB_PrefabType.sceneInstance)
+                if (pt == MB_PrefabType.scenePefabInstance || pt == MB_PrefabType.isInstanceAndNotAPartOfAnyPrefab)
                 {
                     // these are scene objects
                     if (objToCombineType == MB_ObjsToCombineTypes.prefabOnly)
@@ -730,8 +730,11 @@ namespace DigitalOpus.MB.Core
                 else if (objToCombineType == MB_ObjsToCombineTypes.sceneObjOnly)
                 {
                     //these are prefabs
-                    Debug.LogWarning("The list of objects to combine contains prefab assets. You probably want scene objects." + objsToMesh[i] + " is a prefab object");
-                    return false;
+                    if (pt == MB_PrefabType.modelPrefabAsset || pt == MB_PrefabType.prefabAsset)
+                    {
+                        Debug.LogError("The list of objects to combine contains prefab assets. You need scene instances." + objsToMesh[i] + "(position " + i + ") is a project prefab object. Create a scene instance of this prefab and use that in the list of objects to combine.");
+                        return false;
+                    }
                 }
             }
             return true;
@@ -837,7 +840,7 @@ namespace DigitalOpus.MB.Core
                     object obj = objs[i];
                     if (obj is GameObject)
                     {
-                        Renderer[] rs = ((GameObject)obj).GetComponentsInChildren<Renderer>();
+                        Renderer[] rs = ((GameObject)obj).GetComponentsInChildren<Renderer>(true);
                         for (int j = 0; j < rs.Length; j++)
                         {
                             if (rs[j] is MeshRenderer || rs[j] is SkinnedMeshRenderer)
@@ -856,7 +859,7 @@ namespace DigitalOpus.MB.Core
                     if (!objsToCombine.Contains(r.gameObject))
                     {
                         MB_PrefabType prefabType = MBVersionEditor.GetPrefabType(r.gameObject);
-                        if (prefabType == MB_PrefabType.modelPrefab || prefabType == MB_PrefabType.prefab)
+                        if (prefabType == MB_PrefabType.modelPrefabAsset || prefabType == MB_PrefabType.prefabAsset)
                         {
                             failedToAddAssets = true;
                         }

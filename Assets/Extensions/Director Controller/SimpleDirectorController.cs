@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Events;
+using com.dgn.UnityAttributes;
 
 [RequireComponent(typeof(PlayableDirector))]
 public class SimpleDirectorController : MonoBehaviour {
@@ -21,7 +22,7 @@ public class SimpleDirectorController : MonoBehaviour {
     public static SimpleDirectorController Instance { get { return mInstance; } }
 
     public int trackId;
-    [LabelArray("EventPlayableAsset", LabelArrayAttribute.LabelType.FieldName)]
+    [LabelArray("EventPlayableAsset", true)]
     public CustomTimelineAsset[] tracks;
 
     private PlayableDirector director;
@@ -99,7 +100,7 @@ public class SimpleDirectorController : MonoBehaviour {
             Debug.Log("SimpleDirectorController: No track in this ID");
             return;
         }
-        Debug.Log("SimpleDirectorController: PlayTrack [" + tracks[iTrack].EventPlayableAsset.name + "]");
+        //Debug.Log("SimpleDirectorController: PlayTrack [" + tracks[iTrack].EventPlayableAsset.name + "]");
         StartCoroutine (IPlayTrack(iTrack));
 	}
 
@@ -121,14 +122,23 @@ public class SimpleDirectorController : MonoBehaviour {
         if (tracks[trackId].BeforePlayEvent != null){
 			tracks [trackId].BeforePlayEvent.Invoke ();
 		}
-        if (director.playableAsset != null && trackId > 1 && tracks[trackId - 1].TransactionPlayableAsset == director.playableAsset)
+        if (director.playableAsset != null && director.state==PlayState.Playing && trackId > 1 && tracks[trackId - 1].TransactionPlayableAsset == director.playableAsset)
         {
             director.extrapolationMode = DirectorWrapMode.Hold;
             yield return new WaitUntil(() => director.time >= director.playableAsset.duration);
         }
-        SetupPlayTrack(tracks[trackId].EventPlayableAsset, tracks[trackId].EventWrapMode);
-		yield return new WaitUntil(() => director.time >= director.playableAsset.duration);
-		interruptable = true;
+
+        if (tracks[trackId].EventPlayableAsset){
+            SetupPlayTrack(tracks[trackId].EventPlayableAsset, tracks[trackId].EventWrapMode);
+            if (tracks[trackId].EventWrapMode == DirectorWrapMode.Loop)
+            {
+                yield return new WaitForSeconds(System.Convert.ToSingle(director.playableAsset.duration));
+            }
+            else
+            {
+                yield return new WaitUntil(() => director.time >= director.playableAsset.duration);
+            }
+        }
         if (tracks[trackId].TransactionPlayableAsset != null)
         {
             SetupPlayTrack(tracks[trackId].TransactionPlayableAsset, DirectorWrapMode.Loop);
@@ -140,9 +150,11 @@ public class SimpleDirectorController : MonoBehaviour {
         if (tracks[trackId].AfterPlayEvent != null){
 			tracks [trackId].AfterPlayEvent.Invoke ();
 		}
+        interruptable = true;
         if (tracks[trackId].playNext) {
             PlayNextTrack();
         }
+
     }
 
     public void SetupPlayTrack(PlayableAsset playableAsset, DirectorWrapMode wrapMode){

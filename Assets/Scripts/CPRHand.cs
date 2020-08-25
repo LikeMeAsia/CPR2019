@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using com.dgn.XR.Extensions;
+using System.Collections;
 using UnityEngine;
 
 public class CPRHand : MonoBehaviour
@@ -59,11 +60,13 @@ public class CPRHand : MonoBehaviour
         l_handDown = IsBetween(l_rot, l_rotationHandThreshold.x, l_rotationHandThreshold.y);
         r_handDown = IsBetween(r_rot, r_rotationHandThreshold.x, r_rotationHandThreshold.y);
 
-        if (lHandTrack.position.y < rHandTrack.position.y && Player.Instance.r_ful)
+        if (lHandTrack.position.y < rHandTrack.position.y && 
+            Player.Instance.RightHandState == HandPresence.HandState.Fist )
         {
             handsState = HandsState.LeftHandUnder;
         }
-        else if (lHandTrack.position.y > rHandTrack.position.y && Player.Instance.l_ful)
+        else if (lHandTrack.position.y > rHandTrack.position.y && 
+            Player.Instance.LeftHandState == HandPresence.HandState.Fist)
         {
             handsState = HandsState.RightHandUnder;
         }

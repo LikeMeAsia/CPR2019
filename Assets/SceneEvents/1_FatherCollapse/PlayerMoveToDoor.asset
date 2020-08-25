@@ -14,6 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   delayNextEvent: 0
   positionName: Point1
-  moveSpeed: 1
-  layerMask: 1647
-  waitFinishMove: 0
+  teleporterName: Player
+  layerMask: 18031

@@ -7,6 +7,8 @@ namespace DigitalOpus.MB.Core
 {
     public class MB3_TextureCombinerMerging
     {
+        public static bool DO_INTEGRITY_CHECKS = false;
+
         private bool _HasBeenInitialized = false;
 
         public static Rect BuildTransformMeshUV2AtlasRect(
@@ -245,9 +247,9 @@ namespace DigitalOpus.MB.Core
                                             tx1.matsAndGOs.mats[matIdx].mat, tx1.matsAndGOs.mats[matIdx].samplingRectMatAndUVTiling, tx1.ts[0].GetEncapsulatingSamplingRect());
                                     }
                                     //Integrity check that sampling rects fit into enapsulating rects
-                                    if (MB3_MeshBakerRoot.DO_INTEGRITY_CHECKS)
+                                    if (DO_INTEGRITY_CHECKS)
                                     {
-                                        if (MB3_MeshBakerRoot.DO_INTEGRITY_CHECKS) { DoIntegrityCheckMergedEncapsulatingSamplingRects(distinctMaterialTextures); }
+                                        if (DO_INTEGRITY_CHECKS) { DoIntegrityCheckMergedEncapsulatingSamplingRects(distinctMaterialTextures); }
                                     }
                                 }
                                 Debug.Log(sb.ToString());
@@ -277,7 +279,7 @@ namespace DigitalOpus.MB.Core
             {
                 Debug.Log(string.Format("MergeOverlappingDistinctMaterialTexturesAndCalcMaterialSubrects complete merged {0} now have {1}", numMerged, distinctMaterialTextures.Count));
             }
-            if (MB3_MeshBakerRoot.DO_INTEGRITY_CHECKS) { DoIntegrityCheckMergedEncapsulatingSamplingRects(distinctMaterialTextures); }
+            if (DO_INTEGRITY_CHECKS) { DoIntegrityCheckMergedEncapsulatingSamplingRects(distinctMaterialTextures); }
         }
 
 
@@ -400,9 +402,9 @@ namespace DigitalOpus.MB.Core
                                             tx1.matsAndGOs.mats[matIdx].mat, tx1.matsAndGOs.mats[matIdx].samplingRectMatAndUVTiling, tx1.ts[0].GetEncapsulatingSamplingRect());
                                     }
                                     //Integrity check that sampling rects fit into enapsulating rects
-                                    if (MB3_MeshBakerRoot.DO_INTEGRITY_CHECKS)
+                                    if (DO_INTEGRITY_CHECKS)
                                     {
-                                        if (MB3_MeshBakerRoot.DO_INTEGRITY_CHECKS) { DoIntegrityCheckMergedEncapsulatingSamplingRects(distinctMaterialTextures); }
+                                        if (DO_INTEGRITY_CHECKS) { DoIntegrityCheckMergedEncapsulatingSamplingRects(distinctMaterialTextures); }
                                     }
                                 }
                                 Debug.Log(sb.ToString());
@@ -432,12 +434,12 @@ namespace DigitalOpus.MB.Core
             {
                 Debug.Log(string.Format("MergeDistinctMaterialTexturesThatWouldExceedMaxAtlasSizeAndCalcMaterialSubrects complete merged {0} now have {1}", numMerged, distinctMaterialTextures.Count));
             }
-            if (MB3_MeshBakerRoot.DO_INTEGRITY_CHECKS) { DoIntegrityCheckMergedEncapsulatingSamplingRects(distinctMaterialTextures); }
+            if (DO_INTEGRITY_CHECKS) { DoIntegrityCheckMergedEncapsulatingSamplingRects(distinctMaterialTextures); }
         }
 
         public void DoIntegrityCheckMergedEncapsulatingSamplingRects(List<MB_TexSet> distinctMaterialTextures)
         {
-            if (MB3_MeshBakerRoot.DO_INTEGRITY_CHECKS)
+            if (DO_INTEGRITY_CHECKS)
             {
                 for (int i = 0; i < distinctMaterialTextures.Count; i++)
                 {

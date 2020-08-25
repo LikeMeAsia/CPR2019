@@ -158,37 +158,12 @@ MonoBehaviour:
     cellSize: {x: 0, y: 0, z: 0}
     pieNumSegments: 4
     pieAxis: {x: 0, y: 1, z: 0}
-    ringSpacing: 100
-    combineSegmentsInInnermostRing: 0
     height: 1
     maxDistBetweenClusters: 1
     includeCellsWithOnlyOneRenderer: 1
   sourceObjectBounds:
     m_Center: {x: -0.35000002, y: -1.8499999, z: 0}
     m_Extent: {x: 1.05, y: 2.35, z: 2.5}
-  meshBakerSettingsAsset: {fileID: 0}
-  meshBakerSettings:
-    _renderType: 0
-    _outputOption: 0
-    _lightmapOption: 1
-    _doNorm: 1
-    _doTan: 1
-    _doCol: 0
-    _doUV: 1
-    _doUV3: 0
-    _doUV4: 0
-    _doUV5: 0
-    _doUV6: 0
-    _doUV7: 0
-    _doUV8: 0
-    _doBlendShapes: 0
-    _pivotLocationType: 0
-    _pivotLocation: {x: 0, y: 0, z: 0}
-    _clearBuffersAfterBake: 0
-    _optimizeAfterBake: 1
-    _uv2UnwrappingParamsHardAngle: 60
-    _uv2UnwrappingParamsPackMargin: 0.005
-    _assignToMeshCustomizer: {fileID: 0}
 --- !u!114 &24221007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,7 +192,6 @@ MonoBehaviour:
   _meshBakerTexturePackerForcePowerOfTwo: 1
   _customShaderProperties: []
   _customShaderPropNames_Depricated: []
-  _resultType: 0
   _doMultiMaterial: 0
   _doMultiMaterialSplitAtlasesIfTooBig: 1
   _doMultiMaterialSplitAtlasesIfOBUVs: 1
@@ -225,8 +199,6 @@ MonoBehaviour:
   _considerNonTextureProperties: 0
   _doSuggestTreatment: 1
   resultMaterials: []
-  resultMaterialsTexArray: []
-  textureArrayOutputFormats: []
   objsToMesh:
   - {fileID: 349757550}
   - {fileID: 2074156416}
@@ -534,7 +506,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 402197697}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.38, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 24221005}
@@ -558,14 +530,13 @@ MonoBehaviour:
   bakeAssetsInPlaceFolderPath: 
   resultPrefab: {fileID: 0}
   _meshCombiner:
+    _LOG_LEVEL: 3
     _validationLevel: 2
     _name: MeshBaker-mesh
     _textureBakeResults: {fileID: 11400000, guid: af89375df28a025499ebed1e9e776892,
       type: 2}
     _resultSceneObject: {fileID: 640242926}
     _targetRenderer: {fileID: 1648333811}
-    _LOG_LEVEL: 3
-    _settingsHolder: {fileID: 0}
     _renderType: 0
     _outputOption: 0
     _lightmapOption: 1
@@ -575,18 +546,11 @@ MonoBehaviour:
     _doUV: 1
     _doUV3: 0
     _doUV4: 0
-    _doUV5: 0
-    _doUV6: 0
-    _doUV7: 0
-    _doUV8: 0
     _doBlendShapes: 0
-    _pivotLocationType: 0
-    _pivotLocation: {x: 0, y: 0, z: 0}
-    _clearBuffersAfterBake: 0
+    _recenterVertsToBoundsCenter: 0
     _optimizeAfterBake: 1
-    _uv2UnwrappingParamsHardAngle: 60
-    _uv2UnwrappingParamsPackMargin: 0.005
-    _assignToMeshCustomizer: {fileID: 0}
+    uv2UnwrappingParamsHardAngle: 60
+    uv2UnwrappingParamsPackMargin: 0.005
     objectsInCombinedMesh: []
     lightmapIndex: -1
     mbDynamicObjectsInCombinedMesh: []
@@ -594,14 +558,9 @@ MonoBehaviour:
     normals: []
     tangents: []
     uvs: []
-    uvsSliceIdx: []
     uv2s: []
     uv3s: []
     uv4s: []
-    uv5s: []
-    uv6s: []
-    uv7s: []
-    uv8s: []
     colors: []
     bindPoses: []
     bones: []
@@ -711,7 +670,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 640242926}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.35, y: 7.48, z: -10.22}
+  m_LocalPosition: {x: -7.23, y: 7.48, z: -10.22}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1648333813}
@@ -1034,7 +993,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1648333810}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.23, y: -7.48, z: 10.22}
+  m_LocalPosition: {x: 9.33, y: -7.48, z: 8.86}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 640242927}

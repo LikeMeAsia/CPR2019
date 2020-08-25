@@ -198,8 +198,8 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
         set { _doSuggestTreatment = value; }
     }
 
-    private CreateAtlasesCoroutineResult _coroutineResult;
-    public CreateAtlasesCoroutineResult CoroutineResult
+    private MB3_TextureCombiner.CreateAtlasesCoroutineResult _coroutineResult;
+    public MB3_TextureCombiner.CreateAtlasesCoroutineResult CoroutineResult
     {
         get
         {
@@ -232,13 +232,7 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
     public OnCombinedTexturesCoroutineFail onBuiltAtlasesFail;
     public MB_AtlasesAndRects[] OnCombinedTexturesCoroutineAtlasesAndRects;
 
-    public class CreateAtlasesCoroutineResult
-    {
-        public bool success = true;
-        public bool isFinished = false;
-    }
-
-    public IEnumerator CreateAtlasesCoroutine(ProgressUpdateDelegate progressInfo, CreateAtlasesCoroutineResult coroutineResult, bool saveAtlasesAsAssets = false, MB2_EditorMethodsInterface editorMethods = null, float maxTimePerFrame = .01f)
+    public IEnumerator CreateAtlasesCoroutine(ProgressUpdateDelegate progressInfo, MB3_TextureCombiner.CreateAtlasesCoroutineResult coroutineResult, bool saveAtlasesAsAssets = false, MB2_EditorMethodsInterface editorMethods = null, float maxTimePerFrame = .01f)
     {
         yield return _CreateAtlasesCoroutine(progressInfo, coroutineResult, saveAtlasesAsAssets, editorMethods, maxTimePerFrame);
 
@@ -253,7 +247,7 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
         }
     }
 
-    private IEnumerator _CreateAtlasesCoroutineAtlases(MB3_TextureCombiner combiner, ProgressUpdateDelegate progressInfo, CreateAtlasesCoroutineResult coroutineResult, bool saveAtlasesAsAssets = false, MB2_EditorMethodsInterface editorMethods = null, float maxTimePerFrame = .01f)
+    private IEnumerator _CreateAtlasesCoroutineAtlases(MB3_TextureCombiner combiner, ProgressUpdateDelegate progressInfo, MB3_TextureCombiner.CreateAtlasesCoroutineResult coroutineResult, bool saveAtlasesAsAssets = false, MB2_EditorMethodsInterface editorMethods = null, float maxTimePerFrame = .01f)
     {
         int numResults = 1;
         if (_doMultiMaterial)
@@ -320,7 +314,117 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
         if (LOG_LEVEL >= MB2_LogLevel.info) Debug.Log("Created Atlases");
     }
 
-    private IEnumerator _CreateAtlasesCoroutine(ProgressUpdateDelegate progressInfo, CreateAtlasesCoroutineResult coroutineResult, bool saveAtlasesAsAssets = false, MB2_EditorMethodsInterface editorMethods = null, float maxTimePerFrame = .01f)
+    internal IEnumerator _CreateAtlasesCoroutineTextureArray(MB3_TextureCombiner combiner, ProgressUpdateDelegate progressInfo, MB3_TextureCombiner.CreateAtlasesCoroutineResult coroutineResult, bool saveAtlasesAsAssets = false, MB2_EditorMethodsInterface editorMethods = null, float maxTimePerFrame = .01f)
+    {
+        MB_TextureArrayResultMaterial[] bakedMatsAndSlices = null;
+
+        // Validate the formats
+        if (textureArrayOutputFormats == null || textureArrayOutputFormats.Length == 0)
+        {
+            Debug.LogError("No Texture Array Output Formats. There must be at least one entry.");
+            coroutineResult.isFinished = true;
+            yield break;
+        }
+
+        for (int i = 0; i < textureArrayOutputFormats.Length; i++)
+        {
+            if (!textureArrayOutputFormats[i].ValidateTextureImporterFormatsExistsForTextureFormats(editorMethods, i))
+            {
+                Debug.LogError("Could not map the selected texture format to a Texture Importer Format. Safest options are ARGB32, or RGB24.");
+                coroutineResult.isFinished = true;
+                yield break;
+            }
+        }
+
+        for (int resMatIdx = 0; resMatIdx < resultMaterialsTexArray.Length; resMatIdx++)
+        {
+            MB_MultiMaterialTexArray textureArraySliceConfig = resultMaterialsTexArray[resMatIdx];
+            if (textureArraySliceConfig.combinedMaterial == null)
+            {
+                Debug.LogError("Material is null for Texture Array Slice Configuration: " + resMatIdx + ".");
+                coroutineResult.isFinished = true;
+                yield break;
+            }
+
+
+            List<MB_TexArraySlice> slices = textureArraySliceConfig.slices;
+            for (int sliceIdx = 0; sliceIdx < slices.Count; sliceIdx++)
+            {
+                for (int srcMatIdx = 0; srcMatIdx < slices[sliceIdx].sourceMaterials.Count; srcMatIdx++)
+                {
+                    MB_TexArraySliceRendererMatPair sourceMat = slices[sliceIdx].sourceMaterials[srcMatIdx];
+                    if (sourceMat.sourceMaterial == null)
+                    {
+                        Debug.LogError("Source material is null for Texture Array Slice Configuration: " + resMatIdx + " slice: " + sliceIdx);
+                        coroutineResult.isFinished = true;
+                        yield break;
+                    }
+
+                    if (slices[sliceIdx].considerMeshUVs)
+                    {
+                        if (sourceMat.renderer == null)
+                        {
+                            Debug.LogError("Renderer is null for Texture Array Slice Configuration: " + resMatIdx + " slice: " + sliceIdx + ". If considerUVs is enabled then a renderer must be supplied for each source material. The same source material can be used multiple times.");
+                            coroutineResult.isFinished = true;
+                            yield break;
+                        }
+                    }
+                    else
+                    {
+                        // TODO check for duplicate source mats.
+                    }
+                }
+            }
+        }
+
+        for (int resMatIdx = 0; resMatIdx < resultMaterialsTexArray.Length; resMatIdx++)
+        {
+            MB_MultiMaterialTexArray textureArraySliceConfig = resultMaterialsTexArray[resMatIdx];
+        }
+
+        // initialize structure to store results. For texture arrays the structure is two layers deep.
+        // First layer is resultMaterial / submesh (each result material can use a different shader)
+        // Second layer is a set of TextureArrays for the TextureProperties on that result material.
+        int numResultMats = resultMaterialsTexArray.Length;
+        bakedMatsAndSlices = new MB_TextureArrayResultMaterial[numResultMats];
+        for (int resMatIdx = 0; resMatIdx < bakedMatsAndSlices.Length; resMatIdx++)
+        {
+            bakedMatsAndSlices[resMatIdx] = new MB_TextureArrayResultMaterial();
+            int numSlices = resultMaterialsTexArray[resMatIdx].slices.Count;
+            MB_AtlasesAndRects[] slices = bakedMatsAndSlices[resMatIdx].slices = new MB_AtlasesAndRects[numSlices];
+            for (int j = 0; j < numSlices; j++) slices[j] = new MB_AtlasesAndRects();
+        }
+
+        // Some of the slices will be atlases (more than one atlas per slice).
+        // Do the material combining for these. First loop over the result materials (1 per submeshes).
+        for (int resMatIdx = 0; resMatIdx < bakedMatsAndSlices.Length; resMatIdx++)
+        {
+            yield return MB_TextureArrays._CreateAtlasesCoroutineSingleResultMaterial(resMatIdx, bakedMatsAndSlices[resMatIdx], resultMaterialsTexArray[resMatIdx],
+                objsToMesh,
+                combiner, 
+                textureArrayOutputFormats,
+                resultMaterialsTexArray,
+                customShaderProperties,
+                progressInfo, coroutineResult, saveAtlasesAsAssets, editorMethods, maxTimePerFrame);
+            if (!coroutineResult.success) yield break;
+        }
+
+        if (coroutineResult.success)
+        {
+            // Save the results into the TextureBakeResults.
+            unpackMat2RectMap(bakedMatsAndSlices);
+            textureBakeResults.resultType = MB2_TextureBakeResults.ResultType.textureArray;
+            textureBakeResults.resultMaterials = new MB_MultiMaterial[0];
+            textureBakeResults.resultMaterialsTexArray = resultMaterialsTexArray;
+            if (LOG_LEVEL >= MB2_LogLevel.info) Debug.Log("Created Texture2DArrays");
+        }
+        else
+        {
+            if (LOG_LEVEL >= MB2_LogLevel.info) Debug.Log("Failed to create Texture2DArrays");
+        }
+    }
+
+    private IEnumerator _CreateAtlasesCoroutine(ProgressUpdateDelegate progressInfo, MB3_TextureCombiner.CreateAtlasesCoroutineResult coroutineResult, bool saveAtlasesAsAssets = false, MB2_EditorMethodsInterface editorMethods = null, float maxTimePerFrame = .01f)
     {
         MBVersionConcrete mbv = new MBVersionConcrete();
         if (!MB3_TextureCombiner._RunCorutineWithoutPauseIsRunning && (mbv.GetMajorVersion() < 5 || (mbv.GetMajorVersion() == 5 && mbv.GetMinorVersion() < 3)))
@@ -382,7 +486,7 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
         OnCombinedTexturesCoroutineAtlasesAndRects = null;
         if (resultType == MB2_TextureBakeResults.ResultType.textureArray)
         {
-            yield return MB_TextureArrays._CreateAtlasesCoroutineTextureArray(this, combiner, progressInfo, coroutineResult, saveAtlasesAsAssets, editorMethods, maxTimePerFrame);
+            yield return _CreateAtlasesCoroutineTextureArray(combiner, progressInfo, coroutineResult, saveAtlasesAsAssets, editorMethods, maxTimePerFrame);
             if (!coroutineResult.success) yield break;
         }
         else
@@ -422,7 +526,7 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 
         try
         {
-            _coroutineResult = new CreateAtlasesCoroutineResult();
+            _coroutineResult = new MB3_TextureCombiner.CreateAtlasesCoroutineResult();
             MB3_TextureCombiner.RunCorutineWithoutPause(CreateAtlasesCoroutine(progressInfo, _coroutineResult, saveAtlasesAsAssets, editorMethods, 1000f), 0);
             if (_coroutineResult.success && textureBakeResults != null)
             {

@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: PlayerOpenDoorEvent
   m_EditorClassIdentifier: 
   delayNextEvent: 0
-  doorKnobName: DoorKnob
+  doorName: InteractableDoor
+  positionName: Point2
+  teleporterName: Player

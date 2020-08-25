@@ -71,7 +71,7 @@ namespace DigitalOpus.MB.Core
             MB2_EditorMethodsInterface textureEditorMethods,
             MB2_LogLevel LOG_LEVEL)
         {
-            Debug.LogError("TODO this should be done as close to textures being used as possible due to memory issues.");
+            //Debug.LogError("TODO this should be done as close to textures being used as possible due to memory issues.");
             //make procedural materials readable
             /*
             for (int i = 0; i < combiner._proceduralMaterials.Count; i++)
@@ -120,7 +120,7 @@ namespace DigitalOpus.MB.Core
                         if (textureEditorMethods != null)
                         {
                             Texture tx = ts.GetTexture2D();
-                            TextureFormat format = TextureFormat.ARGB32;
+                            TextureFormat format = TextureFormat.RGBA32;
                             if (progressInfo != null) progressInfo(String.Format("Convert texture {0} to readable format ", tx), .5f);
                             textureEditorMethods.AddTextureFormat((Texture2D)tx, format, data.texPropertyNames[j].isNormalMap);
                         }

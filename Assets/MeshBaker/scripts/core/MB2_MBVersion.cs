@@ -4,6 +4,7 @@
 using System;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace DigitalOpus.MB.Core{
 
@@ -32,6 +33,7 @@ namespace DigitalOpus.MB.Core{
         bool GraphicsUVStartsAtTop();
 
         bool IsTextureReadable(Texture2D tex);
+        bool CollectPropertyNames(List<ShaderTextureProperty> texPropertyNames, ShaderTextureProperty[] shaderTexPropertyNames, List<ShaderTextureProperty> _customShaderPropNames, Material resultMaterial, MB2_LogLevel LOG_LEVEL);
     }
 
 	public class MBVersion
@@ -172,6 +174,12 @@ namespace DigitalOpus.MB.Core{
         {
             if (_MBVersion == null) _MBVersion = _CreateMBVersionConcrete();
             return _MBVersion.IsTextureReadable(tex);
+        }
+
+        public static void CollectPropertyNames(List<ShaderTextureProperty> texPropertyNames, ShaderTextureProperty[] shaderTexPropertyNames, List<ShaderTextureProperty> _customShaderPropNames, Material resultMaterial, MB2_LogLevel LOG_LEVEL)
+        {
+            if (_MBVersion == null) _MBVersion = _CreateMBVersionConcrete();
+            _MBVersion.CollectPropertyNames(texPropertyNames, shaderTexPropertyNames, _customShaderPropNames, resultMaterial, LOG_LEVEL);
         }
     }
 }

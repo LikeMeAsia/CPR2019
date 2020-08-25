@@ -207,13 +207,10 @@ namespace DigitalOpus.MB.Core
         {
             return data;
         }
-
-#if UNITY_EDITOR
-        public UnityEditor.SerializedProperty GetMeshBakerSettingsAsSerializedProperty()
+        public void GetMeshBakerSettingsAsSerializedProperty(out string propertyName, out UnityEngine.Object targetObj)
         {
-            UnityEditor.SerializedObject so = new UnityEditor.SerializedObject(this);
-            return so.FindProperty("data");
+            targetObj = this;
+            propertyName = "data";
         }
-#endif
     }
 }

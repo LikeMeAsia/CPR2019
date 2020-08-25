@@ -34,7 +34,7 @@ namespace DigitalOpus.MB.MBEditor
 
         public override void OnInspectorGUI()
         {
-            tbe.DrawGUI(serializedObject, (MB3_TextureBaker)target, typeof(MB3_MeshBakerEditorWindow));
+            tbe.DrawGUI(serializedObject, (MB3_TextureBaker)target, targets, typeof(MB3_MeshBakerEditorWindow));
         }
 
     }

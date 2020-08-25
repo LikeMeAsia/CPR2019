@@ -14,11 +14,7 @@ public class ThaiText : Text
 
     private bool onWrapChange;
     public UnityEvent OnChanged;
-    [SerializeField]
-    [ReadOnly]
     private float boxwidth;
-    [SerializeField]
-    [ReadOnly]
     private string defaultText = "";
     public string DefaultText
     {

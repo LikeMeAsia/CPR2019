@@ -12,7 +12,7 @@ TagManager:
   - Boundary
   - FingerTip
   - Ground
-  - hand
+  - PlayerHand
   layers:
   - Default
   - TransparentFX
@@ -26,13 +26,13 @@ TagManager:
   - Outline
   - Props
   - Player
-  - Grabable
+  - Grabbable
   - Tap
   - FingerTip
   - Camera/FadeCamera
   - Camera/FadeOut
-  - 
-  - 
+  - Teleportable
+  - DirectGrabbable
   - 
   - 
   - 

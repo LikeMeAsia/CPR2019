@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dae21df0cc0d4064bb6ffae29ba9ff39, type: 3}
+  m_Script: {fileID: 11500000, guid: 2546c0bf7444cd34288c2dd315ee3298, type: 3}
   m_Name: SetActiveFatherShoulder
   m_EditorClassIdentifier: 
   delayNextEvent: 0
   assetName: FatherShoulder
   type: 0
+  nextScene: {fileID: 0}

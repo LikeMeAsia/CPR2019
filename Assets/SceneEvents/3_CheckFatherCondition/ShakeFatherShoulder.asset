@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: ShakeFatherShoulder
   m_EditorClassIdentifier: 
   delayNextEvent: 0
-  assetName: FatherShoulder
+  shoulderName: FatherShoulder
+  canvasName: ShakingShoulderCanvas

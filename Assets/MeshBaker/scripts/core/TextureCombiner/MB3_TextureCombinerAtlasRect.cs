@@ -55,6 +55,13 @@ namespace DigitalOpus.MB.Core
         /// </summary>
         public DRect matTilingRect { get; private set; }
 
+        /// <summary>
+        /// Returns -1 if this texture was imported as a normal map
+        /// Returns 1 if this texture was not imported as a normal map
+        /// Returns 0 if unknown
+        /// </summary>
+        public int isImportedAsNormalMap { get; private set; }
+
         public MeshBakerMaterialTexture() { }
         public MeshBakerMaterialTexture(Texture tx)
         {
@@ -76,7 +83,7 @@ namespace DigitalOpus.MB.Core
             }
         }
 
-        public MeshBakerMaterialTexture(Texture tx, Vector2 matTilingOffset, Vector2 matTilingScale, float texelDens)
+        public MeshBakerMaterialTexture(Texture tx, Vector2 matTilingOffset, Vector2 matTilingScale, float texelDens, int isImportedAsNormalMap)
         {
             if (tx is Texture2D)
             {
@@ -96,6 +103,7 @@ namespace DigitalOpus.MB.Core
             }
             matTilingRect = new DRect(matTilingOffset, matTilingScale);
             texelDensity = texelDens;
+            this.isImportedAsNormalMap = isImportedAsNormalMap;
         }
 
         public DRect GetEncapsulatingSamplingRect()

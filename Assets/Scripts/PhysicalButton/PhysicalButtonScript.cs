@@ -1,4 +1,5 @@
-﻿using System;
+﻿using com.dgn.UnityAttributes;
+using com.dgn.XR.Extensions;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,7 +36,7 @@ public class PhysicalButtonScript : MonoBehaviour, ITriggerListener
     private bool activated;
 
     private Rigidbody pressRigid;
-    private HingeJoint pressJoint;
+    private SpringJoint pressJoint;
     private Renderer pressRend;
     public Text textBtn;
     public Image backgroundImage;
@@ -52,7 +53,7 @@ public class PhysicalButtonScript : MonoBehaviour, ITriggerListener
     private PhysicalButtonSkin activateSkin;
     
     private AudioClip buttonClip;
-    private HashSet<OVRInput.Controller> ctrlSet;
+    private HashSet<HandPresence> ctrlSet;
 
     private Coroutine pressRoutine;
 
@@ -62,7 +63,7 @@ public class PhysicalButtonScript : MonoBehaviour, ITriggerListener
         pressed = false;
         activated = false;
         untouchTimer = 0;
-        ctrlSet = new HashSet<OVRInput.Controller>();
+        ctrlSet = new HashSet<HandPresence>();
         if (pressedEvent == null) {
             pressedEvent = new UnityEvent();
         }
@@ -78,7 +79,7 @@ public class PhysicalButtonScript : MonoBehaviour, ITriggerListener
         if (pressChild != null)
         {
             pressRigid = pressChild.GetComponent<Rigidbody>();
-            pressJoint = pressChild.GetComponent<HingeJoint>();
+            pressJoint = pressChild.GetComponent<SpringJoint>();
             pressRend = pressChild.GetComponent<MeshRenderer>();
             defaultSkin = new PhysicalButtonSkin();
             if (pressRend != null) {
@@ -150,10 +151,10 @@ public class PhysicalButtonScript : MonoBehaviour, ITriggerListener
 
     private void OnDisable()
     {
-        foreach (OVRInput.Controller ctrl in ctrlSet)
+        /*foreach (OVRInput.Controller ctrl in ctrlSet)
         {
             OVRInput.SetControllerVibration(0, 0, ctrl);
-        }
+        }*/
         ctrlSet.Clear();
         if(pressRoutine!=null) StopCoroutine(pressRoutine);
     }
@@ -323,12 +324,12 @@ public class PhysicalButtonScript : MonoBehaviour, ITriggerListener
         pressRoutine = null;
     }
 
-    private void UpdateState(PhysicalButtonState updatedState, OVRInput.Controller ovrCtrl = OVRInput.Controller.RTouch)
+    private void UpdateState(PhysicalButtonState updatedState)
     {
         switch (updatedState)
         {
             case PhysicalButtonState.Touch:
-                OVRInput.SetControllerVibration(0.5f, 0.25f, ovrCtrl);
+               // OVRInput.SetControllerVibration(0.5f, 0.25f, ovrCtrl);
                 if (buttonState != updatedState) {
                     pressTimer = PressTimeToActive;
                     SetButtonSkin(hoverSkin);
@@ -338,19 +339,19 @@ public class PhysicalButtonScript : MonoBehaviour, ITriggerListener
             case PhysicalButtonState.Pressed:;
                 if (!activated && activable)
                 {
-                    OVRInput.SetControllerVibration(1, 1, ovrCtrl);
+                   // OVRInput.SetControllerVibration(1, 1, ovrCtrl);
                     pressRoutine = StartCoroutine(InvokePressedEvent());
                 }
                 break;
             case PhysicalButtonState.Released:
-                OVRInput.SetControllerVibration(0f, 0f, ovrCtrl);
+               // OVRInput.SetControllerVibration(0f, 0f, ovrCtrl);
                 pressJoint.connectedBody.AddForce(pressJoint.connectedBody.transform.forward, ForceMode.Impulse);
                 break;
             default:
-                foreach (OVRInput.Controller ctrl in ctrlSet)
+                /*foreach (OVRInput.Controller ctrl in ctrlSet)
                 {
                     OVRInput.SetControllerVibration(0, 0, ctrl);
-                }
+                }*/
                 if (buttonState != updatedState)
                 {
                     releasedEvent.Invoke();
@@ -369,9 +370,9 @@ public class PhysicalButtonScript : MonoBehaviour, ITriggerListener
     void ITriggerListener.OnTriggerEnter(Collider collider)
     {
         if (!pressed) {
-            OVRInput.Controller getCtrl = Player.Instance.GetTouchOVRController(collider);
-            ctrlSet.Add(getCtrl);
-            UpdateState(PhysicalButtonState.Touch, getCtrl);
+           // OVRInput.Controller getCtrl = Player.Instance.GetTouchOVRController(collider);
+           // ctrlSet.Add(getCtrl);
+            UpdateState(PhysicalButtonState.Touch);
         }
         pressRigid.isKinematic = false;
         untouchTimer = 0;
@@ -385,9 +386,9 @@ public class PhysicalButtonScript : MonoBehaviour, ITriggerListener
         if ((pressRigid.transform.localPosition.z <= 0 && buttonState != PhysicalButtonState.Released) || 
             (pressTimer <= 0 && buttonState == PhysicalButtonState.Touch))
         {
-            OVRInput.Controller getCtrl = Player.Instance.GetTouchOVRController(collider);
-            ctrlSet.Add(getCtrl);
-            UpdateState(PhysicalButtonState.Pressed, getCtrl);
+           // OVRInput.Controller getCtrl = Player.Instance.GetTouchOVRController(collider);
+           // ctrlSet.Add(getCtrl);
+            UpdateState(PhysicalButtonState.Pressed);
             pressed = true;
             pressRigid.isKinematic = true;
         }
@@ -403,9 +404,9 @@ public class PhysicalButtonScript : MonoBehaviour, ITriggerListener
 
     void ITriggerListener.OnTriggerExit(Collider collider)
     {
-        OVRInput.Controller getCtrl = Player.Instance.GetTouchOVRController(collider);
-        ctrlSet.Add(getCtrl);
-        UpdateState(PhysicalButtonState.Released, getCtrl);
+      //  OVRInput.Controller getCtrl = Player.Instance.GetTouchOVRController(collider);
+        //ctrlSet.Add(getCtrl);
+        UpdateState(PhysicalButtonState.Released);
         pressRigid.isKinematic = false;
         untouchTimer = 0.4f;
     }

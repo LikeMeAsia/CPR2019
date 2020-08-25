@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using com.dgn.XR.Extensions;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit;
 
-[RequireComponent(typeof(AudioSource), typeof(OVRGrabbable))]
+[RequireComponent(typeof(AudioSource), typeof(XRGrabInteractable))]
 public class Calling : MonoBehaviour
 {
     [System.Serializable]
@@ -51,13 +53,13 @@ public class Calling : MonoBehaviour
 
     public Collider[] colliders;
     private AudioSource audioSource;
-    private OVRGrabbable ovrGrabbable;
+    private XRGrabInteractable grabbable;
 
     private void Awake()
     {
         phone_rigidbody = GetComponentInChildren<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
-        ovrGrabbable = GetComponent<OVRGrabbable>();
+        grabbable = GetComponent<XRGrabInteractable>();
         colliders = GetComponentsInChildren<Collider>();
     }
 
@@ -85,11 +87,11 @@ public class Calling : MonoBehaviour
                 PlayReadyToCprVoices();
             }
         }
-        if (disableOnGround && ovrGrabbable.enabled && isOnGround)
+        if (disableOnGround && grabbable.enabled && isOnGround)
         {
             if (phone_rigidbody.velocity.magnitude < 0.01)
             {
-                ovrGrabbable.enabled = false;
+                grabbable.enabled = false;
                 phone_rigidbody.isKinematic = true;
                 foreach (Collider col in colliders)
                 {
@@ -132,14 +134,15 @@ public class Calling : MonoBehaviour
             phone_Activate = true;
         }
 
-        if (other.CompareTag("Hand") && (Player.Instance.l_ful || Player.Instance.r_ful))
+        if (other.CompareTag("Hand") && (Player.Instance.LeftHandState == HandPresence.HandState.Fist
+            || Player.Instance.RightHandState == HandPresence.HandState.Fist))
         {
             snapItem = true;
         }
 
-        if(phone_rigidbody.isKinematic && ovrGrabbable != null && ovrGrabbable.grabbedBy != null)
+        /*if(phone_rigidbody.isKinematic && grabbable != null && grabbable. != null)
             {
-            OVRInput.Controller grabControllerType = ((CustomOVRGrabber)ovrGrabbable.grabbedBy).GetControllerType();
+            OVRInput.Controller grabControllerType = ((CustomOVRGrabber)grabbable.grabbedBy).GetControllerType();
             if (!isCalling && other.CompareTag("FingerTip") && (
                 (Player.Instance.l_isPointing && Player.Instance.r_ful && grabControllerType == OVRInput.Controller.RTouch) 
                 || (Player.Instance.r_isPointing && Player.Instance.l_ful && grabControllerType == OVRInput.Controller.LTouch))
@@ -147,7 +150,7 @@ public class Calling : MonoBehaviour
                 phoneAnimIcon.SetBool("showingIcon", false);
                 StartCall();
             }
-        }
+        }*/
     }
 
     private void OnTriggerStay(Collider other)
@@ -163,8 +166,6 @@ public class Calling : MonoBehaviour
             fatherShoulder.SetActive(true);
             warrning_icon = false;
             other.gameObject.SetActive(false);
-            //ScenarioControl.Instance.sitCanvas.GetComponent<Animator>().SetBool("disable", true);
-            //ScenarioControl.Instance.shoulderCanvas.SetActive(true);
             layPhoneText.text = "ตบไหล่พ่อ 2 ครั้ง";
             disableOnGround = true;
         }
