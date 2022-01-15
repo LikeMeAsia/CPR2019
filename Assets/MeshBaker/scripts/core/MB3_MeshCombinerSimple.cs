@@ -579,13 +579,8 @@ namespace DigitalOpus.MB.Core
             int totalDeleteBlendShapes = 0;
 
             //in order to decide if a bone can be deleted need to know which dgos use it so build a map
-            List<MB_DynamicGameObject>[] boneIdx2dgoMap = null;
-            HashSet<int> boneIdxsToDelete = new HashSet<int>();
-            HashSet<BoneAndBindpose> bonesToAdd = new HashSet<BoneAndBindpose>();
-            if (settings.renderType == MB_RenderType.skinnedMeshRenderer && _goToDelete.Length > 0)
-            {
-                boneIdx2dgoMap = _buildBoneIdx2dgoMap();
-            }
+            MB3_MeshCombinerSimpleBones boneProcessor = new MB3_MeshCombinerSimpleBones(this);
+            boneProcessor.BuildBoneIdx2DGOMapIfNecessary(_goToDelete);
             for (int i = 0; i < _goToDelete.Length; i++)
             {
                 MB_DynamicGameObject dgo = null;
@@ -596,17 +591,7 @@ namespace DigitalOpus.MB.Core
                     totalDeleteBlendShapes += dgo.numBlendShapes;
                     if (settings.renderType == MB_RenderType.skinnedMeshRenderer)
                     {
-                        for (int j = 0; j < dgo.indexesOfBonesUsed.Length; j++)
-                        {
-                            if (boneIdx2dgoMap[dgo.indexesOfBonesUsed[j]].Contains(dgo))
-                            {
-                                boneIdx2dgoMap[dgo.indexesOfBonesUsed[j]].Remove(dgo);
-                                if (boneIdx2dgoMap[dgo.indexesOfBonesUsed[j]].Count == 0)
-                                {
-                                    boneIdxsToDelete.Add(dgo.indexesOfBonesUsed[j]);
-                                }
-                            }
-                        }
+                        boneProcessor.FindBonesToDelete(dgo);
                     }
                     for (int j = 0; j < dgo.submeshNumTris.Length; j++)
                     {
@@ -628,12 +613,6 @@ namespace DigitalOpus.MB.Core
             int totalAddVerts = 0;
             int[] totalAddSubmeshTris = new int[numResultMats];
             int totalAddBlendShapes = 0;
-            Dictionary<BoneAndBindpose, int> bone2idx = new Dictionary<BoneAndBindpose, int>();
-            for (int i = 0; i < bones.Length; i++)
-            {
-                BoneAndBindpose bn = new BoneAndBindpose(bones[i], bindPoses[i]);
-                bone2idx.Add(bn, i);
-            }
 
             for (int i = 0; i < _goToAdd.Length; i++)
             {
@@ -694,7 +673,7 @@ namespace DigitalOpus.MB.Core
                         Renderer r = MB_Utility.GetRenderer(go);
                         if (settings.renderType == MB_RenderType.skinnedMeshRenderer)
                         {
-                            _CollectBonesToAddForDGO(dgo, bone2idx, boneIdxsToDelete, bonesToAdd, r, meshChannelCache);
+                            boneProcessor.CollectBonesToAddForDGO(dgo, r, meshChannelCache);
                         }
                         if (lightmapIndex == -1)
                         {
@@ -768,7 +747,7 @@ namespace DigitalOpus.MB.Core
 
             //STEP 2 to allocate new buffers and copy everything over
             int newVertSize = verts.Length + totalAddVerts - totalDeleteVerts;
-            int newBonesSize = bindPoses.Length + bonesToAdd.Count - boneIdxsToDelete.Count;
+            int newBonesSize = boneProcessor.GetNewBonesLength();
             int[] newSubmeshTrisSize = new int[numResultMats];
             int newBlendShapeSize = blendShapes.Length + totalAddBlendShapes - totalDeleteBlendShapes;
             if (LOG_LEVEL >= MB2_LogLevel.debug) Debug.Log("Verts adding:" + totalAddVerts + " deleting:" + totalDeleteVerts + " submeshes:" + newSubmeshTrisSize.Length + " bones:" + newBonesSize + " blendShapes:" + newBlendShapeSize);
@@ -896,7 +875,7 @@ namespace DigitalOpus.MB.Core
 
             if (settings.renderType == MB_RenderType.skinnedMeshRenderer)
             {
-                _CopyBonesWeAreKeepingToNewBonesArrayAndAdjustBWIndexes(boneIdxsToDelete, bonesToAdd, nbones, nbindPoses, nboneWeights, totalDeleteVerts);
+                boneProcessor.CopyBonesWeAreKeepingToNewBonesArrayAndAdjustBWIndexes(nbones, nbindPoses, nboneWeights, totalDeleteVerts);
             }
 
             //remove objects we are deleting
@@ -927,18 +906,21 @@ namespace DigitalOpus.MB.Core
             if (settings.doCol) colors = ncolors;
             if (settings.doBlendShapes) blendShapes = nblendShapes;
             if (settings.renderType == MB_RenderType.skinnedMeshRenderer) boneWeights = nboneWeights;
-            int newBonesStartAtIdx = bones.Length - boneIdxsToDelete.Count;
+            int newBonesStartAtIdx = bones.Length - boneProcessor.GetNumBonesToDelete();
             bindPoses = nbindPoses;
             bones = nbones;
             submeshTris = nsubmeshTris;
 
             //insert the new bones into the bones array
             int bidx = 0;
-            foreach (BoneAndBindpose t in bonesToAdd)
+            if (settings.renderType == MB_RenderType.skinnedMeshRenderer)
             {
-                nbones[newBonesStartAtIdx + bidx] = t.bone;
-                nbindPoses[newBonesStartAtIdx + bidx] = t.bindPose;
-                bidx++;
+                foreach (BoneAndBindpose t in boneProcessor.GetBonesToAdd())
+                {
+                    nbones[newBonesStartAtIdx + bidx] = t.bone;
+                    nbindPoses[newBonesStartAtIdx + bidx] = t.bindPose;
+                    bidx++;
+                }
             }
 
             //add new
@@ -1061,7 +1043,7 @@ namespace DigitalOpus.MB.Core
                 if (settings.renderType == MB_RenderType.skinnedMeshRenderer)
                 {
                     Renderer r = MB_Utility.GetRenderer(go);
-                    _AddBonesToNewBonesArrayAndAdjustBWIndexes(dgo, r, vertsIdx, nbones, nboneWeights, meshChannelCache);
+                    MB3_MeshCombinerSimpleBones.AddBonesToNewBonesArrayAndAdjustBWIndexes(this, dgo, r, vertsIdx, nbones, nboneWeights, meshChannelCache);
                 }
 
                 for (int combinedMeshIdx = 0; combinedMeshIdx < targSubmeshTidx.Length; combinedMeshIdx++)
@@ -1199,28 +1181,6 @@ namespace DigitalOpus.MB.Core
             }
 
             UpdateSkinnedMeshApproximateBoundsFromBoundsStatic(objectsInCombinedMesh, (SkinnedMeshRenderer)targetRenderer);
-        }
-
-        int _getNumBones(Renderer r)
-        {
-            if (settings.renderType == MB_RenderType.skinnedMeshRenderer)
-            {
-                if (r is SkinnedMeshRenderer)
-                {
-                    return ((SkinnedMeshRenderer)r).bones.Length;
-                }
-                else if (r is MeshRenderer)
-                {
-                    return 1;
-                }
-                else {
-                    Debug.LogError("Could not _getNumBones. Object does not have a renderer");
-                    return 0;
-                }
-            }
-            else {
-                return 0;
-            }
         }
 
         Transform[] _getBones(Renderer r)
@@ -2304,7 +2264,7 @@ namespace DigitalOpus.MB.Core
                 }
                 else
                 {
-                    Renderer[] rs = (Renderer[])root.GetComponentsInChildren<Renderer>();
+                    Renderer[] rs = (Renderer[])root.GetComponentsInChildren<Renderer>(true);
                     if (rs.Length == 1)
                     {
                         if (rs[0].transform.parent != root.transform)
@@ -2578,198 +2538,6 @@ namespace DigitalOpus.MB.Core
                 arr[i] = Vector3.zero;
             }
         }
-
-        List<MB_DynamicGameObject>[] _buildBoneIdx2dgoMap()
-        {
-            List<MB_DynamicGameObject>[] boneIdx2dgoMap = new List<MB_DynamicGameObject>[bones.Length];
-            for (int i = 0; i < boneIdx2dgoMap.Length; i++) boneIdx2dgoMap[i] = new List<MB_DynamicGameObject>();
-            // build the map of bone indexes to objects that use them
-            for (int i = 0; i < mbDynamicObjectsInCombinedMesh.Count; i++)
-            {
-                MB_DynamicGameObject dgo = mbDynamicObjectsInCombinedMesh[i];
-                for (int j = 0; j < dgo.indexesOfBonesUsed.Length; j++)
-                {
-                    boneIdx2dgoMap[dgo.indexesOfBonesUsed[j]].Add(dgo);
-                }
-            }
-            return boneIdx2dgoMap;
-        }
-
-        void _CollectBonesToAddForDGO(MB_DynamicGameObject dgo, Dictionary<BoneAndBindpose,int> bone2idx, HashSet<int> boneIdxsToDelete, HashSet<BoneAndBindpose> bonesToAdd, Renderer r, MeshChannelsCache meshChannelCache)
-        {
-            //compile a list of bone transforms to add
-            Matrix4x4[] dgoBindPoses = dgo._tmpCachedBindposes = meshChannelCache.GetBindposes(r);
-            BoneWeight[] dgoBoneWeights = dgo._tmpCachedBoneWeights = meshChannelCache.GetBoneWeights(r,dgo.numVerts);
-            Transform[] dgoBones = dgo._tmpCachedBones = _getBones(r);
-
-            //find bones that are actually by the vertices in the skinned mesh
-            HashSet<int> usedBones = new HashSet<int>();
-            for (int j = 0; j < dgoBoneWeights.Length; j++)
-            {
-                usedBones.Add(dgoBoneWeights[j].boneIndex0);
-                usedBones.Add(dgoBoneWeights[j].boneIndex1);
-                usedBones.Add(dgoBoneWeights[j].boneIndex2);
-                usedBones.Add(dgoBoneWeights[j].boneIndex3);
-            }
-
-            int[] usedBoneIdx2srcMeshBoneIdx = new int[usedBones.Count];
-            usedBones.CopyTo(usedBoneIdx2srcMeshBoneIdx);
-
-            //for each bone see if it exists in the bones array
-            for (int i = 0; i < usedBoneIdx2srcMeshBoneIdx.Length; i++)
-            {
-                bool foundInBonesList = false;
-                int bidx;
-                int dgoBoneIdx = usedBoneIdx2srcMeshBoneIdx[i];
-                BoneAndBindpose bb = new BoneAndBindpose(dgoBones[dgoBoneIdx], dgoBindPoses[dgoBoneIdx]);
-                if (bone2idx.TryGetValue(bb, out bidx))
-                {
-                    if (dgoBones[dgoBoneIdx] == bones[bidx] && !boneIdxsToDelete.Contains(bidx))
-                    {
-                        if (dgoBindPoses[dgoBoneIdx] == bindPoses[bidx])
-                        {
-                            foundInBonesList = true;
-                        }
-                    }
-                }
-
-                if (!foundInBonesList)
-                {
-                    if (!bonesToAdd.Contains(bb))
-                    {
-                        bonesToAdd.Add(bb);
-                    }
-                }
-            }
-
-            dgo._tmpIndexesOfSourceBonesUsed = usedBoneIdx2srcMeshBoneIdx;
-        }
-
-        void _CopyBonesWeAreKeepingToNewBonesArrayAndAdjustBWIndexes(HashSet<int> boneIdxsToDeleteHS, HashSet<BoneAndBindpose> bonesToAdd, Transform[] nbones, Matrix4x4[] nbindPoses, BoneWeight[] nboneWeights, int totalDeleteVerts)
-        {
-
-            // bones are copied separately because some dgos share bones
-            if (boneIdxsToDeleteHS.Count > 0)
-            {
-                int[] boneIdxsToDelete = new int[boneIdxsToDeleteHS.Count];
-                boneIdxsToDeleteHS.CopyTo(boneIdxsToDelete);
-                Array.Sort(boneIdxsToDelete);
-                //bones are being moved in bones array so need to do some remapping
-                int[] oldBonesIndex2newBonesIndexMap = new int[bones.Length];
-                int newIdx = 0;
-                int indexInDeleteList = 0;
-
-                //bones were deleted so we need to rebuild bones and bind poses
-                //and build a map of old bone indexes to new bone indexes
-                //do this by copying old to new skipping ones we are deleting
-                for (int i = 0; i < bones.Length; i++)
-                {
-                    if (indexInDeleteList < boneIdxsToDelete.Length &&
-                        boneIdxsToDelete[indexInDeleteList] == i)
-                    {
-                        //we are deleting this bone so skip its index
-                        indexInDeleteList++;
-                        oldBonesIndex2newBonesIndexMap[i] = -1;
-                    }
-                    else {
-                        oldBonesIndex2newBonesIndexMap[i] = newIdx;
-                        nbones[newIdx] = bones[i];
-                        nbindPoses[newIdx] = bindPoses[i];
-                        newIdx++;
-                    }
-                }
-                //adjust the indexes on the boneWeights
-                int numVertKeeping = boneWeights.Length - totalDeleteVerts;
-                for (int i = 0; i < numVertKeeping; i++)
-                {
-                    nboneWeights[i].boneIndex0 = oldBonesIndex2newBonesIndexMap[nboneWeights[i].boneIndex0];
-                    nboneWeights[i].boneIndex1 = oldBonesIndex2newBonesIndexMap[nboneWeights[i].boneIndex1];
-                    nboneWeights[i].boneIndex2 = oldBonesIndex2newBonesIndexMap[nboneWeights[i].boneIndex2];
-                    nboneWeights[i].boneIndex3 = oldBonesIndex2newBonesIndexMap[nboneWeights[i].boneIndex3];
-                }
-                //adjust the bone indexes on the dgos from old to new
-                for (int i = 0; i < mbDynamicObjectsInCombinedMesh.Count; i++)
-                {
-                    MB_DynamicGameObject dgo = mbDynamicObjectsInCombinedMesh[i];
-                    for (int j = 0; j < dgo.indexesOfBonesUsed.Length; j++)
-                    {
-                        dgo.indexesOfBonesUsed[j] = oldBonesIndex2newBonesIndexMap[dgo.indexesOfBonesUsed[j]];
-                    }
-                }
-            }
-            else { //no bones are moving so can simply copy bones from old to new
-                Array.Copy(bones, nbones, bones.Length);
-                Array.Copy(bindPoses, nbindPoses, bindPoses.Length);
-            }
-        }
-
-        void _AddBonesToNewBonesArrayAndAdjustBWIndexes(MB_DynamicGameObject dgo, Renderer r, int vertsIdx,
-                                                         Transform[] nbones, BoneWeight[] nboneWeights, MeshChannelsCache meshChannelCache)
-        {
-            //Renderer r = MB_Utility.GetRenderer(go);
-            Transform[] dgoBones = dgo._tmpCachedBones;
-            Matrix4x4[] dgoBindPoses = dgo._tmpCachedBindposes;
-            BoneWeight[] dgoBoneWeights = dgo._tmpCachedBoneWeights;
-
-            int[] srcIndex2combinedIndexMap = new int[dgoBones.Length];
-            for (int j = 0; j < dgo._tmpIndexesOfSourceBonesUsed.Length; j++)
-            {
-                int dgoBoneIdx = dgo._tmpIndexesOfSourceBonesUsed[j];
-
-                for (int k = 0; k < nbones.Length; k++)
-                {
-                    if (dgoBones[dgoBoneIdx] == nbones[k])
-                    {
-                        if (dgoBindPoses[dgoBoneIdx] == bindPoses[k])
-                        {
-                            srcIndex2combinedIndexMap[dgoBoneIdx] = k;
-                            break;
-                        }
-                    }
-                }
-            }
-            //remap the bone weights for this dgo
-            //build a list of usedBones, can't trust dgoBones because it contains all bones in the rig
-            for (int j = 0; j < dgoBoneWeights.Length; j++)
-            {
-                int newVertIdx = vertsIdx + j;
-                nboneWeights[newVertIdx].boneIndex0 = srcIndex2combinedIndexMap[dgoBoneWeights[j].boneIndex0];
-                nboneWeights[newVertIdx].boneIndex1 = srcIndex2combinedIndexMap[dgoBoneWeights[j].boneIndex1];
-                nboneWeights[newVertIdx].boneIndex2 = srcIndex2combinedIndexMap[dgoBoneWeights[j].boneIndex2];
-                nboneWeights[newVertIdx].boneIndex3 = srcIndex2combinedIndexMap[dgoBoneWeights[j].boneIndex3];
-                nboneWeights[newVertIdx].weight0 = dgoBoneWeights[j].weight0;
-                nboneWeights[newVertIdx].weight1 = dgoBoneWeights[j].weight1;
-                nboneWeights[newVertIdx].weight2 = dgoBoneWeights[j].weight2;
-                nboneWeights[newVertIdx].weight3 = dgoBoneWeights[j].weight3;
-            }
-            // repurposing the _tmpIndexesOfSourceBonesUsed since
-            //we don't need it anymore and this saves a memory allocation . remap the indexes that point to source bones to combined bones.
-            for (int j = 0; j < dgo._tmpIndexesOfSourceBonesUsed.Length; j++)
-            {
-                dgo._tmpIndexesOfSourceBonesUsed[j] = srcIndex2combinedIndexMap[dgo._tmpIndexesOfSourceBonesUsed[j]];
-            }
-            dgo.indexesOfBonesUsed = dgo._tmpIndexesOfSourceBonesUsed;
-            dgo._tmpIndexesOfSourceBonesUsed = null;
-            dgo._tmpCachedBones = null;
-            dgo._tmpCachedBindposes = null;
-            dgo._tmpCachedBoneWeights = null;
-
-            //check original bones and bindPoses
-            /*
-            for (int j = 0; j < dgo.indexesOfBonesUsed.Length; j++) {
-                Transform bone = bones[dgo.indexesOfBonesUsed[j]];
-                Matrix4x4 bindpose = bindPoses[dgo.indexesOfBonesUsed[j]];
-                bool found = false;
-                for (int k = 0; k < dgo._originalBones.Length; k++) {
-                    if (dgo._originalBones[k] == bone && dgo._originalBindPoses[k] == bindpose) {
-                        found = true;
-                    }
-                }
-                if (!found) Debug.LogError("A Mismatch between original bones and bones array. " + dgo.name);
-            }
-            */
-        }
-        //--------  End Skinned Mesh Bone Routines -----------------
 
         void _copyUV2unchangedToSeparateRects()
         {

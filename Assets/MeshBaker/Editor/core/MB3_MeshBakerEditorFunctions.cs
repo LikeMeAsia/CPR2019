@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.Collections.Generic;
 using DigitalOpus.MB.Core;
 using UnityEditor;
+using DigitalOpus.MB.MBEditor;
 
 public class MB3_MeshBakerEditorFunctions
 {
@@ -39,60 +40,109 @@ public class MB3_MeshBakerEditorFunctions
     {
         MB2_OutputOptions prefabOrSceneObject = mom.meshCombiner.outputOption;
         createdDummyTextureBakeResults = false;
-        if (MB3_MeshCombiner.EVAL_VERSION && prefabOrSceneObject == MB2_OutputOptions.bakeIntoPrefab)
-        {
-            Debug.LogError("Cannot BakeIntoPrefab with evaluation version.");
-            return false;
-        }
-        if (prefabOrSceneObject != MB2_OutputOptions.bakeIntoPrefab && prefabOrSceneObject != MB2_OutputOptions.bakeIntoSceneObject)
-        {
-            Debug.LogError("Paramater prefabOrSceneObject must be bakeIntoPrefab or bakeIntoSceneObject");
-            return false;
-        }
 
-        MB3_TextureBaker tb = mom.GetComponentInParent<MB3_TextureBaker>();
-        if (mom.textureBakeResults == null && tb != null)
+        // Initial Validate
         {
-            mom.textureBakeResults = tb.textureBakeResults;
-        }
-        if (mom.textureBakeResults == null)
-        {
-            if (_OkToCreateDummyTextureBakeResult(mom))
+            if (mom.meshCombiner.resultSceneObject != null &&
+                (MBVersionEditor.GetPrefabType(mom.meshCombiner.resultSceneObject) == MB_PrefabType.modelPrefabAsset ||
+                 MBVersionEditor.GetPrefabType(mom.meshCombiner.resultSceneObject) == MB_PrefabType.prefabAsset))
             {
-                createdDummyTextureBakeResults = true;
-                List<GameObject> gos = mom.GetObjectsToCombine();
-                if (mom.GetNumObjectsInCombined() > 0)
+                Debug.LogWarning("Result Game Object was a project asset not a scene object instance. Clearing this field.");
+                mom.meshCombiner.resultSceneObject = null;
+            }
+
+            if (prefabOrSceneObject != MB2_OutputOptions.bakeIntoPrefab && prefabOrSceneObject != MB2_OutputOptions.bakeIntoSceneObject)
+            {
+                Debug.LogError("Paramater prefabOrSceneObject must be bakeIntoPrefab or bakeIntoSceneObject");
+                return false;
+            }
+
+            if (prefabOrSceneObject == MB2_OutputOptions.bakeIntoPrefab)
+            {
+                if (MB3_MeshCombiner.EVAL_VERSION)
                 {
-                    if (mom.clearBuffersAfterBake) { mom.ClearMesh(); }
-                    else
-                    {
-                        Debug.LogError("'Texture Bake Result' must be set to add more objects to a combined mesh that already contains objects. Try enabling 'clear buffers after bake'");
-                        return false;
-                    }
+                    Debug.LogError("Cannot BakeIntoPrefab with evaluation version.");
+                    return false;
                 }
-                mom.textureBakeResults = MB2_TextureBakeResults.CreateForMaterialsOnRenderer(gos.ToArray(), mom.meshCombiner.GetMaterialsOnTargetRenderer());
-                if (mom.meshCombiner.LOG_LEVEL >= MB2_LogLevel.debug) { Debug.Log("'Texture Bake Result' was not set. Creating a temporary one. Each material will be mapped to a separate submesh."); }
+
+                if (mom.resultPrefab == null)
+                {
+                    Debug.LogError("Need to set the Combined Mesh Prefab field. Create a prefab asset, drag an empty game object into it, and drag it to the 'Combined Mesh Prefab' field.");
+                    return false;
+                }
+
+                string prefabPth = AssetDatabase.GetAssetPath(mom.resultPrefab);
+                if (prefabPth == null || prefabPth.Length == 0)
+                {
+                    Debug.LogError("Could not save result to prefab. Result Prefab value is not a project asset. Is it an instance in the scene?");
+                    return false;
+                }
             }
         }
-        MB2_ValidationLevel vl = Application.isPlaying ? MB2_ValidationLevel.quick : MB2_ValidationLevel.robust;
-        if (!MB3_MeshBakerRoot.DoCombinedValidate(mom, MB_ObjsToCombineTypes.sceneObjOnly, new MB3_EditorMethods(), vl)) return false;
-        if (prefabOrSceneObject == MB2_OutputOptions.bakeIntoPrefab &&
-            mom.resultPrefab == null)
+
         {
-            Debug.LogError("Need to set the Combined Mesh Prefab field. Create a prefab asset, drag an empty game object into it, and drag it to the 'Combined Mesh Prefab' field.");
-            return false;
-        }
-        if (mom.meshCombiner.resultSceneObject != null &&
-            (MBVersionEditor.GetPrefabType(mom.meshCombiner.resultSceneObject) == MB_PrefabType.modelPrefab ||
-             MBVersionEditor.GetPrefabType(mom.meshCombiner.resultSceneObject) == MB_PrefabType.prefab))
-        {
-            Debug.LogWarning("Result Game Object was a project asset not a scene object instance. Clearing this field.");
-            mom.meshCombiner.resultSceneObject = null;
+            // Find or create texture bake results
+            MB3_TextureBaker tb = mom.GetComponentInParent<MB3_TextureBaker>();
+            if (mom.textureBakeResults == null && tb != null)
+            {
+                mom.textureBakeResults = tb.textureBakeResults;
+            }
+
+            if (mom.textureBakeResults == null)
+            {
+                if (_OkToCreateDummyTextureBakeResult(mom))
+                {
+                    createdDummyTextureBakeResults = true;
+                    List<GameObject> gos = mom.GetObjectsToCombine();
+                    if (mom.GetNumObjectsInCombined() > 0)
+                    {
+                        if (mom.clearBuffersAfterBake) { mom.ClearMesh(); }
+                        else
+                        {
+                            Debug.LogError("'Texture Bake Result' must be set to add more objects to a combined mesh that already contains objects. Try enabling 'clear buffers after bake'");
+                            return false;
+                        }
+                    }
+                    mom.textureBakeResults = MB2_TextureBakeResults.CreateForMaterialsOnRenderer(gos.ToArray(), mom.meshCombiner.GetMaterialsOnTargetRenderer());
+                    if (mom.meshCombiner.LOG_LEVEL >= MB2_LogLevel.debug) { Debug.Log("'Texture Bake Result' was not set. Creating a temporary one. Each material will be mapped to a separate submesh."); }
+                }
+            }
         }
 
+        // Second level of validation now that TextureBakeResults exists.
+        MB2_ValidationLevel vl = Application.isPlaying ? MB2_ValidationLevel.quick : MB2_ValidationLevel.robust;
+        if (!MB3_MeshBakerRoot.DoCombinedValidate(mom, MB_ObjsToCombineTypes.sceneObjOnly, new MB3_EditorMethods(), vl))
+        {
+            return false;
+        }
+
+        // Add Delete Game Objects
+        bool success;
+        if (prefabOrSceneObject == MB2_OutputOptions.bakeIntoSceneObject)
+        {
+            success = _BakeIntoCombinedSceneObject(mom, createdDummyTextureBakeResults, ref so);
+        }
+        else if (prefabOrSceneObject == MB2_OutputOptions.bakeIntoPrefab)
+        {
+            success = _BakeIntoCombinedPrefab(mom, createdDummyTextureBakeResults, ref so);
+        } else
+        {
+            Debug.LogError("Should be impossible.");
+            success = false;
+        }
+
+        if (mom.clearBuffersAfterBake) { mom.meshCombiner.ClearBuffers(); }
+        if (createdDummyTextureBakeResults) MB_Utility.Destroy(mom.textureBakeResults);
+        return success;
+    }
+
+    private static bool _BakeIntoCombinedSceneObject(MB3_MeshBakerCommon mom, bool createdDummyTextureBakeResults, ref SerializedObject so)
+    {
+        bool success;
         mom.ClearMesh();
         if (mom.AddDeleteGameObjects(mom.GetObjectsToCombine().ToArray(), null, false))
         {
+            success = true;
             mom.Apply(UnwrapUV2);
             if (createdDummyTextureBakeResults)
             {
@@ -102,57 +152,239 @@ public class MB3_MeshBakerEditorFunctions
             {
                 Debug.Log(String.Format("Successfully baked {0} meshes", mom.GetObjectsToCombine().Count));
             }
+        }
+        else
+        {
+            success = false;
+        }
 
+        return success;
+    }
 
-            if (prefabOrSceneObject == MB2_OutputOptions.bakeIntoSceneObject)
+    private static bool _BakeIntoCombinedPrefab(MB3_MeshBakerCommon mom, bool createdDummyTextureBakeResults, ref SerializedObject so)
+    {
+        bool success = false;
+
+        List<Transform> tempPrefabInstanceRoots = null;
+        GameObject[] objsToCombine = mom.GetObjectsToCombine().ToArray();
+        if (mom.meshCombiner.settings.renderType == MB_RenderType.skinnedMeshRenderer)
+        {
+            tempPrefabInstanceRoots = new List<Transform>();
+            // We are going to move bones of source objs and transforms into our combined mesh prefab so make some duplicates
+            // so that we don't destroy a setup.
+            _DuplicateSrcObjectInstancesAndUnpack(mom.meshCombiner.settings.renderType, objsToCombine, tempPrefabInstanceRoots);
+        }
+        try
+        {
+            mom.ClearMesh();
+            if (mom.AddDeleteGameObjects(objsToCombine, null, false))
             {
-                MB_PrefabType pt = MBVersionEditor.GetPrefabType(mom.meshCombiner.resultSceneObject);
-                if (pt == MB_PrefabType.prefab || pt == MB_PrefabType.modelPrefab)
+                success = true;
+                mom.Apply(UnwrapUV2);
+                if (createdDummyTextureBakeResults)
                 {
-                    Debug.LogError("Combined Mesh Object is a prefab asset. If output option bakeIntoSceneObject then this must be an instance in the scene.");
-                    return false;
+                    Debug.Log(String.Format("Successfully baked {0} meshes each material is mapped to its own submesh.", mom.GetObjectsToCombine().Count));
                 }
-            }
-            else if (prefabOrSceneObject == MB2_OutputOptions.bakeIntoPrefab)
-            {
+                else
+                {
+                    Debug.Log(String.Format("Successfully baked {0} meshes", mom.GetObjectsToCombine().Count));
+                }
+
                 string prefabPth = AssetDatabase.GetAssetPath(mom.resultPrefab);
                 if (prefabPth == null || prefabPth.Length == 0)
                 {
                     Debug.LogError("Could not save result to prefab. Result Prefab value is not an Asset.");
-                    return false;
+                    success = false;
                 }
-                string baseName = Path.GetFileNameWithoutExtension(prefabPth);
-                string folderPath = prefabPth.Substring(0, prefabPth.Length - baseName.Length - 7);
-                string newFilename = folderPath + baseName + "-mesh";
-                SaveMeshsToAssetDatabase(mom, folderPath, newFilename);
-
-
-                if (mom.meshCombiner.renderType == MB_RenderType.skinnedMeshRenderer)
+                else
                 {
-                    Debug.LogWarning("Render type is skinned mesh renderer. " +
-                            "Can't create prefab until all bones have been added to the combined mesh object " + mom.resultPrefab +
-                            " Add the bones then drag the combined mesh object to the prefab.");
-
+                    string baseName = Path.GetFileNameWithoutExtension(prefabPth);
+                    string folderPath = prefabPth.Substring(0, prefabPth.Length - baseName.Length - 7);
+                    string newFilename = folderPath + baseName + "-mesh";
+                    SaveMeshsToAssetDatabase(mom, folderPath, newFilename);
+                    GameObject rootGO = RebuildPrefab(mom, ref so, tempPrefabInstanceRoots, objsToCombine);
+                    MB_Utility.Destroy(mom.meshCombiner.resultSceneObject);
                 }
-                RebuildPrefab(mom, ref so);
-
-                MB_Utility.Destroy(mom.meshCombiner.resultSceneObject);
             }
             else
             {
-                Debug.LogError("Unknown parameter");
-                return false;
+                success = false;
+            }
+
+        }
+#pragma warning disable 0169
+        catch (Exception ex)
+#pragma warning restore 0169
+        {
+            throw;
+        } finally
+        {
+            // Clean up temporary created instances. If success was true then they should have been added to a prefab
+            // and cleaned up for us.
+            if (success == false)
+            {
+                if (tempPrefabInstanceRoots != null)
+                {
+                    for (int i = 0; i < tempPrefabInstanceRoots.Count; i++)
+                    {
+                        MB_Utility.Destroy(tempPrefabInstanceRoots[i]);
+                    }
+                }
             }
         }
-        else
+
+        return success;
+    }
+
+    /// <summary>
+    /// We will modify the source objects (unpack prefabs and re-organize prefabs) so duplicate them.
+    /// </summary>
+    /// <param name="tempGameObjectInstances"></param>
+    private static void _MoveBonesToCombinedMeshPrefabAndDeleteRenderers(Transform newPrefabInstanceRoot, List<Transform> tempGameObjectInstances, GameObject[] srcRenderers)
+    {
+        for (int i = 0; i < srcRenderers.Length; i++)
         {
-            if (mom.clearBuffersAfterBake) { mom.meshCombiner.ClearBuffers(); }
-            if (createdDummyTextureBakeResults) MB_Utility.Destroy(mom.textureBakeResults);
-            return false;
+            MeshRenderer mr = srcRenderers[i].GetComponent<MeshRenderer>();
+            if (mr != null) MB_Utility.Destroy(mr);
+            MeshFilter mf = srcRenderers[i].GetComponent<MeshFilter>();
+            if (mf != null) MB_Utility.Destroy(mf);
+            SkinnedMeshRenderer smr = srcRenderers[i].GetComponent<SkinnedMeshRenderer>();
+            if (smr != null) MB_Utility.Destroy(smr);
         }
-        if (mom.clearBuffersAfterBake) { mom.meshCombiner.ClearBuffers(); }
-        if (createdDummyTextureBakeResults) MB_Utility.Destroy(mom.textureBakeResults);
-        return true;
+
+        for (int i = 0; i < tempGameObjectInstances.Count; i++)
+        {
+            Transform tt = tempGameObjectInstances[i];
+            tempGameObjectInstances[i].parent = newPrefabInstanceRoot;
+        }
+    }
+
+    /// <summary>
+    /// We will modify the source object so duplicate them
+    /// </summary>
+    /// <param name="tempGameObjectInstances"></param>
+    public static void _DuplicateSrcObjectInstancesAndUnpack(MB_RenderType renderType, GameObject[] objsToCombine, List<Transform> tempGameObjectInstances)
+    {
+        Debug.Assert(renderType == MB_RenderType.skinnedMeshRenderer, "RenderType must be Skinned Mesh Renderer");
+        // first pass, collect the prefab-instance roots for each of the src objects.
+        Transform[] sceneInstanceParents = new Transform[objsToCombine.Length];
+        for (int i = 0; i < objsToCombine.Length; i++)
+        {
+            // Get the prefab root
+            GameObject pr = null;
+            {
+                MB_PrefabType pt = MBVersionEditor.GetPrefabType(objsToCombine[i]);
+                if (pt == MB_PrefabType.scenePefabInstance || pt == MB_PrefabType.isInstanceAndNotAPartOfAnyPrefab)
+                {
+                    pr = MBVersionEditor.GetPrefabInstanceRoot(objsToCombine[i]);
+                }
+
+                if (pr == null)
+                {
+                    pr = objsToCombine[i];
+                }
+            }
+
+            sceneInstanceParents[i] = pr.transform;
+        }
+
+        // second pass, some of the parents could be children of other parents. ensure that we are
+        // using the uppermost ancestor for all.
+        for (int i = 0; i < objsToCombine.Length; i++)
+        {
+            sceneInstanceParents[i] = _FindUppermostParent(objsToCombine[i], sceneInstanceParents);
+        }
+
+        // Now build a map of sceneInstanceParents to the renderers contained beneath.
+        Dictionary<Transform, List<Transform>> srcPrefabInstances2Renderers = new Dictionary<Transform, List<Transform>>();
+        for (int i = 0; i < objsToCombine.Length; i++)
+        {
+            List<Transform> renderersUsed;
+            if (!srcPrefabInstances2Renderers.TryGetValue(sceneInstanceParents[i], out renderersUsed))
+            {
+                renderersUsed = new List<Transform>();
+                srcPrefabInstances2Renderers.Add(sceneInstanceParents[i], renderersUsed);
+            }
+
+            renderersUsed.Add(objsToCombine[i].transform);
+        }
+
+        // Duplicate the prefab-instance-root scene objects
+        List<Transform> srcRoots = new List<Transform>(srcPrefabInstances2Renderers.Keys);
+        List<Transform> targRoots = new List<Transform>();
+        for (int i = 0; i < srcRoots.Count; i++)
+        {
+            Transform src = srcRoots[i];
+            GameObject n = GameObject.Instantiate<GameObject>(src.gameObject);
+            n.transform.rotation = src.rotation;
+            n.transform.position = src.position;
+            n.transform.localScale = src.localScale;
+            targRoots.Add(n.transform);
+            tempGameObjectInstances.Add(targRoots[i]);
+            _CheckSrcRootScale(renderType, src);
+        }
+
+        // Find the correct duplicated objsToCombine in the new instances that maps to objs in "objsToCombine".
+        List<GameObject> newObjsToCombine = new List<GameObject>();
+        for (int i = 0; i < srcRoots.Count; i++)
+        {
+            List<Transform> renderers = srcPrefabInstances2Renderers[srcRoots[i]];
+            for (int j = 0; j < renderers.Count; j++)
+            {
+                Transform t = MB3_BatchPrefabBakerEditor.FindCorrespondingTransform(srcRoots[i], renderers[j], targRoots[i]);
+                Debug.Assert(!newObjsToCombine.Contains(t.gameObject));
+                newObjsToCombine.Add(t.gameObject);
+            }
+
+        }
+        Debug.Assert(newObjsToCombine.Count == objsToCombine.Length);
+
+        for (int i = 0; i < newObjsToCombine.Count; i++)
+        {
+            //GameObject go = newObjsToCombine[i];
+            //SerializedObject so = null;
+            //MB_PrefabType pt = MBVersionEditor.GetPrefabType(go);
+            //if (pt == MB_PrefabType.sceneInstance)
+            //{
+            //    MBVersionEditor.UnpackPrefabInstance(go, ref so);
+            //}
+
+            objsToCombine[i] = newObjsToCombine[i];
+        }
+    }
+
+    private static void _CheckSrcRootScale(MB_RenderType renderType, Transform trans)
+    {
+        Debug.Assert(renderType == MB_RenderType.skinnedMeshRenderer, "Render Type must be skinned mesh Renderer");
+        Transform t = trans.parent;
+        while (t != null)
+        {
+            if (Vector3.Distance(t.localScale, Vector3.one) > 10e-5f)
+            {
+                Debug.LogError("Src object " + trans.gameObject + " is a game object instance in the scene that is a child of a hierarchy with scale that is not (1,1,1). " +
+                    "This object will become the bones of a skinned mesh renderer and these bones need to be copied to the Combined Mesh Prefab. When this happens, it may not " +
+                    "be possible to re create the the bone position and scale in the Combined Mesh Prefab that matches the position and scale of the source object. If objects " +
+                    " are not in the correct place after baking, ensure that all scaling happens inside the hierarchy of the source-object-prefab-instances.");
+            }
+            t = t.parent;
+        }
+    }
+
+    private static Transform _FindUppermostParent(GameObject go, Transform[] objsToCombinePrefabInstanceParent)
+    {
+        // traverse up to parent checking if any of the gameObjs are in the list of objs to combine.
+        Transform commonParent = go.transform;
+        Transform t = go.transform;
+        while (t != null)
+        {
+            for (int i = 0; i < objsToCombinePrefabInstanceParent.Length; i++)
+            {
+                if (objsToCombinePrefabInstanceParent[i] == t) commonParent = objsToCombinePrefabInstanceParent[i];
+            }
+            t = t.parent;
+        }
+
+        return commonParent;
     }
 
     public static void SaveMeshsToAssetDatabase(MB3_MeshBakerCommon mom, string folderPath, string newFileNameBase)
@@ -170,7 +402,7 @@ public class MB3_MeshBakerEditorFunctions
             }
             else
             {
-                Debug.Log("Mesh is an asset at " + ap);
+                Debug.Log("Mesh is an existing asset at " + ap);
             }
         }
         else if (mom is MB3_MultiMeshBaker)
@@ -200,23 +432,24 @@ public class MB3_MeshBakerEditorFunctions
     }
 
     // The serialized object reference is necessary to work around a nasty unity bug.
-    public static void RebuildPrefab(MB3_MeshBakerCommon mom, ref SerializedObject so)
+    public static GameObject RebuildPrefab(MB3_MeshBakerCommon mom, ref SerializedObject so, List<Transform> tempPrefabInstanceRoots, GameObject[] objsToCombine)
     {
-        if (MB3_MeshCombiner.EVAL_VERSION) return;
+        if (MB3_MeshCombiner.EVAL_VERSION) return null;
 
         if (mom.meshCombiner.LOG_LEVEL >= MB2_LogLevel.debug) Debug.Log("Rebuilding Prefab: " + mom.resultPrefab);
         GameObject prefabRoot = mom.resultPrefab;
         GameObject rootGO = (GameObject)PrefabUtility.InstantiatePrefab(prefabRoot);
 
-        //remove all renderer childeren of rootGO
+        rootGO.transform.position = Vector3.zero;
+        rootGO.transform.rotation = Quaternion.identity;
+        rootGO.transform.localScale = Vector3.one;
+
+        //remove everything in the prefab.
         MBVersionEditor.UnpackPrefabInstance(rootGO, ref so);
-        Renderer[] rs = rootGO.GetComponentsInChildren<Renderer>();
-        for (int i = 0; i < rs.Length; i++)
+        int numChildren = rootGO.transform.childCount;
+        for (int i = numChildren - 1; i >= 0; i--)
         {
-            if (rs[i] != null && rs[i].transform.parent == rootGO.transform)
-            {
-                MB_Utility.Destroy(rs[i].gameObject);
-            }
+            MB_Utility.Destroy(rootGO.transform.GetChild(i).gameObject);
         }
 
         if (mom is MB3_MeshBaker)
@@ -239,13 +472,18 @@ public class MB3_MeshBakerEditorFunctions
             Debug.LogError("Argument was not a MB3_MeshBaker or an MB3_MultiMeshBaker.");
         }
 
+        if (mom.meshCombiner.settings.renderType == MB_RenderType.skinnedMeshRenderer)
+        {
+            _MoveBonesToCombinedMeshPrefabAndDeleteRenderers(rootGO.transform, tempPrefabInstanceRoots, objsToCombine);
+        }
+
         string prefabPth = AssetDatabase.GetAssetPath(prefabRoot);
         MBVersionEditor.ReplacePrefab(rootGO, prefabPth, MB_ReplacePrefabOption.connectToPrefab);
-        if (mom.meshCombiner.renderType != MB_RenderType.skinnedMeshRenderer)
-        {
-            // For Skinned meshes, leave the prefab instance in the scene so source game objects can moved into the prefab.
-            Editor.DestroyImmediate(rootGO);
-        }
+        Editor.DestroyImmediate(rootGO);
+
+        mom.resultPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPth);
+
+        return rootGO;
     }
 
     public static void UnwrapUV2(Mesh mesh, float hardAngle, float packingMargin)

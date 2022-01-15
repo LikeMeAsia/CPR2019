@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using com.dgn.XR.Extensions;
+using System.Collections;
 using UnityEngine;
 
 public class CPRHand : MonoBehaviour
@@ -14,7 +15,8 @@ public class CPRHand : MonoBehaviour
 
     [Header("CPR Hand")]
     public Vector3 centerPoint;
-    public Collider cprHandCollider;
+    public Collider cprHandCollider_L;
+    public Collider cprHandCollider_R;
 
     public Transform rHandTrack;
     public Transform lHandTrack;
@@ -40,7 +42,6 @@ public class CPRHand : MonoBehaviour
 
     void Start()
     {
-        cprHandCollider = GetComponent<Collider>();
         DisabledSnapping();
     }
 
@@ -59,11 +60,13 @@ public class CPRHand : MonoBehaviour
         l_handDown = IsBetween(l_rot, l_rotationHandThreshold.x, l_rotationHandThreshold.y);
         r_handDown = IsBetween(r_rot, r_rotationHandThreshold.x, r_rotationHandThreshold.y);
 
-        if (lHandTrack.position.y < rHandTrack.position.y && Player.Instance.r_ful)
+        if (lHandTrack.position.y < rHandTrack.position.y && 
+            Player.Instance.RightHandState == HandPresence.HandState.Fist )
         {
             handsState = HandsState.LeftHandUnder;
         }
-        else if (lHandTrack.position.y > rHandTrack.position.y && Player.Instance.l_ful)
+        else if (lHandTrack.position.y > rHandTrack.position.y && 
+            Player.Instance.LeftHandState == HandPresence.HandState.Fist)
         {
             handsState = HandsState.RightHandUnder;
         }
@@ -79,12 +82,12 @@ public class CPRHand : MonoBehaviour
             centerPoint = (lHandTrack.position + rHandTrack.position) / 2;
             transform.rotation = Quaternion.identity;
             Player.Instance.SetEnabledHands(false);
-            cprHandCollider.enabled = true;
-
             if (handsState == HandsState.LeftHandUnder)
             {
                 l_cprHandUnderObj.SetActive(true);
+                cprHandCollider_L.enabled = true;
                 r_cprHandUnderObj.SetActive(false);
+                cprHandCollider_R.enabled = false;
                 transform.rotation = lHandTrack.rotation;
                 centerPoint.y = lHandTrack.position.y;
                 transform.position = centerPoint;
@@ -92,7 +95,9 @@ public class CPRHand : MonoBehaviour
             else if (handsState == HandsState.RightHandUnder)
             {
                 r_cprHandUnderObj.SetActive(true);
+                cprHandCollider_R.enabled = true;
                 l_cprHandUnderObj.SetActive(false);
+                cprHandCollider_L.enabled = false;
                 centerPoint.y = rHandTrack.position.y;
                 transform.rotation = rHandTrack.rotation;
             }
@@ -108,7 +113,8 @@ public class CPRHand : MonoBehaviour
     private void DisabledSnapping() {
         r_cprHandUnderObj.SetActive(false);
         l_cprHandUnderObj.SetActive(false);
-        cprHandCollider.enabled = false;
+        cprHandCollider_L.enabled = false;
+        cprHandCollider_R.enabled = false;
     }
 
     private bool IsBetween(float num, float min, float max)

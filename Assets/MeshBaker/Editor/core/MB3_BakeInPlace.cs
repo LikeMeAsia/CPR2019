@@ -30,7 +30,7 @@ namespace DigitalOpus.MB.Core
             MB3_EditorMethods editorMethods = new MB3_EditorMethods();
             mom.DestroyMeshEditor(editorMethods);
 
-            MB_RenderType originalRenderType = mom.renderType;
+            MB_RenderType originalRenderType = mom.settings.renderType;
             bool success = false;
             string[] objNames = GenerateNames(objsToMesh);
             for (int i = 0; i < objsToMesh.Count; i++)
@@ -51,7 +51,7 @@ namespace DigitalOpus.MB.Core
                 }
                 if (updateProgressBar != null) updateProgressBar("Created mesh saving mesh on " + objsToMesh[i].name + " to asset " + objNames[i], .6f);
             }
-            mom.renderType = originalRenderType;
+            mom.settings.renderType = originalRenderType;
             MB_Utility.Destroy(mom.resultSceneObject);
             if (clearBuffersAfterBake) { mom.ClearBuffers(); }
             return success;
@@ -77,11 +77,11 @@ namespace DigitalOpus.MB.Core
             Renderer r = MB_Utility.GetRenderer(objToBake);
             if (r is SkinnedMeshRenderer)
             {
-                mom.renderType = MB_RenderType.skinnedMeshRenderer;
+                mom.settings.renderType = MB_RenderType.skinnedMeshRenderer;
             }
             else if (r is MeshRenderer)
             {
-                mom.renderType = MB_RenderType.meshRenderer;
+                mom.settings.renderType = MB_RenderType.meshRenderer;
             }
             else
             {

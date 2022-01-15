@@ -178,53 +178,13 @@ namespace DigitalOpus.MB.Core
                 }
             }
 
-            Material m = resultMaterial;
-            if (m == null)
+            if (resultMaterial == null)
             {
                 Debug.LogError("Please assign a result material. The combined mesh will use this material.");
                 return false;
             }
 
-            //Collect the property names for the textures
-            string shaderPropStr = "";
-            for (int i = 0; i < shaderTexPropertyNames.Length; i++)
-            {
-                if (m.HasProperty(shaderTexPropertyNames[i].name))
-                {
-                    shaderPropStr += ", " + shaderTexPropertyNames[i].name;
-                    if (!texPropertyNames.Contains(shaderTexPropertyNames[i])) texPropertyNames.Add(shaderTexPropertyNames[i]);
-                    if (m.GetTextureOffset(shaderTexPropertyNames[i].name) != new Vector2(0f, 0f))
-                    {
-                        if (LOG_LEVEL >= MB2_LogLevel.warn) Debug.LogWarning("Result material has non-zero offset. This is may be incorrect.");
-                    }
-                    if (m.GetTextureScale(shaderTexPropertyNames[i].name) != new Vector2(1f, 1f))
-                    {
-                        if (LOG_LEVEL >= MB2_LogLevel.warn) Debug.LogWarning("Result material should have tiling of 1,1");
-                    }
-                }
-            }
-
-            for (int i = 0; i < _customShaderPropNames.Count; i++)
-            {
-                if (m.HasProperty(_customShaderPropNames[i].name))
-                {
-                    shaderPropStr += ", " + _customShaderPropNames[i].name;
-                    texPropertyNames.Add(_customShaderPropNames[i]);
-                    if (m.GetTextureOffset(_customShaderPropNames[i].name) != new Vector2(0f, 0f))
-                    {
-                        if (LOG_LEVEL >= MB2_LogLevel.warn) Debug.LogWarning("Result material has non-zero offset. This is probably incorrect.");
-                    }
-                    if (m.GetTextureScale(_customShaderPropNames[i].name) != new Vector2(1f, 1f))
-                    {
-                        if (LOG_LEVEL >= MB2_LogLevel.warn) Debug.LogWarning("Result material should probably have tiling of 1,1.");
-                    }
-                }
-                else
-                {
-                    if (LOG_LEVEL >= MB2_LogLevel.warn) Debug.LogWarning("Result material shader does not use property " + _customShaderPropNames[i].name + " in the list of custom shader property names");
-                }
-            }
-
+            MBVersion.CollectPropertyNames(texPropertyNames, shaderTexPropertyNames, _customShaderPropNames, resultMaterial, LOG_LEVEL);
             return true;
         }
 
@@ -401,6 +361,7 @@ namespace DigitalOpus.MB.Core
                         Vector2 scale = Vector2.one;
                         Vector2 offset = Vector2.zero;
                         float texelDensity = 0f;
+                        int isImportedAsNormalMap = 0;
                         if (mat.HasProperty(data.texPropertyNames[propIdx].name))
                         {
                             Texture txx = GetTextureConsideringStandardShaderKeywords(data.resultMaterial.shader.name, mat, data.texPropertyNames[propIdx].name);
@@ -411,7 +372,11 @@ namespace DigitalOpus.MB.Core
                                     tx = txx;
                                     TextureFormat f = ((Texture2D)tx).format;
                                     bool isNormalMap = false;
-                                    if (!Application.isPlaying && textureEditorMethods != null) isNormalMap = textureEditorMethods.IsNormalMap((Texture2D)tx);
+                                    if (!Application.isPlaying && textureEditorMethods != null)
+                                    {
+                                        isNormalMap = textureEditorMethods.IsNormalMap((Texture2D)tx);
+                                        isImportedAsNormalMap = isNormalMap == true ? -1 : 1;
+                                    }
                                     if ((f == TextureFormat.ARGB32 ||
                                         f == TextureFormat.RGBA32 ||
                                         f == TextureFormat.BGRA32 ||
@@ -472,7 +437,7 @@ namespace DigitalOpus.MB.Core
                             GetMaterialScaleAndOffset(mat, data.texPropertyNames[propIdx].name, out offset, out scale);
                         }
 
-                        mts[propIdx] = new MeshBakerMaterialTexture(tx, offset, scale, texelDensity);
+                        mts[propIdx] = new MeshBakerMaterialTexture(tx, offset, scale, texelDensity, isImportedAsNormalMap);
                     }
 
                     data.nonTexturePropertyBlender.CollectAverageValuesOfNonTextureProperties(data.resultMaterial, mat);
@@ -531,6 +496,26 @@ namespace DigitalOpus.MB.Core
             if (data.doMergeDistinctMaterialTexturesThatWouldExceedAtlasSize)
             {
                 merger.MergeDistinctMaterialTexturesThatWouldExceedMaxAtlasSizeAndCalcMaterialSubrects(data.distinctMaterialTextures, Mathf.Max(data._maxAtlasHeight, data._maxAtlasWidth));
+            }
+
+            // Try to guess the isNormalMap if for textureProperties if necessary.
+            {
+                for (int propIdx = 0; propIdx < data.texPropertyNames.Count; propIdx++)
+                {
+                    ShaderTextureProperty texProp = data.texPropertyNames[propIdx];
+                    if (texProp.isNormalDontKnow)
+                    {
+                        int isNormalVote = 0;
+                        for (int rectIdx = 0; rectIdx < data.distinctMaterialTextures.Count; rectIdx++)
+                        {
+                            MeshBakerMaterialTexture matTex = data.distinctMaterialTextures[rectIdx].ts[propIdx];
+                            isNormalVote += matTex.isImportedAsNormalMap;
+                        }
+
+                        texProp.isNormalMap = isNormalVote >= 0 ? false : true;
+                        texProp.isNormalDontKnow = false;
+                    }
+                }
             }
 
             if (LOG_LEVEL >= MB2_LogLevel.debug) Debug.Log("Total time Step1_CollectDistinctTextures " + (sw.ElapsedMilliseconds).ToString("f5"));

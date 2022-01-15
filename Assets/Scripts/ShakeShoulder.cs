@@ -1,5 +1,8 @@
 ﻿using cakeslice;
+using com.dgn.UnityAttributes;
+using com.dgn.XR.Extensions;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class ShakeShoulder : MonoBehaviour
 {
@@ -45,7 +48,7 @@ public class ShakeShoulder : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (enableVibration &&  !canVibrateOnce && other.gameObject.CompareTag("Hand"))
+        if (enableVibration &&  !canVibrateOnce && other.gameObject.CompareTag("PlayerHand"))
         {
             canVibrateOnce = true;
         }
@@ -85,13 +88,13 @@ public class ShakeShoulder : MonoBehaviour
         vibrateTimer += Time.deltaTime;
         if (vibrateTimer < vibrateTime)
         {
-            OVRInput.SetControllerVibration(1, 1, OVRInput.Controller.RTouch);
-            OVRInput.SetControllerVibration(1, 1, OVRInput.Controller.LTouch);
+            XRVibrationManager.Instance.TriggerVibration(1, 1, XRNode.RightHand);
+            XRVibrationManager.Instance.TriggerVibration(1, 1, XRNode.LeftHand);
         }
         else
         {
-            OVRInput.SetControllerVibration(0, 0, OVRInput.Controller.RTouch);
-            OVRInput.SetControllerVibration(0, 0, OVRInput.Controller.LTouch);
+            XRVibrationManager.Instance.StopVibration(XRNode.RightHand);
+            XRVibrationManager.Instance.StopVibration(XRNode.LeftHand);
         }
 
         if (vibrateTimer > vibrateTime + vibrateDelay)

@@ -17,6 +17,7 @@ namespace DigitalOpus.MB.MBEditor
 {
 
     [CustomEditor(typeof(MB3_MeshBakerGrouper))]
+    [CanEditMultipleObjects]
     public class MB3_MeshBakerGrouperEditor : Editor
     {
 
@@ -68,7 +69,11 @@ namespace DigitalOpus.MB.MBEditor
             if (mbSettingsAsset.objectReferenceValue != null)
             {
                 meshBakerSettingsExternal = new MB_MeshBakerSettingsEditor();
-                meshBakerSettingsExternal.OnEnable(((MB3_MeshCombinerSettings)mbSettingsAsset.objectReferenceValue).GetMeshBakerSettingsAsSerializedProperty());
+                UnityEngine.Object targetObj;
+                string propertyName;
+                ((MB3_MeshCombinerSettings)mbSettingsAsset.objectReferenceValue).GetMeshBakerSettingsAsSerializedProperty(out propertyName, out targetObj);
+                SerializedProperty meshBakerSettings = new SerializedObject(targetObj).FindProperty(propertyName);
+                meshBakerSettingsExternal.OnEnable(meshBakerSettings);
             }
         }
 
@@ -80,104 +85,45 @@ namespace DigitalOpus.MB.MBEditor
 
         public override void OnInspectorGUI()
         {
-            MB3_MeshBakerGrouper tbg = (MB3_MeshBakerGrouper)target;
-            MB3_TextureBaker tb = ((MB3_MeshBakerGrouper)target).GetComponent<MB3_TextureBaker>();
             grouper.Update();
             DrawGrouperInspector();
             if (GUILayout.Button("Generate Mesh Bakers"))
             {
-                if (tb == null)
+                for(int tIdx = 0; tIdx < targets.Length; tIdx++)
                 {
-                    Debug.LogError("There must be an MB3_TextureBaker attached to this game object.");
-                    return;
-                }
-
-                if (tb.GetObjectsToCombine().Count == 0)
-                {
-                    Debug.LogError("The MB3_MeshBakerGrouper creates clusters based on the objects to combine in the MB3_TextureBaker component. There were no objects in this list.");
-                    return;
-                }
-
-                //check if any of the objes that will be added to bakers already exist in child bakers
-                List<GameObject> objsWeAreGrouping = tb.GetObjectsToCombine();
-                MB3_MeshBakerCommon[] alreadyExistBakers = tbg.GetComponentsInChildren<MB3_MeshBakerCommon>();
-                bool foundChildBakersWithObjsToCombine = false;
-                for (int i = 0; i < alreadyExistBakers.Length; i++)
-                {
-                    List<GameObject> childOjs2Combine = alreadyExistBakers[i].GetObjectsToCombine();
-                    for (int j = 0; j < childOjs2Combine.Count; j++)
-                    {
-                        if (childOjs2Combine[j] != null && objsWeAreGrouping.Contains(childOjs2Combine[j]))
-                        {
-                            foundChildBakersWithObjsToCombine = true;
-                            break;
-                        }
-                    }
-                }
-
-                bool proceed = true;
-                if (foundChildBakersWithObjsToCombine)
-                {
-                    proceed = EditorUtility.DisplayDialog("Replace Previous Generated Bakers", "Delete child bakers?\n\n" +
-                        "This grouper has child Mesh Baker objects from a previous clustering. Do you want to delete these and create new ones?", "OK", "Cancel");
-                }
-
-                if (proceed)
-                {
-                    if (foundChildBakersWithObjsToCombine) tbg.DeleteAllChildMeshBakers();
-                    ((MB3_MeshBakerGrouper)target).grouper.DoClustering(tb, tbg);
+                    _generateMeshBakers(targets[tIdx]);
                 }
             }
+
             if (GUILayout.Button("Bake All Child MeshBakers"))
             {
-                try
+                for (int tIdx = 0; tIdx < targets.Length; tIdx++)
                 {
-                    MB3_MeshBakerCommon[] mBakers = tbg.GetComponentsInChildren<MB3_MeshBakerCommon>();
-                    for (int i = 0; i < mBakers.Length; i++)
-                    {
-                        bool createdDummyMaterialBakeResult;
-                        MB3_MeshBakerEditorFunctions.BakeIntoCombined(mBakers[i], out createdDummyMaterialBakeResult, ref grouper);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError(e);
-                }
-                finally
-                {
-                    EditorUtility.ClearProgressBar();
+                    _bakeAllChildMeshBakers(targets[tIdx], ref grouper);
                 }
             }
+
             string buttonTextEnableRenderers = "Disable Renderers On All Child MeshBaker Source Objs";
             bool enableRenderers = false;
-            MB3_MeshBakerCommon bc = tbg.GetComponentInChildren<MB3_MeshBakerCommon>();
-            if (bc != null && bc.GetObjectsToCombine().Count > 0)
             {
-                GameObject go = bc.GetObjectsToCombine()[0];
-                if (go != null && go.GetComponent<Renderer>() != null && go.GetComponent<Renderer>().enabled == false)
+                MB3_MeshBakerGrouper tbg = (MB3_MeshBakerGrouper)target;
+                MB3_MeshBakerCommon bc = tbg.GetComponentInChildren<MB3_MeshBakerCommon>();
+                if (bc != null && bc.GetObjectsToCombine().Count > 0)
                 {
-                    buttonTextEnableRenderers = "Enable Renderers On All Child MeshBaker Source Objs";
-                    enableRenderers = true;
+                    GameObject go = bc.GetObjectsToCombine()[0];
+                    if (go != null && go.GetComponent<Renderer>() != null && go.GetComponent<Renderer>().enabled == false)
+                    {
+                        buttonTextEnableRenderers = "Enable Renderers On All Child MeshBaker Source Objs";
+                        enableRenderers = true;
+                    }
                 }
             }
 
             if (GUILayout.Button(buttonTextEnableRenderers))
             {
-                try
+                for (int tIdx = 0; tIdx < targets.Length; tIdx++)
                 {
-                    MB3_MeshBakerCommon[] mBakers = tbg.GetComponentsInChildren<MB3_MeshBakerCommon>();
-                    for (int i = 0; i < mBakers.Length; i++)
-                    {
-                        mBakers[i].EnableDisableSourceObjectRenderers(enableRenderers);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError(e);
-                }
-                finally
-                {
-                    EditorUtility.ClearProgressBar();
+                    _enableDisableRenderers(targets[tIdx], enableRenderers);
                 }
             }
 
@@ -185,29 +131,40 @@ namespace DigitalOpus.MB.MBEditor
             {
                 if (EditorUtility.DisplayDialog("Delete Mesh Bakers", "Delete all child mesh bakers", "OK", "Cancel"))
                 {
-                    tbg.DeleteAllChildMeshBakers();
-                }
-            }
-
-
-            if (DateTime.UtcNow.Ticks - lastBoundsCheckRefreshTime > 10000000 && tb != null)
-            {
-                List<GameObject> gos = tb.GetObjectsToCombine();
-                Bounds b = new Bounds(Vector3.zero, Vector3.one);
-                if (gos.Count > 0 && gos[0] != null && gos[0].GetComponent<Renderer>() != null)
-                {
-                    b = gos[0].GetComponent<Renderer>().bounds;
-                }
-                for (int i = 0; i < gos.Count; i++)
-                {
-                    if (gos[i] != null && gos[i].GetComponent<Renderer>() != null)
+                    for (int i = 0; i < targets.Length; i++)
                     {
-                        b.Encapsulate(gos[i].GetComponent<Renderer>().bounds);
+                        MB3_MeshBakerGrouper tbg = (MB3_MeshBakerGrouper)targets[i];
+                        tbg.DeleteAllChildMeshBakers();
                     }
                 }
-                tbg.sourceObjectBounds = b;
-                lastBoundsCheckRefreshTime = DateTime.UtcNow.Ticks;
             }
+
+
+            if (DateTime.UtcNow.Ticks - lastBoundsCheckRefreshTime > 10000000)
+            {
+                MB3_TextureBaker tb = ((MB3_MeshBakerGrouper)target).GetComponent<MB3_TextureBaker>();
+                if (tb != null)
+                {
+                    MB3_MeshBakerGrouper tbg = (MB3_MeshBakerGrouper)target;
+                    List<GameObject> gos = tb.GetObjectsToCombine();
+                    Bounds b = new Bounds(Vector3.zero, Vector3.one);
+                    if (gos.Count > 0 && gos[0] != null && gos[0].GetComponent<Renderer>() != null)
+                    {
+                        b = gos[0].GetComponent<Renderer>().bounds;
+                    }
+                    for (int i = 0; i < gos.Count; i++)
+                    {
+                        if (gos[i] != null && gos[i].GetComponent<Renderer>() != null)
+                        {
+                            b.Encapsulate(gos[i].GetComponent<Renderer>().bounds);
+                        }
+                    }
+
+                    tbg.sourceObjectBounds = b;
+                    lastBoundsCheckRefreshTime = DateTime.UtcNow.Ticks;
+                }
+            }
+
             grouper.ApplyModifiedProperties();
         }
 
@@ -217,20 +174,19 @@ namespace DigitalOpus.MB.MBEditor
                                 " It generates multiple MB3_MeshBaker objects from the List Of Objects to be combined in the MB3_TextureBaker component." +
                                 " Objects that are close together will be grouped together and added to a new child MB3_MeshBaker object.\n\n" +
                                 " TIP: Try the new agglomerative cluster type. It's awsome!", MessageType.Info);
-            MB3_MeshBakerGrouper grouper = (MB3_MeshBakerGrouper)target;
+            MB3_MeshBakerGrouper tbg = (MB3_MeshBakerGrouper)target;
 
-            MB3_TextureBaker tb = grouper.GetComponent<MB3_TextureBaker>();
-
+            MB3_TextureBaker tb = tbg.GetComponent<MB3_TextureBaker>();
             EditorGUILayout.PropertyField(clusterType, gc_ClusterType);
             MB3_MeshBakerGrouper.ClusterType gg = (MB3_MeshBakerGrouper.ClusterType)clusterType.enumValueIndex;
-            if ((gg == MB3_MeshBakerGrouper.ClusterType.none && !(grouper.grouper is MB3_MeshBakerGrouperNone)) ||
-                (gg == MB3_MeshBakerGrouper.ClusterType.grid && !(grouper.grouper is MB3_MeshBakerGrouperGrid)) ||
-                (gg == MB3_MeshBakerGrouper.ClusterType.pie && !(grouper.grouper is MB3_MeshBakerGrouperPie)) ||
-                (gg == MB3_MeshBakerGrouper.ClusterType.agglomerative && !(grouper.grouper is MB3_MeshBakerGrouperCluster))
+            if ((gg == MB3_MeshBakerGrouper.ClusterType.none && !(tbg.grouper is MB3_MeshBakerGrouperNone)) ||
+                (gg == MB3_MeshBakerGrouper.ClusterType.grid && !(tbg.grouper is MB3_MeshBakerGrouperGrid)) ||
+                (gg == MB3_MeshBakerGrouper.ClusterType.pie && !(tbg.grouper is MB3_MeshBakerGrouperPie)) ||
+                (gg == MB3_MeshBakerGrouper.ClusterType.agglomerative && !(tbg.grouper is MB3_MeshBakerGrouperCluster))
                 )
             {
-                grouper.CreateGrouper(gg, grouper.data);
-                grouper.clusterType = gg;
+                tbg.CreateGrouper(gg, tbg.data);
+                tbg.clusterType = gg;
             }
 
             if (clusterType.enumValueIndex == (int)MB3_MeshBakerGrouper.ClusterType.grid)
@@ -252,9 +208,9 @@ namespace DigitalOpus.MB.MBEditor
                 float maxDist = 100f;
                 float minDist = .000001f;
                 MB3_MeshBakerGrouperCluster cl = null;
-                if (grouper.grouper is MB3_MeshBakerGrouperCluster)
+                if (tbg.grouper is MB3_MeshBakerGrouperCluster)
                 {
-                    cl = (MB3_MeshBakerGrouperCluster)grouper.grouper;
+                    cl = (MB3_MeshBakerGrouperCluster)tbg.grouper;
                     maxDist = cl._ObjsExtents;
                     minDist = cl._minDistBetweenClusters;
                     if (dist < minDist)
@@ -273,9 +229,9 @@ namespace DigitalOpus.MB.MBEditor
                 }
                 if (GUILayout.Button(btnName))
                 {
-                    if (grouper.grouper is MB3_MeshBakerGrouperCluster)
+                    if (tbg.grouper is MB3_MeshBakerGrouperCluster)
                     {
-                        MB3_MeshBakerGrouperCluster cg = (MB3_MeshBakerGrouperCluster)grouper.grouper;
+                        MB3_MeshBakerGrouperCluster cg = (MB3_MeshBakerGrouperCluster)tbg.grouper;
                         if (tb != null)
                         {
                             cg.BuildClusters(tb.GetObjectsToCombine(), updateProgressBar);
@@ -301,17 +257,118 @@ namespace DigitalOpus.MB.MBEditor
             if (tb != null && tb.textureBakeResults != null) doingTextureArrays = tb.textureBakeResults.resultType == MB2_TextureBakeResults.ResultType.textureArray;
             if (mbSettingsAsset.objectReferenceValue == null)
             {
-                meshBakerSettingsMe.DrawGUI(grouper.meshBakerSettings, true, doingTextureArrays);
+                meshBakerSettingsMe.DrawGUI(tbg.meshBakerSettings, true, doingTextureArrays);
             }
             else
             {
                 if (meshBakerSettingsExternal == null || oldObjVal != mbSettingsAsset.objectReferenceValue)
                 {
-                    meshBakerSettingsExternal = new MB_MeshBakerSettingsEditor();
-                    meshBakerSettingsExternal.OnEnable(((MB3_MeshCombinerSettings)mbSettingsAsset.objectReferenceValue).GetMeshBakerSettingsAsSerializedProperty());
+                    UnityEngine.Object targetObj;
+                    string propertyName;
+                    ((MB3_MeshCombinerSettings)mbSettingsAsset.objectReferenceValue).GetMeshBakerSettingsAsSerializedProperty(out propertyName, out targetObj);
+                    SerializedProperty meshBakerSettings = new SerializedObject(targetObj).FindProperty(propertyName);
                 }
 
                 meshBakerSettingsExternal.DrawGUI(((MB3_MeshCombinerSettings)mbSettingsAsset.objectReferenceValue).data, false, doingTextureArrays);
+            }
+        }
+
+        private static void _generateMeshBakers(UnityEngine.Object target)
+        {
+            MB3_MeshBakerGrouper tbg = (MB3_MeshBakerGrouper)target;
+            MB3_TextureBaker tb = tbg.GetComponent<MB3_TextureBaker>();
+            if (tb == null)
+            {
+                Debug.LogError("There must be an MB3_TextureBaker attached to this game object.");
+                return;
+            }
+
+            if (tb.GetObjectsToCombine().Count == 0)
+            {
+                Debug.LogError("The MB3_MeshBakerGrouper creates clusters based on the objects to combine in the MB3_TextureBaker component. There were no objects in this list.");
+                return;
+            }
+
+            //check if any of the objes that will be added to bakers already exist in child bakers
+            List<GameObject> objsWeAreGrouping = tb.GetObjectsToCombine();
+            MB3_MeshBakerCommon[] alreadyExistBakers = tbg.GetComponentsInChildren<MB3_MeshBakerCommon>();
+            bool foundChildBakersWithObjsToCombine = false;
+            for (int i = 0; i < alreadyExistBakers.Length; i++)
+            {
+                List<GameObject> childOjs2Combine = alreadyExistBakers[i].GetObjectsToCombine();
+                for (int j = 0; j < childOjs2Combine.Count; j++)
+                {
+                    if (childOjs2Combine[j] != null && objsWeAreGrouping.Contains(childOjs2Combine[j]))
+                    {
+                        foundChildBakersWithObjsToCombine = true;
+                        break;
+                    }
+                }
+            }
+
+            bool proceed = true;
+            if (foundChildBakersWithObjsToCombine)
+            {
+                proceed = EditorUtility.DisplayDialog("Replace Previous Generated Bakers", "Delete child bakers?\n\n" +
+                    "This grouper has child Mesh Baker objects from a previous clustering. Do you want to delete these and create new ones?", "OK", "Cancel");
+            }
+
+            if (proceed)
+            {
+                if (foundChildBakersWithObjsToCombine) tbg.DeleteAllChildMeshBakers();
+                tbg.grouper.DoClustering(tb, tbg);
+            }
+        }
+
+        private static void _bakeAllChildMeshBakers(UnityEngine.Object target, ref SerializedObject grouper)
+        {
+            MB3_MeshBakerGrouper tbg = (MB3_MeshBakerGrouper)target;
+            MB3_TextureBaker tb = tbg.GetComponent<MB3_TextureBaker>();
+            try
+            {
+                MB3_MeshBakerCommon[] mBakers = tbg.GetComponentsInChildren<MB3_MeshBakerCommon>();
+                for (int i = 0; i < mBakers.Length; i++)
+                {
+                    bool createdDummyMaterialBakeResult;
+                    if (grouper.targetObject == tbg)
+                    {
+                        MB3_MeshBakerEditorFunctions.BakeIntoCombined(mBakers[i], out createdDummyMaterialBakeResult, ref grouper);
+                    }
+                    else
+                    {
+                        MB3_MeshBakerEditorFunctions.BakeIntoCombined(mBakers[i], out createdDummyMaterialBakeResult);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
+            }
+        }
+
+        private static void _enableDisableRenderers(UnityEngine.Object target, bool enableRenderers)
+        {
+            MB3_MeshBakerGrouper tbg = (MB3_MeshBakerGrouper)target;
+            MB3_TextureBaker tb = tbg.GetComponent<MB3_TextureBaker>();
+            try
+            {
+                MB3_MeshBakerCommon[] mBakers = tbg.GetComponentsInChildren<MB3_MeshBakerCommon>();
+                for (int i = 0; i < mBakers.Length; i++)
+                {
+                    mBakers[i].EnableDisableSourceObjectRenderers(enableRenderers);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
             }
         }
 

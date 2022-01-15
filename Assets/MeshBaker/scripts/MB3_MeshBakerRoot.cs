@@ -15,8 +15,6 @@ using DigitalOpus.MB.Core;
 /// </summary>
 public abstract class MB3_MeshBakerRoot : MonoBehaviour {
 
-    public static bool DO_INTEGRITY_CHECKS = false;
-
     /**
      * Transparent shaders often require objects to be sorted along 
      */
@@ -147,7 +145,7 @@ public abstract class MB3_MeshBakerRoot : MonoBehaviour {
 				Debug.LogError("No meshes to combine. Please assign some meshes to combine.");
 				return false;
 			}
-			if (mom is MB3_MeshBaker && ((MB3_MeshBaker)mom).meshCombiner.renderType == MB_RenderType.skinnedMeshRenderer){
+			if (mom is MB3_MeshBaker && ((MB3_MeshBaker)mom).meshCombiner.settings.renderType == MB_RenderType.skinnedMeshRenderer){
 				if (!editorMethods.ValidateSkinnedMeshes(objs))
 				{
 					return false;

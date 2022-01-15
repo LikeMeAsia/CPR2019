@@ -96,7 +96,7 @@ namespace DigitalOpus.MB.MBEditor
 
         public override void OnInspectorGUI()
         {
-            mbe.OnInspectorGUI(serializedObject, (MB3_MeshBakerCommon)target, typeof(MB3_MeshBakerEditorWindow));
+            mbe.OnInspectorGUI(serializedObject, (MB3_MeshBakerCommon)target, targets, typeof(MB3_MeshBakerEditorWindow));
         }
 
 

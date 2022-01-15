@@ -188,32 +188,55 @@ namespace DigitalOpus.MB.Core
 #if UNITY_2018_3_OR_NEWER
             if (PrefabUtility.IsPartOfNonAssetPrefabInstance(obj))
             {
-                return MB_PrefabType.sceneInstance;
+                return MB_PrefabType.scenePefabInstance;
             }
+
+            if (!PrefabUtility.IsPartOfAnyPrefab(obj))
+            {
+                return MB_PrefabType.isInstanceAndNotAPartOfAnyPrefab;
+            }
+
             PrefabAssetType assetType = PrefabUtility.GetPrefabAssetType(obj);
             if (assetType == PrefabAssetType.NotAPrefab)
             {
-                return MB_PrefabType.sceneInstance;
+                if (PrefabUtility.GetPrefabInstanceStatus(obj) != PrefabInstanceStatus.NotAPrefab)
+                {
+                    return MB_PrefabType.isInstanceAndNotAPartOfAnyPrefab;
+                }
+                else
+                {
+                    return MB_PrefabType.scenePefabInstance;
+                }
             }
             else if (assetType == PrefabAssetType.Model)
             {
-                return MB_PrefabType.modelPrefab;
+                return MB_PrefabType.modelPrefabAsset;
+            }
+            else if (assetType == PrefabAssetType.Regular ||
+                     assetType == PrefabAssetType.Variant ||
+                     assetType == PrefabAssetType.MissingAsset)
+            {
+                return MB_PrefabType.prefabAsset;
             }
             else
             {
-                return MB_PrefabType.prefab;
+                Debug.Assert(false, "Should never get here. Unknown prefab asset type.");
+                return MB_PrefabType.isInstanceAndNotAPartOfAnyPrefab;
             }
 #else
             PrefabType prefabType = PrefabUtility.GetPrefabType(obj);
             if (prefabType == PrefabType.ModelPrefab)
             {
-                return MB_PrefabType.modelPrefab;
+                return MB_PrefabType.modelPrefabAsset;
             } else if (prefabType == PrefabType.Prefab)
             {
-                return MB_PrefabType.prefab;
+                return MB_PrefabType.prefabAsset;
+            } else if (prefabType == PrefabType.PrefabInstance || prefabType == PrefabType.ModelPrefabInstance)
+            {
+                return MB_PrefabType.scenePefabInstance;
             } else
             {
-                return MB_PrefabType.sceneInstance;
+                return MB_PrefabType.isInstanceAndNotAPartOfAnyPrefab;
             }
 #endif
         }
@@ -240,6 +263,15 @@ namespace DigitalOpus.MB.Core
 #else
             GameObject obj = (GameObject) AssetDatabase.LoadAssetAtPath(assetPath, typeof(GameObject));
             PrefabUtility.ReplacePrefab(gameObject, obj, (ReplacePrefabOptions) replacePrefabOptions);
+#endif
+        }
+
+        public GameObject GetPrefabInstanceRoot(GameObject sceneInstance)
+        {
+#if UNITY_2018_3_OR_NEWER
+            return PrefabUtility.GetOutermostPrefabInstanceRoot(sceneInstance);
+#else
+            return PrefabUtility.FindRootGameObjectWithSameParentPrefab(sceneInstance);
 #endif
         }
     }

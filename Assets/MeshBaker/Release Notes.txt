@@ -1,19 +1,37 @@
 =================
+Version 3.29.1 Feb 18, 2020
+    Bug fix when updating a combined skinned mesh. Some bones that are unused should have been deleted that were not.
+    Combined all the bone processing code into a class so it is easier to manage
+    Freshly created MeshBakerGroupers may not have Settings instantiated. This can result in NRE if user tries to Bake without first visiting baker in the inspector.
+    Fixes to the MeshBakerSettings where RenderType was sometimes used from the MeshCombiner when it should have been read from the MeshBakerSettings
+    Split the MeshBakerWindow into a separate class for each tab and a class for the window and improved Undo.
+    Fix for adding disabled objects in the hierarchy to the Objects To Combine
+    Fixed issue where inactive renderers are not replace when using the Batch Prefab Baker
+    CollectTextureProperties uses the Material API to get the properites from the material for Unity > 2018.2
+    Made the MeshBaker and MultiMeshBaker buttons work with MultiObjectEditing.
+    Made TextureArray buttons work with MultiObjectEditing.
+    Removed CanEditMultipleObjects from BoneWeightCopier
+    Modified MeshBakerGrouperEditor so that it supports MultiObjectEditing.
+    Fixes NRE with batch prefab baker.
+    Fixed bug where textures are converted to ARGB32 when they should be RGBA32 on Unity 2019.
+    Better warning when TexturePacker exceeds max recursion depth, explaining why and what to do.
+    Fix bug where SkinedMesh bake would faile the first time.
+    Changed the workflow for SkinnedMeshRenderer Bake Into Prefab. Mesh Baker now does the bone copying. This was very tricky with the new Unity Prefabs.
+
+=================
 Version 3.29.0 Oct 20, 2019
-	Added Beta support for Texture Arrays
-		Can choose to bake into atlases or Texture Arrays
-		Can define multiple output formats. Texture Arrays will be baked for each format
-		Can configure which source materials will be baked into which slice
-		Slice Index can be baked into a coordinate of the mesh
-		An example shader is included
-		Manual for Texture Arrays
-	Fixed issue with normals for meshes with negative and non-uniform scaling
-	Fixed issue with "Replace Prefab Instance In Scene Window", model prefabs would not be replaced properly.
-	Added option for setting a custom mesh pivot.
-	Added property names Lit shaders used by HDRP and LRP
-	Added extra UV channels (5,6,7,8) added in recent versions of Unity
-
-
+    Added Beta support for Texture Arrays
+        Can choose to bake into atlases or Texture Arrays
+        Can define multiple output formats. Texture Arrays will be baked for each format
+        Can configure which source materials will be baked into which slice
+        Slice Index can be baked into a coordinate of the mesh
+        An example shader is included
+        Manual for Texture Arrays
+    Fixed issue with normals for meshes with negative and non-uniform scaling
+    Fixed issue with "Replace Prefab Instance In Scene Window", model prefabs would not be replaced properly.
+    Added option for setting a custom mesh pivot.
+    Added property names Lit shaders used by HDRP and LRP
+    Added extra UV channels (5,6,7,8) added in recent versions of Unity
 
 =================
 Version 3.28.1 July 8, 2019
@@ -21,8 +39,8 @@ Version 3.28.1 July 8, 2019
     Fix bug with Skinned Mesh bones error that would prevent updating combined skinned meshes if source meshes shared bones.
     Configure newly created Mesh Bakers so they use the settings from the MeshBakerGrouper.
     Added workaround for bug in 2018.X where a SerializedObject for a prefab would become corrupt when the prefab is instantiated.
-	Fixed formatting for many documents.
-	Added a namespace (DigitalOpus.MB.MBEditor). Editor scripts have been added to this namespace.
+    Fixed formatting for many documents.
+    Added a namespace (DigitalOpus.MB.MBEditor). Editor scripts have been added to this namespace.
 
 =================
 Version 3.27.3 June 18, 2019
@@ -47,10 +65,10 @@ Version 3.27.1 May 7, 2019
 
 =================
 Version 3.26.3 March 19, 2019
-	Fix bug with MeshBakerFast texture packer where textures could be copied to atlas upside down on some platforms.
-	Add code to delete runtime created meshes when switching scenes.
-	Changed how Mesh Baker serializes references to game objects. Instead of using Instance ID a reference to a game object is used.
-	This fixes issue where meshes baked in the editor cannot be modified at runtime.
+    Fix bug with MeshBakerFast texture packer where textures could be copied to atlas upside down on some platforms.
+    Add code to delete runtime created meshes when switching scenes.
+    Changed how Mesh Baker serializes references to game objects. Instead of using Instance ID a reference to a game object is used.
+    This fixes issue where meshes baked in the editor cannot be modified at runtime.
 
 ==================
 Version 3.26.2 December 19, 2018
@@ -72,218 +90,218 @@ Version 3.26.1 October 30, 2018
 
 ==================
 Version 3.26 July 17, 2018
-	Fixe for NRE when using MeshBaker packer and null textures
-	Fix bug for missing build target Tiezen in 2018.2 
-	Fix bug importing PVRT compressed meshes which don't support GetPixelBilinear
-	Added search filter for LOD levels
-	Introduced maxAtlasWidth and maxAtlasHeight which can be set independantly for horizontal vertical packing
-	Added horizontal vertical texture packing
-	BatchBakerPrefab changes
-		Fixes bug where more materials could be assigned than submeshes
-		Baked meshes are saved as part of the prefab
-		Bake does a better job of cleaning up unused materials
-		Added a bake that only updates meshes and materials
-		Added log level
+    Fixe for NRE when using MeshBaker packer and null textures
+    Fix bug for missing build target Tiezen in 2018.2 
+    Fix bug importing PVRT compressed meshes which don't support GetPixelBilinear
+    Added search filter for LOD levels
+    Introduced maxAtlasWidth and maxAtlasHeight which can be set independantly for horizontal vertical packing
+    Added horizontal vertical texture packing
+    BatchBakerPrefab changes
+        Fixes bug where more materials could be assigned than submeshes
+        Baked meshes are saved as part of the prefab
+        Bake does a better job of cleaning up unused materials
+        Added a bake that only updates meshes and materials
+        Added log level
 
 ==================
 Version 3.25 April 26, 2018
-	Created a TextureBlender for MetallicRoughness
-	Rewrote the texture blenders for MetallicSpecular and Metallic
-	Fixed bug with only one texture in atlas if textures for different properties had different tiling.
-	Added non texture property average classes so that an average value can be used if not using consider non texture properties
-	Fixed issues iwth blending non texture properties with  the Standard shader.
-	Refactor
-		Cleaned up creating of temporary textures used in atlas creation. They are not created on a per atlas basis immediately before use and disposed of immediately afterward.
-		Created TextureCombinerPackerOneTextureInAtlas for handling the case of only one texture in atlas.
-		Removed code from other TextureCombinerPackers for handling one texture in atlas cases.
-	
+    Created a TextureBlender for MetallicRoughness
+    Rewrote the texture blenders for MetallicSpecular and Metallic
+    Fixed bug with only one texture in atlas if textures for different properties had different tiling.
+    Added non texture property average classes so that an average value can be used if not using consider non texture properties
+    Fixed issues iwth blending non texture properties with  the Standard shader.
+    Refactor
+        Cleaned up creating of temporary textures used in atlas creation. They are not created on a per atlas basis immediately before use and disposed of immediately afterward.
+        Created TextureCombinerPackerOneTextureInAtlas for handling the case of only one texture in atlas.
+        Removed code from other TextureCombinerPackers for handling one texture in atlas cases.
+    
 ==================
 Version 3.24.3
-	Removed references to Procedural Texture which were removed in Unity2018
+    Removed references to Procedural Texture which were removed in Unity2018
 
 ==================
 Version 3.24.2
     Support for meshes larger than 64k
-	Big refactor of the texture combining pipeline
+    Big refactor of the texture combining pipeline
 
 ==================
 Version 3.24.1
-	Rewrite of the TextureBlenderStandardMetallic
-	Fix bug where mesh was not assigned to prefab when generating skinned meshes with the MultiMeshBaker and assigning to a prefab
-	Refactored Texture Combining pipeline.
-	Refactored BlendTextureProperty system. Encpsulated code in a separate file.
-	Replaced simple bool allTexturesAreNullAndSameColor flags with more informative CreateAtlasForProperty
-	Fixed problems when merging atlas rectangles that would occasionally generate strange UV map problems
-	Moved everything related to atlas merging into its own file
+    Rewrite of the TextureBlenderStandardMetallic
+    Fix bug where mesh was not assigned to prefab when generating skinned meshes with the MultiMeshBaker and assigning to a prefab
+    Refactored Texture Combining pipeline.
+    Refactored BlendTextureProperty system. Encpsulated code in a separate file.
+    Replaced simple bool allTexturesAreNullAndSameColor flags with more informative CreateAtlasForProperty
+    Fixed problems when merging atlas rectangles that would occasionally generate strange UV map problems
+    Moved everything related to atlas merging into its own file
 
 ==================
 Version 3.24.0
-	Fixed bug where normal map format is not restored if texture is uncompressed
-	Added TexturePackerHorizontal, TexturePackerVertical which stack textures in atlas so that textures in atlas can tile horizontally and vertically
-	Removed creation of report when using list shaders in scene
+    Fixed bug where normal map format is not restored if texture is uncompressed
+    Added TexturePackerHorizontal, TexturePackerVertical which stack textures in atlas so that textures in atlas can tile horizontally and vertically
+    Removed creation of report when using list shaders in scene
 
 ==================
 Version 3.23.3
-	Fixes error when baking skinned meshes in Unity 2017.2. that generated error about skinned meshes lacking skinning information.
+    Fixes error when baking skinned meshes in Unity 2017.2. that generated error about skinned meshes lacking skinning information.
 
 ==================
 Version 3.23.2
-	Added integrity check to TextureCombiner so it checks if can find tiled rect after generating atlas
-	Fixed bug combining materials that have different tiling on different maps when using 'consider UVs' that would generate 'can't find tiled rectangle' error
-	Fixed bug when baking skinned mesh prefabs where prefab would not be built and scene object was destroyed making it impossible to add bones
-	Fixed bug when building for Android or Tizen and ASTC compression that would cause pixelated quality in atlases
+    Added integrity check to TextureCombiner so it checks if can find tiled rect after generating atlas
+    Fixed bug combining materials that have different tiling on different maps when using 'consider UVs' that would generate 'can't find tiled rectangle' error
+    Fixed bug when baking skinned mesh prefabs where prefab would not be built and scene object was destroyed making it impossible to add bones
+    Fixed bug when building for Android or Tizen and ASTC compression that would cause pixelated quality in atlases
 
 ==================
 Version 3.23.1
-	Baking children for a grouper now works correctly if there is no TextureBakeResult
-	Fixed errors using Unity 2017 with Crunch compression
-	Fixed errors using when baking objects with different materials and no TextureBakeResult
-	Fixed bug that caused TextureBlenders to use Fallback when other blenders match shader
+    Baking children for a grouper now works correctly if there is no TextureBakeResult
+    Fixed errors using Unity 2017 with Crunch compression
+    Fixed errors using when baking objects with different materials and no TextureBakeResult
+    Fixed bug that caused TextureBlenders to use Fallback when other blenders match shader
 
 ==================
 Version 3.23.0
-	Improved 'Consider Mesh UVs' can now be applied with different value to each result material
-	Added version number to TextureBakeResults to fix backward compatibility issues.
-	Refactored TextureBakeResults so that only resultMaterials is used in all cases. _resultMaterial is depricated
-	Fixed bug with Unity 5.4 + with TexturePacker.MeshBakerTexturePackerFast creating black textures
-	Fixed bug with MeshBakerGrouper so that it will include bakers with only one source object if desired
-	_MetallicGlossMap color if no texture is 0,0,0,1 to fix issues with alpha=0 in map
-	Fixed bug when using GroupByStandardShaderMode which would not compare correctly
-	Added write texture to TGA code (not yet integrated with UI)
-	Refactored "Build Source To Combined Mapping" to use new Consider Mesh UVs
+    Improved 'Consider Mesh UVs' can now be applied with different value to each result material
+    Added version number to TextureBakeResults to fix backward compatibility issues.
+    Refactored TextureBakeResults so that only resultMaterials is used in all cases. _resultMaterial is depricated
+    Fixed bug with Unity 5.4 + with TexturePacker.MeshBakerTexturePackerFast creating black textures
+    Fixed bug with MeshBakerGrouper so that it will include bakers with only one source object if desired
+    _MetallicGlossMap color if no texture is 0,0,0,1 to fix issues with alpha=0 in map
+    Fixed bug when using GroupByStandardShaderMode which would not compare correctly
+    Added write texture to TGA code (not yet integrated with UI)
+    Refactored "Build Source To Combined Mapping" to use new Consider Mesh UVs
 
 ==================
 Version 3.22.2
-	Fixed bug where submeshes with zero length triangle arrays could be created causing dynamic batching errors
-	Fixed bug where submesh triangles not being serialized correctly and causing errors with ShowHide
-	Fixed auto generation of multiple materials to handle standard shader modes
+    Fixed bug where submeshes with zero length triangle arrays could be created causing dynamic batching errors
+    Fixed bug where submesh triangles not being serialized correctly and causing errors with ShowHide
+    Fixed auto generation of multiple materials to handle standard shader modes
 
 ==================
 Version 3.22.1
-	Fixed bug where many submeshes were created if no TextureBakeResult and all source objs share a material
-	Fixed bug where UV2 could contain NAN values if using 'copy UV2 to separate rects' and a source mesh has no UV2 channel.
-	Refactored platform defines so they all exist only in the MBVersion
+    Fixed bug where many submeshes were created if no TextureBakeResult and all source objs share a material
+    Fixed bug where UV2 could contain NAN values if using 'copy UV2 to separate rects' and a source mesh has no UV2 channel.
+    Refactored platform defines so they all exist only in the MBVersion
 
 ==================
 Version 3.22
-	Fixes so Mesh Baker will work with Unity 2017
+    Fixes so Mesh Baker will work with Unity 2017
 
-	`
+    `
 ==================
 Version 3.21
-	Modified texture packer to support distributing textures across multiple atlases if total packing exceed atlas size
-	Editor window can split atlases when listing shaders in scene
-	Texture Baker can distribute across atlases when using the multiple materials feature
-	
+    Modified texture packer to support distributing textures across multiple atlases if total packing exceed atlas size
+    Editor window can split atlases when listing shaders in scene
+    Texture Baker can distribute across atlases when using the multiple materials feature
+    
 
 ==================
 Version 3.20
-	Added include cells with only one renderer checkbox to MeshBakerGrouper
-	Changed clustering to use render bounds center instead of gameobject pivot
-	Fixed drawGizmos for pie clusters so it matches what is clustered
-	Made agglomerativeClustering cancelable
-	Massive performance improvment for agglomerativeClustering
-	Fixed bug with blendshapes if more than one blendshapes
-	Fixed TextureCombiner indexOutOfBounds that occurs if the shader has no texture properties
-	
+    Added include cells with only one renderer checkbox to MeshBakerGrouper
+    Changed clustering to use render bounds center instead of gameobject pivot
+    Fixed drawGizmos for pie clusters so it matches what is clustered
+    Made agglomerativeClustering cancelable
+    Massive performance improvment for agglomerativeClustering
+    Fixed bug with blendshapes if more than one blendshapes
+    Fixed TextureCombiner indexOutOfBounds that occurs if the shader has no texture properties
+    
 
 ==================
 Version 3.19.5 May 26, 2017
-	Fix bug in Unity 5.5+ which generated a compile error in import.
-	
+    Fix bug in Unity 5.5+ which generated a compile error in import.
+    
 ==================
 Version 3.19.4 May 19, 2017
-	Cleaned up Mesh Baker Menu
-	Added link under Windows for opening Mesh Baker window
-	Changed numbering of newly created bakers to match Unity's convention
-	Renamed 'Material Bake Result' to 'Texture Bake Result'
-	Set the MeshBakerGroup default algorithm to 'Agglomerative' and improved default settings
-	MeshBakerGrouper detects if there are already child bakers with objects in list of objects to combine
-	Set default _considerNonTextureProperties to false to speed up atlas creation
-	Fixed NullPointerException when running texture bake as a Coroutine on a platform that doesn't support it
-	Optimize after bake is never called at runtime
-	Updated Manual & API docs
+    Cleaned up Mesh Baker Menu
+    Added link under Windows for opening Mesh Baker window
+    Changed numbering of newly created bakers to match Unity's convention
+    Renamed 'Material Bake Result' to 'Texture Bake Result'
+    Set the MeshBakerGroup default algorithm to 'Agglomerative' and improved default settings
+    MeshBakerGrouper detects if there are already child bakers with objects in list of objects to combine
+    Set default _considerNonTextureProperties to false to speed up atlas creation
+    Fixed NullPointerException when running texture bake as a Coroutine on a platform that doesn't support it
+    Optimize after bake is never called at runtime
+    Updated Manual & API docs
 
-==================	
+==================  
 Version 3.19.3 March 27, 2017
     Added #IF UNITY_EDITOR to mesh optimization code since it uses UnityEditor. Fixed build error
     Added fix for rounding error with Vector2 which could cause "Cannot find merged rectangle" errors
     Added fix for builing for WAS, reflection classes don't exist
 
-==================	
+==================  
 Version 3.19.2 March 13, 2017
-	Fixed bug with blend shapes if using the same Mesh Baker multiple times
-	Fixed bug with GroupByFilterStandardShaderMode so groups correctly
-	Fixed bug if using a mesh with no UVs and using the 'consider UVs' feature would get Can't find merged rect error
+    Fixed bug with blend shapes if using the same Mesh Baker multiple times
+    Fixed bug with GroupByFilterStandardShaderMode so groups correctly
+    Fixed bug if using a mesh with no UVs and using the 'consider UVs' feature would get Can't find merged rect error
 
-==================	
+==================  
 Version 3.19.1 Febuary 15, 2017
-	Fixed bug with creating temporary bake results
-	Added conditional version code for LOD groups only for 5.1 and greater
-	Added conditional version code for mesh.Optimize for 5.6 and greater
-	Speed up for agglomerativeClustering
+    Fixed bug with creating temporary bake results
+    Added conditional version code for LOD groups only for 5.1 and greater
+    Added conditional version code for mesh.Optimize for 5.6 and greater
+    Speed up for agglomerativeClustering
 
-==================	
+==================  
 Version 3.19 December 31, 2016
 
-	- Modified 'can bake without baking textures first'. Now collects all materials and maps each mat to its own submesh
-	- Removed limitation where first mesh must have all materials
-	- Fixed bug with MeshCombiner checking objsInCombined list if user has deleted some of these
-	- Batch Prefab Baker calls .ClearMesh before trying to bake so combiner isn't contaminated by previous bakes
-	- TextureCombiner creates temporary textures for missing textures earlier in the pipeline. Fixes bugs with 
-	  consider mesh UVs if some materials don't have textures.  
+    - Modified 'can bake without baking textures first'. Now collects all materials and maps each mat to its own submesh
+    - Removed limitation where first mesh must have all materials
+    - Fixed bug with MeshCombiner checking objsInCombined list if user has deleted some of these
+    - Batch Prefab Baker calls .ClearMesh before trying to bake so combiner isn't contaminated by previous bakes
+    - TextureCombiner creates temporary textures for missing textures earlier in the pipeline. Fixes bugs with 
+      consider mesh UVs if some materials don't have textures.  
 
-==================	
+==================  
 Version 3.18 December 8, 2016
 
-	- Agglomerative clustering 
-		- Fixed error when no clusters. 
-		- Add button to trigger creating clusters.
-		- Add progress bar
-	- Added feature for recenter verts to bounds center
-	- Fixed bug when deleting parts of combined mesh would leave bones
-	- Added optimize after bake
-	- Batch prefab baker will create new meshes if targets are same as source.
-	- Can use tools for adding objects to remove objects from bakers in a bulk operation
-	- Cluster grouper can group by LOD level
+    - Agglomerative clustering 
+        - Fixed error when no clusters. 
+        - Add button to trigger creating clusters.
+        - Add progress bar
+    - Added feature for recenter verts to bounds center
+    - Fixed bug when deleting parts of combined mesh would leave bones
+    - Added optimize after bake
+    - Batch prefab baker will create new meshes if targets are same as source.
+    - Can use tools for adding objects to remove objects from bakers in a bulk operation
+    - Cluster grouper can group by LOD level
 
-==================	
+==================  
 Version 3.17 November 22, 2016
 
-	- New Agglomerative cluster type in the MeshBakerGrouper
-	- Performance improvements when adding and deleting bones. Uses HashSets instead of traversing lists
-	- Added a "select objects to be combined" convenience button
-	- Added ability to sort objects to be combined along an axis. Usefull for transparent shaders
-	- Can populate rows in batch prefab baker from prefab instances in scene
-	- A number of minor fixes
+    - New Agglomerative cluster type in the MeshBakerGrouper
+    - Performance improvements when adding and deleting bones. Uses HashSets instead of traversing lists
+    - Added a "select objects to be combined" convenience button
+    - Added ability to sort objects to be combined along an axis. Usefull for transparent shaders
+    - Can populate rows in batch prefab baker from prefab instances in scene
+    - A number of minor fixes
 
-==================	
+==================  
 Version 3.16.3 October 25, 2016
 
-	- Added regular expression field for filtering game objects to be added in the add objects to bakers window
-	- Fixed bug with "list shaders in scene" which generate exceptions if a file is modified
-	- MeshBakerGrouper does not create bakers if there are no objects or only one object in a cell
+    - Added regular expression field for filtering game objects to be added in the add objects to bakers window
+    - Fixed bug with "list shaders in scene" which generate exceptions if a file is modified
+    - MeshBakerGrouper does not create bakers if there are no objects or only one object in a cell
 
-==================	
+==================  
 Version 3.16.2 October 8, 2016
 
-	- Added support for the new Texture Import API in Unity 5.5
+    - Added support for the new Texture Import API in Unity 5.5
 
-==================	
+==================  
 Version 3.16.1 September 16, 2016
 
-	- Added support for blend shapes
-	- Mesh Baker can now convert 'optimized' meshes to be readable
-	- New UV2 option. If source objects have custom UV2 layout, this can be preserved when copying to combined mesh
+    - Added support for blend shapes
+    - Mesh Baker can now convert 'optimized' meshes to be readable
+    - New UV2 option. If source objects have custom UV2 layout, this can be preserved when copying to combined mesh
 
-==================	
+==================  
 Version 3.16.0 September 6, 2016
 
-	- Fixed bug with "Open Tools For Adding Objects" window. Texture baker tab would hang.
-	- Fixed Bake Meshes in Place Bug if folder path is not set and bake is clicked
-	- Fixed bug where MeshBakerGrouper bug can include renderers not in texture baker
-	- Converted texture baking to a coroutine so texture baking at runtime can take place across several frames.
-	- Fixed bug and refactored the _considerUVs option that merges textures.
+    - Fixed bug with "Open Tools For Adding Objects" window. Texture baker tab would hang.
+    - Fixed Bake Meshes in Place Bug if folder path is not set and bake is clicked
+    - Fixed bug where MeshBakerGrouper bug can include renderers not in texture baker
+    - Converted texture baking to a coroutine so texture baking at runtime can take place across several frames.
+    - Fixed bug and refactored the _considerUVs option that merges textures.
 
 ===================
 Version 3.15.1 August 18, 2016
@@ -598,12 +616,12 @@ MB2_MeshCombiner.Apply takes a delegate function for Generating UV2. This should
 
 
 These methods require an instance of MB2_EditorMethods when called from the editor. The parameter should be null or ommitted when called at runtime.
-	doCombinedValidate
-	CreateAndSaveAtlases
+    doCombinedValidate
+    CreateAndSaveAtlases
 
 These methods were moved to MB2_EditorMethods
-	SaveMeshsToAssetDatabase 
-	RebuildPrefab
+    SaveMeshsToAssetDatabase 
+    RebuildPrefab
 
 ======================
 Version 2.8.3

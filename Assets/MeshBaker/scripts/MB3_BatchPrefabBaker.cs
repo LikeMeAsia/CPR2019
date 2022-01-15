@@ -44,7 +44,7 @@ public class MB3_BatchPrefabBaker : MonoBehaviour {
         Vector3 resultPos = Vector3.zero + offsetX;
         for (int i = 0; i < srcPrefabs.Count; i++)
         {
-            Renderer[] rs = srcPrefabs[i].GetComponentsInChildren<Renderer>();
+            Renderer[] rs = srcPrefabs[i].GetComponentsInChildren<Renderer>(true);
             Bounds b = new Bounds(Vector3.zero, Vector3.one);
             if (rs.Length > 0)
             {

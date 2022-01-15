@@ -18,9 +18,10 @@ namespace DigitalOpus.MB.Core
 
     public enum MB_PrefabType
     {
-        modelPrefab,
-        prefab,
-        sceneInstance,
+        modelPrefabAsset,
+        prefabAsset,
+        scenePefabInstance,
+        isInstanceAndNotAPartOfAnyPrefab,
     }
 
     public interface MBVersionEditorInterface
@@ -34,6 +35,8 @@ namespace DigitalOpus.MB.Core
         MB_PrefabType GetPrefabType(UnityEngine.Object go);
         void UnpackPrefabInstance(UnityEngine.GameObject go, ref SerializedObject so);
         void ReplacePrefab(GameObject gameObject, string assetPath, MB_ReplacePrefabOption replacePrefabOptions);
+
+        GameObject GetPrefabInstanceRoot(GameObject sceneInstance);
     }
 
     public class MBVersionEditor
@@ -100,6 +103,11 @@ namespace DigitalOpus.MB.Core
         public static void ReplacePrefab(GameObject gameObject, string assetPath, MB_ReplacePrefabOption replacePrefabOptions)
         {
             GetInstance().ReplacePrefab(gameObject, assetPath, replacePrefabOptions);
+        }
+
+        public static GameObject GetPrefabInstanceRoot(GameObject sceneInstance)
+        {
+            return GetInstance().GetPrefabInstanceRoot(sceneInstance);
         }
     }
 }

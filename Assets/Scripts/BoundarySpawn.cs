@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using com.dgn.UnityAttributes;
+using UnityEngine;
 
 [RequireComponent(typeof(Collider), typeof(Rigidbody))]
 public class BoundarySpawn : MonoBehaviour

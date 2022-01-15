@@ -32,6 +32,7 @@ public class MB3_MeshBakerGrouper : MonoBehaviour, MB_IMeshBakerSettingsHolder
     {
         if (meshBakerSettingsAsset == null)
         {
+            if (meshBakerSettings == null) meshBakerSettings = new MB3_MeshCombinerSettingsData();
             return meshBakerSettings;
         }
         else
@@ -40,21 +41,19 @@ public class MB3_MeshBakerGrouper : MonoBehaviour, MB_IMeshBakerSettingsHolder
         }
     }
 
-#if UNITY_EDITOR
-    public SerializedProperty GetMeshBakerSettingsAsSerializedProperty()
+    public void GetMeshBakerSettingsAsSerializedProperty(out string propertyName, out UnityEngine.Object targetObj)
     {
         if (meshBakerSettingsAsset == null)
         {
-            UnityEditor.SerializedObject so = new UnityEditor.SerializedObject(this);
-            return so.FindProperty("meshBakerSettings");
+            targetObj = this;
+            propertyName = "meshBakerSettings";
         }
         else
         {
-            UnityEditor.SerializedObject so = new UnityEditor.SerializedObject(meshBakerSettingsAsset);
-            return so.FindProperty("data");
+            targetObj = meshBakerSettingsAsset;
+            propertyName = "data";
         }
     }
-#endif
 
 
     void OnDrawGizmosSelected()

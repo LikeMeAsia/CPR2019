@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: PlayTrackFatherCollapse
   m_EditorClassIdentifier: 
   delayNextEvent: 0
-  trackId: 0
+  trackId: 1

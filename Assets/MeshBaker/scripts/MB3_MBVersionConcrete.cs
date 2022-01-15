@@ -4,6 +4,7 @@
 using System;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace DigitalOpus.MB.Core
 {
@@ -12,7 +13,7 @@ namespace DigitalOpus.MB.Core
     {
         public string version()
         {
-            return "3.28.1";
+            return "3.29.1";
         }
 
         public int GetMajorVersion()
@@ -440,6 +441,99 @@ namespace DigitalOpus.MB.Core
             }
 #endif
         }
-    }
 
+        public bool CollectPropertyNames(List<ShaderTextureProperty> texPropertyNames, ShaderTextureProperty[] shaderTexPropertyNames, List<ShaderTextureProperty> _customShaderPropNames, Material resultMaterial, MB2_LogLevel LOG_LEVEL)
+        {
+#if UNITY_2018_3_OR_NEWER
+            // 2018.2 and up
+            // Collect the property names from the material
+            // Check with the lists of property names to flag which ones are normal maps.
+            string[] matPropertyNames = resultMaterial.GetTexturePropertyNames();
+            for (int matIdx = 0; matIdx < matPropertyNames.Length; matIdx++)
+            {
+                string matPropName = matPropertyNames[matIdx];
+                if (resultMaterial.GetTextureOffset(matPropName) != new Vector2(0f, 0f))
+                {
+                    if (LOG_LEVEL >= MB2_LogLevel.warn) Debug.LogWarning("Result material has non-zero offset for property " + matPropName + ". This is probably incorrect.");
+                }
+
+                if (resultMaterial.GetTextureScale(matPropName) != new Vector2(1f, 1f))
+                {
+                    if (LOG_LEVEL >= MB2_LogLevel.warn) Debug.LogWarning("Result material should probably have tiling of 1,1 for propert " + matPropName);
+                }
+
+                ShaderTextureProperty pn = null;
+                // We need to know if the property is a normal map or not.
+                // first check the list of default names
+                for (int defaultIdx = 0; defaultIdx < shaderTexPropertyNames.Length; defaultIdx++)
+                {
+                    if (shaderTexPropertyNames[defaultIdx].name == matPropName)
+                    {
+                        pn = new ShaderTextureProperty(matPropName, shaderTexPropertyNames[defaultIdx].isNormalMap);
+                    }
+                }
+
+                // now check the list of custom property names
+                for (int custPropIdx = 0; custPropIdx < _customShaderPropNames.Count; custPropIdx++)
+                {
+                    if (_customShaderPropNames[custPropIdx].name == matPropName)
+                    {
+                        pn = new ShaderTextureProperty(matPropName, _customShaderPropNames[custPropIdx].isNormalMap);
+                    }
+                }
+
+                if (pn == null)
+                {
+                    pn = new ShaderTextureProperty(matPropName, false, true);
+                }
+
+                texPropertyNames.Add(pn);
+            }
+            return true;
+#else
+            { // Pre 2018.2, doesn't have API for querying material for property names.
+                //Collect the property names for the textures
+                string shaderPropStr = "";
+                for (int i = 0; i < shaderTexPropertyNames.Length; i++)
+                {
+                    if (resultMaterial.HasProperty(shaderTexPropertyNames[i].name))
+                    {
+                        shaderPropStr += ", " + shaderTexPropertyNames[i].name;
+                        if (!texPropertyNames.Contains(shaderTexPropertyNames[i])) texPropertyNames.Add(shaderTexPropertyNames[i]);
+                        if (resultMaterial.GetTextureOffset(shaderTexPropertyNames[i].name) != new Vector2(0f, 0f))
+                        {
+                            if (LOG_LEVEL >= MB2_LogLevel.warn) Debug.LogWarning("Result material has non-zero offset. This is may be incorrect.");
+                        }
+                        if (resultMaterial.GetTextureScale(shaderTexPropertyNames[i].name) != new Vector2(1f, 1f))
+                        {
+                            if (LOG_LEVEL >= MB2_LogLevel.warn) Debug.LogWarning("Result material should have tiling of 1,1");
+                        }
+                    }
+                }
+
+                for (int i = 0; i < _customShaderPropNames.Count; i++)
+                {
+                    if (resultMaterial.HasProperty(_customShaderPropNames[i].name))
+                    {
+                        shaderPropStr += ", " + _customShaderPropNames[i].name;
+                        texPropertyNames.Add(_customShaderPropNames[i]);
+                        if (resultMaterial.GetTextureOffset(_customShaderPropNames[i].name) != new Vector2(0f, 0f))
+                        {
+                            if (LOG_LEVEL >= MB2_LogLevel.warn) Debug.LogWarning("Result material has non-zero offset. This is probably incorrect.");
+                        }
+                        if (resultMaterial.GetTextureScale(_customShaderPropNames[i].name) != new Vector2(1f, 1f))
+                        {
+                            if (LOG_LEVEL >= MB2_LogLevel.warn) Debug.LogWarning("Result material should probably have tiling of 1,1.");
+                        }
+                    }
+                    else
+                    {
+                        if (LOG_LEVEL >= MB2_LogLevel.warn) Debug.LogWarning("Result material shader does not use property " + _customShaderPropNames[i].name + " in the list of custom shader property names");
+                    }
+                }
+            }
+            return true;
+#endif
+        }
+    }
 }

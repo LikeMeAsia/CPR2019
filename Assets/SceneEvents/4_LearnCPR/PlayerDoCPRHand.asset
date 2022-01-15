@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: PlayerDoCPRHand
   m_EditorClassIdentifier: 
   delayNextEvent: 0
-  assetName: CPRUIAnim
-  audioSourceAssetName: Phone
+  cprUIName: CPRCanvas
+  audioSourceName: Phone
+  chestColliderName: ChestCollider
+  gameManagerName: GameManager
   audioClips:
   - {fileID: 8300000, guid: 2c298e7fbf3861642ae0b416ea537412, type: 3}

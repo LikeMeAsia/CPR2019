@@ -199,7 +199,7 @@ namespace DigitalOpus.MB.MBEditor
 
             List<GameObjectFilterInfo> objsNotAddedToBaker = new List<GameObjectFilterInfo>();
 
-            Dictionary<GameObjectFilterInfo, List<List<GameObjectFilterInfo>>> gs2bakeGroupMap = MB3_MeshBakerEditorWindow.sortIntoBakeGroups3(gameObjects, objsNotAddedToBaker, filters, false, mom.maxAtlasSize);
+            Dictionary<GameObjectFilterInfo, List<List<GameObjectFilterInfo>>> gs2bakeGroupMap = MB3_MeshBakerEditorWindowAnalyseSceneTab.sortIntoBakeGroups3(gameObjects, objsNotAddedToBaker, filters, false, mom.maxAtlasSize);
 
             mom.resultMaterials = new MB_MultiMaterial[gs2bakeGroupMap.Keys.Count];
             string pth = AssetDatabase.GetAssetPath(mom.textureBakeResults);

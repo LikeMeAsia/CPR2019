@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Name: MaterialBakeResult
   m_EditorClassIdentifier: 
   version: 3252
-  resultType: 0
   materialsAndUVRects:
   - material: {fileID: 2100000, guid: feccc9b89c26805468d1bdcb46344626, type: 2}
     atlasRect:
@@ -134,5 +133,4 @@ MonoBehaviour:
     - {fileID: 2100000, guid: d76898e20fbb4d345b4606f98f5307f4, type: 2}
     - {fileID: 2100000, guid: 4cc14f2d300d0c445b1ff0006e0737c8, type: 2}
     - {fileID: 2100000, guid: 5a6823c7766599549af1fd87503dc15d, type: 2}
-  resultMaterialsTexArray: []
   doMultiMaterial: 0

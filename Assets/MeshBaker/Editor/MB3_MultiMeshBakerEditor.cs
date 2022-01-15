@@ -16,6 +16,7 @@ using DigitalOpus.MB.Core;
 namespace DigitalOpus.MB.MBEditor
 {
     [CustomEditor(typeof(MB3_MultiMeshBaker))]
+    [CanEditMultipleObjects]
     public class MB3_MultiMeshBakerEditor : Editor
     {
         MB3_MeshBakerEditorInternal mbe = new MB3_MeshBakerEditorInternal();
@@ -67,7 +68,7 @@ namespace DigitalOpus.MB.MBEditor
 
         public override void OnInspectorGUI()
         {
-            mbe.OnInspectorGUI(serializedObject, (MB3_MeshBakerCommon)target, typeof(MB3_MeshBakerEditorWindow));
+            mbe.OnInspectorGUI(serializedObject, (MB3_MeshBakerCommon)target, targets, typeof(MB3_MeshBakerEditorWindow));
         }
 
 

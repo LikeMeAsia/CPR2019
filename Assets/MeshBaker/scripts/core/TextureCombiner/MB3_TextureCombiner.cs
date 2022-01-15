@@ -11,12 +11,6 @@ using System.Text;
 using System.Reflection;
 
 /*
-    Test different texture packers
-    Test lots of multiple material configs
-    Try using on Coast scene
-*/
-
-/*
   
 Notes on Normal Maps in Unity3d
 
@@ -43,11 +37,29 @@ namespace DigitalOpus.MB.Core
         public string name;
         public bool isNormalMap;
 
+        /// <summary>
+        /// If we find a texture property in the result material we don't know if it is normal or not
+        /// We can try to look at how it is used in the source materials. If the majority of those are normal
+        /// then it is normal.
+        /// </summary>
+        [HideInInspector]
+        public bool isNormalDontKnow = false;
+
         public ShaderTextureProperty(string n,
                                      bool norm)
         {
             name = n;
             isNormalMap = norm;
+            isNormalDontKnow = false;
+        }
+
+        public ShaderTextureProperty(string n,
+                                     bool norm,
+                                     bool isNormalDontKnow)
+        {
+            name = n;
+            isNormalMap = norm;
+            this.isNormalDontKnow = isNormalDontKnow;
         }
 
         public override bool Equals(object obj)
@@ -78,6 +90,11 @@ namespace DigitalOpus.MB.Core
     [System.Serializable]
     public class MB3_TextureCombiner
     {
+        public class CreateAtlasesCoroutineResult
+        {
+            public bool success = true;
+            public bool isFinished = false;
+        }
 
         internal class TemporaryTexture
         {

@@ -74,6 +74,8 @@ namespace DigitalOpus.MB.Core{
 
         public MB2_LogLevel LOG_LEVEL = MB2_LogLevel.info;
 
+        internal const int MAX_RECURSION_DEPTH = 10;
+
         internal enum NodeType
         {
             Container,
@@ -593,7 +595,6 @@ namespace DigitalOpus.MB.Core{
             }
 		}
 
-
         //------------------ Algorithm for fitting everything into one atlas and scaling down
         // 
         // for images being added calc area, maxW, maxH. A perfectly packed atlas will match area exactly. atlas must be at least maxH and maxW in size.
@@ -604,9 +605,13 @@ namespace DigitalOpus.MB.Core{
         AtlasPackingResult _GetRectsSingleAtlas(List<Vector2> imgWidthHeights, List<AtlasPadding> paddings, int maxDimensionX, int maxDimensionY, int minImageSizeX, int minImageSizeY, int masterImageSizeX, int masterImageSizeY, int recursionDepth){
 			if (LOG_LEVEL >= MB2_LogLevel.debug) Debug.Log (String.Format("_GetRects numImages={0}, maxDimension={1}, minImageSizeX={2}, minImageSizeY={3}, masterImageSizeX={4}, masterImageSizeY={5}, recursionDepth={6}",
 			                                                                 imgWidthHeights.Count, maxDimensionX, minImageSizeX, minImageSizeY, masterImageSizeX, masterImageSizeY, recursionDepth));
-			if (recursionDepth > 10){
-				if (LOG_LEVEL >= MB2_LogLevel.error) Debug.LogError("Maximum recursion depth reached. Couldn't find packing for these textures.");
-				return null;
+            if (recursionDepth > MAX_RECURSION_DEPTH) {
+                if (LOG_LEVEL >= MB2_LogLevel.error) Debug.LogError("Maximum recursion depth reached. The baked atlas is likely not very good. " +
+                    " This happens when the packed atlases exceeds the maximum" +
+                    " atlas size in one or both dimensions so that the atlas needs to be downscaled AND there are some very thin or very small images (only-a-few-pixels)." +
+                    " these very thin images can 'vanish' completely when the atlas is downscaled.\n\n" +
+                    " Try one or more of the following: using multiple atlases, increase the maximum atlas size, don't use 'force-power-of-two', remove the source materials that are are using very small/thin textures.");
+				//return null;
 			}
 			float area = 0;
 			int maxW = 0;
@@ -739,7 +744,8 @@ namespace DigitalOpus.MB.Core{
             float padX, padY; 
             int newMinSizeX, newMinSizeY;
             if (!ScaleAtlasToFitMaxDim(rootWH, images, maxDimensionX, maxDimensionY, paddings[0], minImageSizeX, minImageSizeY, masterImageSizeX, masterImageSizeY,
-                ref outW, ref outH, out padX, out padY, out newMinSizeX, out newMinSizeY))
+                ref outW, ref outH, out padX, out padY, out newMinSizeX, out newMinSizeY) ||
+                recursionDepth > MAX_RECURSION_DEPTH)
             {
                 AtlasPackingResult res = new AtlasPackingResult(paddings.ToArray());
                 res.rects = new Rect[images.Count];
@@ -758,7 +764,7 @@ namespace DigitalOpus.MB.Core{
                     res.srcImgIdxs[i] = im.imgId;
                     if (LOG_LEVEL >= MB2_LogLevel.debug) MB2_Log.LogDebug("Image: " + i + " imgID=" + im.imgId + " x=" + r.x * outW +
                                " y=" + r.y * outH + " w=" + r.width * outW +
-                               " h=" + r.height * outH + " padding=" + paddings[i]);
+                               " h=" + r.height * outH + " padding=" + (paddings[i].leftRight * 2) + "x" + (paddings[i].topBottom*2));
                 }
                 res.CalcUsedWidthAndHeight();
                 return res;
